@@ -19,18 +19,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'pnpm'
-
-      # 🔥 pnpm 설치 단계 추가
+      # ✅ pnpm을 먼저 설치 (캐시 포함)
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: latest
+          run_install: false   # 의존성 자동 설치 비활성화 (아래에서 직접 실행)
 
+      # ✅ Node.js 환경 세팅 (pnpm 캐시를 actions/setup-node가 아니라 pnpm/action-setup이 관리)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # ✅ 의존성 설치 (pnpm lockfile 기반, 캐시 자동 적용)
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -38,4 +40,4 @@ jobs:
         run: pnpm run lint
 
       - name: Run Build
-        run: pnpm run build 
+        run: pnpm run build
