@@ -5,4 +5,5 @@ export const routeBg: Record<string, string> = {
   "/": bgLanding,
   "/join/nickname": bgPaper,
   "/join/complete": bgPaper,
+  "/letter/guide": bgPaper,
 };

@@ -1,6 +1,11 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AppShell from "./layouts/AppShell";
-import { JoinCompletePage, JoinNicknamePage, LoginPage } from "./pages";
+import {
+  JoinCompletePage,
+  JoinNicknamePage,
+  LetterGuidePage,
+  LoginPage,
+} from "./pages";
 
 function App() {
   return (
@@ -10,6 +15,7 @@ function App() {
           <Route path="/" element={<LoginPage />} />
           <Route path="/join/nickname" element={<JoinNicknamePage />} />
           <Route path="/join/complete" element={<JoinCompletePage />} />
+          <Route path="/letter/guide" element={<LetterGuidePage />} />
         </Routes>
       </AppShell>
     </Router>
