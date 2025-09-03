@@ -5,6 +5,7 @@ import {
   JoinNicknamePage,
   LetterGuidePage,
   LoginPage,
+  MusicSearchPage,
 } from "./pages";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/join/nickname" element={<JoinNicknamePage />} />
           <Route path="/join/complete" element={<JoinCompletePage />} />
           <Route path="/letter/guide" element={<LetterGuidePage />} />
+          <Route path="/letter/search" element={<MusicSearchPage />} />
         </Routes>
       </AppShell>
     </Router>
