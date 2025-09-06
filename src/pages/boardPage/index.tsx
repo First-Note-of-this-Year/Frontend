@@ -17,6 +17,7 @@ import ObjLp from "@/assets/obj_lp.webp";
 import { LinkShareButton } from "@/components/ui/link-share-button";
 import { Pagination } from "@/components/ui/pagination";
 import { Sidebar } from "@/components/ui/sidebar";
+import { useAudio } from "@/hooks/useAudio";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
 
 function BoardPage() {
@@ -85,8 +86,13 @@ function BoardPage() {
     if (isSharedBoard && sharedBoardData) {
       const mapped = (sharedBoardData.content ?? []).map((s) => ({
         messageId: s.messageId,
-        sender: s.sender,
+        senderName: s.sender,
+        content: "",
+        songId: "",
+        songName: "",
+        artist: "",
         coverImageUrl: s.coverImageUrl,
+        songUrl: "",
         read: s.read ?? false,
       }));
       setBoardList(mapped);
@@ -130,6 +136,8 @@ function BoardPage() {
   const [messageDetail, setMessageDetail] = useState<
     import("@/types/board").BoardMessageData | null
   >(null);
+
+  const { isPlaying, playAudio, stopAudio, toggleAudio } = useAudio();
 
   useEffect(() => {
     // use a fixed server time as requested
@@ -191,6 +199,7 @@ function BoardPage() {
     (async () => {
       if (letterOpenId === null) {
         setMessageDetail(null);
+        stopAudio();
         return;
       }
 
@@ -209,8 +218,14 @@ function BoardPage() {
         );
         if (!mounted) return;
         setMessageDetail(res.data ?? null);
+
+        // Start playing music if songUrl is available
+        if (res.data?.songUrl) {
+          playAudio(res.data.songUrl).catch((error) => {
+            console.error("Failed to start audio playback:", error);
+          });
+        }
       } catch (err) {
-        // eslint-disable-next-line no-console
         console.error("Failed to load message detail", err);
         setMessageDetail(null);
       }
@@ -219,7 +234,14 @@ function BoardPage() {
     return () => {
       mounted = false;
     };
-  }, [letterOpenId, isSharedBoard, boardList, sharedBoardData]);
+  }, [
+    letterOpenId,
+    isSharedBoard,
+    boardList,
+    sharedBoardData,
+    playAudio,
+    stopAudio,
+  ]);
 
   return (
     <div className="relative flex min-h-screen flex-col pb-[77px]">
@@ -446,9 +468,15 @@ function BoardPage() {
               role="dialog"
               aria-modal="true"
               tabIndex={-1}
-              onClick={() => setLetterOpenId(null)}
+              onClick={() => {
+                setLetterOpenId(null);
+                stopAudio();
+              }}
               onKeyDown={(e) => {
-                if (e.key === "Escape") setLetterOpenId(null);
+                if (e.key === "Escape") {
+                  setLetterOpenId(null);
+                  stopAudio();
+                }
               }}
               style={{
                 position: "fixed",
@@ -624,12 +652,13 @@ function BoardPage() {
                     onClick={(e) => {
                       // prevent overlay click from closing modal when Play button is clicked
                       e.stopPropagation();
+                      toggleAudio();
                     }}
                     onKeyDown={(e) => {
                       // ensure keyboard interaction also does not close the modal
                       e.stopPropagation();
                     }}
-                    aria-label="play"
+                    aria-label={isPlaying ? "pause" : "play"}
                   >
                     <PlayIcon />
                   </button>
