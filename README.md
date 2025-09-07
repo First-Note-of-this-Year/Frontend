@@ -109,11 +109,3 @@ src/
 
 <br/>
 
-
-<div align="center">
-
-**2025 SEASONTHON TEAM 80** 🎵
-
-*새해를 더 특별하게 만드는 첫 소리*
-
-</div>
