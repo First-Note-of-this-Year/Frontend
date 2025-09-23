@@ -770,7 +770,7 @@ function BoardPage() {
                     color: "#000",
                   }}
                 >
-                  From. ${messageDetail?.senderName}
+                  From. {messageDetail?.senderName}
                 </div>
                 {messageDetail?.coverImageUrl ? (
                   <img
