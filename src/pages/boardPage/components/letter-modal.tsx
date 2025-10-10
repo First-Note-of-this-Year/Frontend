@@ -108,7 +108,7 @@ export function LetterModal({
         >
           To. {ownerNickname}
         </div>
-        
+
         {/* read-only display box below the To. label: 294x225, font-letter 17px */}
         <div
           className="font-letter"
@@ -129,9 +129,7 @@ export function LetterModal({
           }}
         >
           {messageDetail ? (
-            <div style={{ marginBottom: 8 }}>
-              {messageDetail.content}
-            </div>
+            <div style={{ marginBottom: 8 }}>{messageDetail.content}</div>
           ) : (
             <div>로딩 중...</div>
           )}
@@ -151,10 +149,10 @@ export function LetterModal({
         >
           From. {messageDetail?.senderName}
         </div>
-        
-        {messageDetail?.coverImageUrl ? (
+
+        {messageDetail?.musicCoverUrl ? (
           <img
-            src={messageDetail.coverImageUrl}
+            src={messageDetail.musicCoverUrl}
             alt={`album-${letterOpenId ?? ""}`}
             aria-hidden
             style={{
@@ -198,12 +196,12 @@ export function LetterModal({
           }}
         />
       </div>
-      
+
       <div className="mx-auto flex w-60 flex-col gap-4">
         <div className="flex flex-row gap-2">
           <div className="flex flex-1 flex-row items-center gap-1 rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
             <p className="text-base text-white">
-              {messageDetail?.songName ?? "곡 제목"}
+              {messageDetail?.musicName ?? "곡 제목"}
             </p>
             <p className="text-gray-500 text-xs">
               {messageDetail?.artist ?? "가수"}

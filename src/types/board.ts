@@ -18,22 +18,23 @@ export interface GetBoardShareResponse {
 
 export interface SharedBoardMessage {
   messageId: string;
-  // cover image URL for the shared board item
-  coverImageUrl: string;
-  // sender name
-  sender: string;
-  // whether the message has been read
-  read?: boolean;
+  musicId: string;
+  musicCoverUrl: string;
 }
 
-export interface SharedBoardResponse {
+export interface SharedBoardData {
   content: SharedBoardMessage[];
   pageNumber: number;
   pageSize: number;
   totalElements: number;
   totalPages: number;
-  // owner nickname (optional)
-  nickname?: string;
+}
+
+export interface SharedBoardResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: SharedBoardData;
 }
 
 export interface SharedBoardInfo {
@@ -44,11 +45,11 @@ export interface BoardListItem {
   messageId: string;
   senderName: string;
   content: string;
-  songId: string;
-  songName: string;
+  musicId: string;
+  musicName: string;
   artist: string;
-  coverImageUrl: string;
-  songUrl: string;
+  musicCoverUrl: string;
+  musicUrl: string;
   read: boolean;
 }
 
@@ -85,11 +86,11 @@ export interface BoardMessageData {
   messageId: string;
   senderName: string;
   content: string;
-  songId?: string | null;
-  songName?: string | null;
+  musicId?: string | null;
+  musicName?: string | null;
   artist?: string | null;
-  coverImageUrl?: string | null;
-  songUrl?: string | null;
+  musicCoverUrl?: string | null;
+  musicUrl?: string | null;
 }
 
 export interface BoardMessageResponse {
