@@ -34,7 +34,10 @@ export function BoardHeader({
       {/* Header Logo */}
       <div
         className="fixed z-40"
-        style={{ top: 20, left: screenWidth >= 450 ? 10 : 12 }}
+        style={{
+          top: 17,
+          left: screenWidth >= 450 ? `calc(50% - 225px + 19px)` : 19,
+        }}
       >
         <HeaderIcon />
       </div>
@@ -44,7 +47,7 @@ export function BoardHeader({
         type="button"
         onClick={onMenuClick}
         className="fixed z-40 cursor-pointer"
-        style={{ top: 20, right: screenWidth >= 450 ? 10 : 20 }}
+        style={{ top: 21, right: screenWidth >= 450 ? `calc(50% - 225px + 19px)` : 19 }}
         aria-label="메뉴 열기"
       >
         <HamburgerIcon />
