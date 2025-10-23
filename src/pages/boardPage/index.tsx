@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import FrameImg from "@/assets/ic_frame.webp";
+import bgbottom from "@/assets/bg_bottom.webp";
 import { Sidebar } from "@/components/ui/sidebar";
 import { AlbumGrid } from "./components/album-grid";
 import { BoardHeader } from "./components/board-header";
@@ -128,6 +129,18 @@ function BoardPage() {
         isSharedBoard={isSharedBoard}
         shareUri={shareUri}
         bottomGroupRef={bottomGroupRef}
+      />
+
+      {/* Background bottom image */}
+      <img
+        src={bgbottom}
+        alt=""
+        aria-hidden
+        className="pointer-events-none fixed left-1/2 w-full max-w-[450px]"
+        style={{
+          bottom: 46,
+          transform: "translateX(-50%)",
+        }}
       />
 
       {/* Sidebar */}

@@ -97,7 +97,7 @@ export function BoardHeader({
         }}
       >
         <div className="flex items-center gap-3">
-          <span className="font-primary text-[20px] text-brown-100">
+          <span className="font-primary text-[20px] text-brown-200">
             {ownerNickname} 님의 LP 보드
           </span>
         </div>
@@ -109,7 +109,7 @@ export function BoardHeader({
             className="flex items-center gap-1 px-2"
             style={{
               background: "rgba(230,218,202,0.10)",
-              color: "#E6DACA",
+              color: "#412716",
               height: 25,
               fontSize: 12,
               borderRadius: 6,
