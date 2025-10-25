@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import FrameImg from "@/assets/ic_frame.webp";
+import bgbottom from "@/assets/bg_bottom.webp";
+import drawerIcon from "@/assets/ic_drawer.webp";
+import HatIcon from "@/assets/ic_hat.svg?react";
+import LpNormalIcon from "@/assets/ic_lp_normal.svg?react";
+import LpPlayingIcon from "@/assets/ic_lp_playing.svg?react";
+import windowIcon from "@/assets/ic_window_normal.webp";
 import { Sidebar } from "@/components/ui/sidebar";
 import { AlbumGrid } from "./components/album-grid";
 import { BoardHeader } from "./components/board-header";
@@ -14,6 +19,16 @@ import { useLetterModal } from "./hooks/useLetterModal";
 function BoardPage() {
   const { shareUri } = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isLpPlaying, setIsLpPlaying] = useState(false);
+
+  // 화면 높이 가져오기
+  const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
+  const rawRatio = screenHeight / 850;
+  const heightRatio = Math.max(0.3, Math.min(1, rawRatio * rawRatio));
+
+  // Window 아이콘 top 값 (hamburger와 동일)
+  const baseWindowTop = 49;
+  const windowTop = baseWindowTop * heightRatio;
 
   // Custom hooks
   const {
@@ -31,16 +46,11 @@ function BoardPage() {
 
   const {
     shelfRef,
-    frameRef,
     shelfWrapperRef,
     bottomGroupRef,
-    shiftPx,
-    contentLeft,
     screenWidth,
-    bottomGroupHeight,
     frameCenter,
     computeShift,
-    getAdjustedPositions,
   } = useLayoutCalculation();
 
   const timeRemaining = useCountdown(boardInfoQuery?.data?.data?.serverTime);
@@ -58,8 +68,26 @@ function BoardPage() {
   return (
     <div
       className="relative flex min-h-screen flex-col"
-      style={{ paddingTop: 140, paddingBottom: 96 + bottomGroupHeight }}
+      style={{
+        paddingTop: 140,
+        paddingBottom: 0,
+      }}
     >
+      {/* Window Icon - 79px clipped on right, positioned at top */}
+      <div
+        className="pointer-events-none fixed z-10"
+        style={{
+          top: windowTop,
+          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+          width: "fit-content",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ marginRight: -79 }}>
+          <img src={windowIcon} alt="" aria-hidden />
+        </div>
+      </div>
+
       <BoardHeader
         ownerNickname={ownerNickname}
         messageCount={
@@ -75,33 +103,26 @@ function BoardPage() {
         onMenuClick={() => setIsSidebarOpen(true)}
       />
 
-      {/* decorative frame image: moved up to sit higher on the page */}
-      <img
-        ref={frameRef}
-        src={FrameImg}
-        alt=""
-        aria-hidden
-        onLoad={() => {
-          // compute center when the frame image has loaded
-          setTimeout(() => {
-            const ev = new Event("resize");
-            window.dispatchEvent(ev);
-          }, 0);
+      <div
+        className="fixed z-20"
+        style={{
+          bottom: 65,
+          left:
+            screenWidth >= 450
+              ? `calc(50% - 225px + 15px)`
+              : screenWidth >= 390
+                ? 15
+                : Math.max(3, 15 - (390 - screenWidth) * 0.5),
         }}
-        style={{ position: "absolute", top: 60, left: 0 }}
-      />
-
-      <div className="relative flex w-full flex-1 flex-col items-center justify-end">
+      >
         <AlbumGrid
           boardList={boardList}
           isSharedBoard={isSharedBoard}
           shelfRef={shelfRef}
           shelfWrapperRef={shelfWrapperRef}
-          shiftPx={shiftPx}
-          contentLeft={contentLeft}
-          getAdjustedPositions={getAdjustedPositions}
           onComputeShift={computeShift}
           onAlbumClick={setLetterOpenId}
+          screenWidth={screenWidth}
         />
 
         <LetterModal
@@ -129,6 +150,62 @@ function BoardPage() {
         shareUri={shareUri}
         bottomGroupRef={bottomGroupRef}
       />
+
+      {/* Background bottom image */}
+      <img
+        src={bgbottom}
+        alt=""
+        aria-hidden
+        className="pointer-events-none fixed left-1/2 z-10 w-full max-w-[450px]"
+        style={{
+          bottom: 46,
+          transform: "translateX(-50%)",
+          height: "auto",
+          maxHeight: "70px",
+        }}
+      />
+
+      {/* Drawer Icon */}
+      <img
+        src={drawerIcon}
+        alt=""
+        aria-hidden
+        className="pointer-events-none fixed z-10 max-w-[450px]"
+        style={{
+          bottom: 65 + 19,
+          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+        }}
+      />
+
+      {/* Hat Icon - 31px clipped on right, 6px below drawer top */}
+      <div
+        className="pointer-events-none fixed z-10"
+        style={{
+          bottom: 65 + 105,
+          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+          width: "fit-content",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ marginRight: -31 }}>
+          <HatIcon />
+        </div>
+      </div>
+
+      {/* LP Icon - positioned at center right */}
+      <button
+        type="button"
+        onClick={() => setIsLpPlaying(!isLpPlaying)}
+        className="fixed z-10 cursor-pointer"
+        style={{
+          top: "50%",
+          transform: "translateY(-50%)",
+          right: screenWidth >= 450 ? `calc(50% - 225px + 18px)` : 18,
+        }}
+        aria-label={isLpPlaying ? "LP 정지" : "LP 재생"}
+      >
+        {isLpPlaying ? <LpPlayingIcon /> : <LpNormalIcon />}
+      </button>
 
       {/* Sidebar */}
       {isSidebarOpen && (

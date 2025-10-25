@@ -1,3 +1,4 @@
+import EnvelopIcon from "@/assets/ic_envelope.svg?react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import { LinkShareButton } from "@/components/ui/link-share-button";
 import { Pagination } from "@/components/ui/pagination";
@@ -25,9 +26,8 @@ export function BottomNavigation({
     <div
       ref={bottomGroupRef}
       className="pointer-events-none fixed right-0 bottom-0 left-0 z-40 flex justify-center"
-      style={{ padding: 12 }}
     >
-      <div className="pointer-events-auto flex w-full max-w-[450px] flex-col items-center gap-4">
+      <div className="pointer-events-auto flex w-full max-w-[450px] flex-col items-center gap-4 px-0">
         <div style={{ width: "100%" }}>
           <Pagination
             totalPages={totalPages}
@@ -35,7 +35,6 @@ export function BottomNavigation({
             onPageChange={(page) => onPageChange(page - 1)}
           />
         </div>
-
         <div style={{ width: "100%" }}>
           <LinkShareButton
             label={
@@ -43,7 +42,7 @@ export function BottomNavigation({
                 ? `${ownerNickname}님에게 마음 전달하기`
                 : "링크 공유"
             }
-            Icon={LinkIcon}
+            Icon={isSharedBoard ? EnvelopIcon : LinkIcon}
             className="w-full"
             isSharedBoard={isSharedBoard}
             shareUri={shareUri}

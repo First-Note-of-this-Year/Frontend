@@ -67,7 +67,7 @@ function LinkShareButton({
         "h-[53px] w-full max-w-[450px]",
         "bg-[#8E2D2D]",
         "text-[#FFFFFF]",
-        "font-bold text-[20px]",
+        "font-bold text-[16px]",
         "hover:bg-[#7A2525]",
         "focus:outline-none focus:ring-2 focus:ring-[#8E2D2D]/50",
         "disabled:cursor-not-allowed disabled:opacity-50",
@@ -89,7 +89,7 @@ function LinkShareButton({
                   ? "링크가 복사되었습니다!"
                   : label}
           </span>
-          {Icon && <Icon className="h-[24px] w-[24px]" />}
+          {Icon && <Icon className="h-[20px] w-[20px]" />}
         </>
       )}
     </button>
