@@ -1,7 +1,6 @@
 import BoardNoteIcon from "@/assets/ic_board_note.svg?react";
 import HamburgerIcon from "@/assets/ic_hamburger.svg?react";
 import HeaderIcon from "@/assets/ic_header_logo.svg?react";
-import DefaultProfile from "@/assets/obj_default_profile.svg";
 
 interface TimeRemaining {
   d: number;
@@ -25,18 +24,40 @@ export function BoardHeader({
   messageCount,
   timeRemaining,
   screenWidth,
-  profileImage,
-  frameCenter,
   onMenuClick,
 }: BoardHeaderProps) {
+  // 화면 높이 가져오기
+  const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
+  const rawRatio = screenHeight / 850;
+  const heightRatio = Math.max(0.3, Math.min(1, rawRatio * rawRatio));
+
+  // 좌우 여백 계산 (390px 기준, 이하에서 급격히 감소)
+  const horizontalPadding =
+    screenWidth >= 390 ? 26 : Math.max(5, 26 - (390 - screenWidth) * 0.1);
+
+  // 각 요소의 기준 top 값
+  const baseLogoTop = 17;
+  const baseHamburgerTop = 26;
+  const baseTimerTop = 26;
+  const baseTitleTop = screenHeight * 0.1 + 20;
+
+  // 비율에 따라 조정된 top 값
+  const logoTop = baseLogoTop * heightRatio;
+  const hamburgerTop = baseHamburgerTop * heightRatio;
+  const timerTop = baseTimerTop * heightRatio;
+  const titleTop = baseTitleTop * heightRatio;
+
   return (
     <>
       {/* Header Logo */}
       <div
         className="fixed z-40"
         style={{
-          top: 17,
-          left: screenWidth >= 450 ? `calc(50% - 225px + 19px)` : 19,
+          top: logoTop,
+          left:
+            screenWidth >= 450
+              ? `calc(50% - 225px + ${horizontalPadding}px)`
+              : horizontalPadding,
         }}
       >
         <HeaderIcon />
@@ -47,7 +68,13 @@ export function BoardHeader({
         type="button"
         onClick={onMenuClick}
         className="fixed z-40 cursor-pointer"
-        style={{ top: 21, right: screenWidth >= 450 ? `calc(50% - 225px + 19px)` : 19 }}
+        style={{
+          top: hamburgerTop,
+          right:
+            screenWidth >= 450
+              ? `calc(50% - 225px + ${horizontalPadding}px)`
+              : horizontalPadding,
+        }}
         aria-label="메뉴 열기"
       >
         <HamburgerIcon />
@@ -59,56 +86,43 @@ export function BoardHeader({
           position: "fixed",
           left: "50%",
           transform: "translateX(-50%)",
-          top: 26,
+          top: timerTop,
           zIndex: 40,
         }}
       >
-        <span className="text-[12px] text-brown-100">
+        <span className="text-[12px] text-brown-200">
           {`${timeRemaining.d} D ${timeRemaining.h} H ${timeRemaining.m} M ${timeRemaining.s} S`}
         </span>
       </div>
-
-      {/* Profile Avatar */}
-      <img
-        src={profileImage ?? DefaultProfile}
-        alt="profile"
-        style={{
-          position: "fixed",
-          left: frameCenter.x ?? 0,
-          top: frameCenter.y ?? 0,
-          transform: "translate(-50%, -50%)",
-          width: 36,
-          height: 36,
-          borderRadius: 18,
-          objectFit: "cover",
-          zIndex: 40,
-          pointerEvents: "none",
-        }}
-      />
 
       {/* Board Title and Count */}
       <div
         className="fixed z-40"
         style={{
-          top: "10%",
-          left: "50%",
-          transform: "translateX(calc(-20%))",
-          marginTop: 20,
+          top: titleTop,
+          left:
+            screenWidth >= 450
+              ? `calc(50% - 225px + ${horizontalPadding}px)`
+              : horizontalPadding,
         }}
       >
         <div className="flex items-center gap-3">
-          <span className="font-primary text-[20px] text-brown-200">
-            {ownerNickname} 님의 LP 보드
+          <span className="font-primary text-[28px] text-brown-200">
+            {ownerNickname} 님의 {screenHeight > 620 && <br />}LP 보드판
           </span>
         </div>
         <div
-          className="mt-3 flex items-center"
-          style={{ width: 98, height: 25 }}
+          className="flex items-center"
+          style={{
+            width: 98,
+            height: 25,
+            marginTop: 12 * heightRatio,
+          }}
         >
           <div
             className="flex items-center gap-1 px-2"
             style={{
-              background: "rgba(230,218,202,0.10)",
+              background: "rgba(69, 48, 45, 0.1)",
               color: "#412716",
               height: 25,
               fontSize: 12,

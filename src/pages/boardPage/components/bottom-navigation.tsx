@@ -1,5 +1,5 @@
-import LinkIcon from "@/assets/ic_link.svg?react";
 import EnvelopIcon from "@/assets/ic_envelope.svg?react";
+import LinkIcon from "@/assets/ic_link.svg?react";
 import { LinkShareButton } from "@/components/ui/link-share-button";
 import { Pagination } from "@/components/ui/pagination";
 
@@ -42,9 +42,7 @@ export function BottomNavigation({
                 ? `${ownerNickname}님에게 마음 전달하기`
                 : "링크 공유"
             }
-            Icon={
-              isSharedBoard ? EnvelopIcon : LinkIcon
-            }
+            Icon={isSharedBoard ? EnvelopIcon : LinkIcon}
             className="w-full"
             isSharedBoard={isSharedBoard}
             shareUri={shareUri}

@@ -20,7 +20,7 @@ export function useBoardData(shareUri?: string) {
 
   const { data: sharedBoardData } = useQuery({
     queryKey: ["sharedBoard", shareUri, currentPage],
-    queryFn: () => getSharedBoard(shareUri ?? "", currentPage, 10),
+    queryFn: () => getSharedBoard(shareUri ?? "", currentPage, 11),
     enabled: isSharedBoard && Boolean(shareUri),
   });
 
@@ -66,7 +66,7 @@ export function useBoardData(shareUri?: string) {
   // fetch current user's board list (paginated) when not viewing a shared board
   const { data: currentUserBoardList } = useQuery({
     queryKey: ["currentUserBoardList", currentPage],
-    queryFn: () => getBoardList(currentPage, 10, "desc"),
+    queryFn: () => getBoardList(currentPage, 11, "desc"),
     enabled: !isSharedBoard,
   });
 

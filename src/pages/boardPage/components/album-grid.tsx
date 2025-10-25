@@ -1,6 +1,4 @@
 import ShelfBg from "@/assets/bg_shelf.webp";
-import HatIcon from "@/assets/ic_hat.svg?react";
-import LuckyPocketIcon from "@/assets/ic_lucky_pocket.svg?react";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
 
 interface AlbumGridProps {
@@ -8,11 +6,9 @@ interface AlbumGridProps {
   isSharedBoard: boolean;
   shelfRef: React.RefObject<HTMLImageElement | null>;
   shelfWrapperRef: React.RefObject<HTMLDivElement | null>;
-  shiftPx: { x: number; y: number };
-  contentLeft: number;
-  getAdjustedPositions: () => Array<{ id: number; x: number; y: number }>;
   onComputeShift: () => void;
   onAlbumClick: (id: number) => void;
+  screenWidth: number;
 }
 
 export function AlbumGrid({
@@ -20,34 +16,18 @@ export function AlbumGrid({
   isSharedBoard,
   shelfRef,
   shelfWrapperRef,
-  shiftPx,
-  contentLeft,
-  getAdjustedPositions,
   onComputeShift,
   onAlbumClick,
+  screenWidth,
 }: AlbumGridProps) {
-  const ORIGINAL_POS = [
-    { id: 1, x: 0, y: 10 },
-    { id: 2, x: 85, y: 10 },
-    { id: 3, x: 175, y: 10 },
-    { id: 4, x: 265, y: 10 },
-    { id: 5, x: 0, y: 102 },
-    { id: 6, x: 85, y: 102 },
-    { id: 7, x: 175, y: 102 },
-    { id: 8, x: 265, y: 102 },
-    { id: 9, x: 0, y: 200 },
-    { id: 10, x: 265, y: 200 },
-    { id: 11, x: 0, y: 290 },
-    { id: 12, x: 265, y: 290 },
-  ];
-
-  // align pocket/hat coords to existing ORIGINAL_POS entries so they render
-  const POCKET_COORD = { x: 175, y: 102 };
-  const HAT_COORD = { x: 0, y: 200 };
-  const POCKET_OFFSET = { x: -8, y: 0 };
-  const GLOBAL_DOWN_PX = 0; // removed top margin
-  const GLOBAL_LEFT_PX = -16; // shift everything 8px left
-  const coverOffsetPx = 6;
+  // Calculate responsive gaps
+  // 390px 기준: 나머지 열 10px, 첫 번째 열 22px
+  const horizontalGap =
+    screenWidth >= 390 ? 10 : Math.max(5, 10 - (390 - screenWidth) * 0.05);
+  const firstRowGap =
+    screenWidth >= 390 ? 22 : Math.max(15, 22 - (390 - screenWidth) * 0.07);
+  const sideMargin =
+    screenWidth >= 390 ? 14 : Math.max(7, 14 - (390 - screenWidth) * 0.08);
 
   return (
     <div ref={shelfWrapperRef} className="relative mb-8 inline-block">
@@ -59,158 +39,124 @@ export function AlbumGrid({
         alt="shelf"
       />
 
-      {getAdjustedPositions().map((orig) => {
-        const id = orig.id;
+      {/* First row with 2 items - separate grid */}
+      <div
+        className="absolute left-0 w-full"
+        style={{
+          top: "13px",
+          display: "grid",
+          gridTemplateColumns: `${sideMargin}px 60px ${firstRowGap}px 60px ${sideMargin}px`,
+          columnGap: "0",
+          rowGap: "0",
+          padding: "10px 15px",
+          justifyContent: "center",
+          marginLeft: "-3px",
+        }}
+      >
+        <div style={{ gridColumn: "1 / 2" }} />
 
-        // pocket
-        if (
-          ORIGINAL_POS.find((p) => p.id === id)?.x === POCKET_COORD.x &&
-          ORIGINAL_POS.find((p) => p.id === id)?.y === POCKET_COORD.y
-        ) {
+        {boardList.slice(0, 2).map((item, index) => {
+          const messageId = isSharedBoard
+            ? (item as SharedBoardMessage).messageId
+            : (item as BoardListItem).messageId;
+          const musicCoverUrl = isSharedBoard
+            ? (item as SharedBoardMessage).musicCoverUrl
+            : (item as BoardListItem).musicCoverUrl;
+
           return (
-            <div
-              key={`lucky-${id}`}
-              style={{
-                position: "absolute",
-                left:
-                  contentLeft +
-                  orig.x +
-                  shiftPx.x +
-                  POCKET_OFFSET.x -
-                  3 +
-                  GLOBAL_LEFT_PX,
-                top: orig.y + shiftPx.y + POCKET_OFFSET.y + GLOBAL_DOWN_PX,
-                width: 78,
-                height: 78,
-              }}
-            >
-              <LuckyPocketIcon style={{ width: "100%", height: "100%" }} />
-            </div>
-          );
-        }
-
-        // hat
-        if (
-          ORIGINAL_POS.find((p) => p.id === id)?.x === HAT_COORD.x &&
-          ORIGINAL_POS.find((p) => p.id === id)?.y === HAT_COORD.y
-        ) {
-          return (
-            <div
-              key={`hat-${id}`}
-              style={{
-                position: "absolute",
-                left: contentLeft + orig.x + shiftPx.x + GLOBAL_LEFT_PX,
-                top: orig.y + shiftPx.y + GLOBAL_DOWN_PX,
-                width: 68,
-                height: 100,
-              }}
-            >
-              <HatIcon style={{ width: "100%", height: "100%" }} />
-            </div>
-          );
-        }
-
-        // get item for this slot
-        const item = boardList[id - 1];
-
-        // if there is no item for this slot, render nothing
-        if (!item) return null;
-
-        return (
-          <div
-            key={`slot-${id}`}
-            style={{ position: "absolute", left: 0, top: 0 }}
-          >
-            <img
-              key={`placeholder-${id}`}
-              aria-hidden
-              onClick={() => {
-                if (!isSharedBoard) onAlbumClick(id);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  if (!isSharedBoard) onAlbumClick(id);
-                }
-              }}
-              alt=""
-              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-              style={{
-                position: "absolute",
-                left: contentLeft + orig.x + shiftPx.x + GLOBAL_LEFT_PX,
-                top: orig.y + shiftPx.y + GLOBAL_DOWN_PX,
-                width: 60,
-                height: 60,
-                zIndex: 10,
-                cursor: "pointer",
-                transition: "transform 120ms ease",
-                transform: "none",
-              }}
-            />
-
             <button
-              key={`cover-${id}`}
+              key={`album-${messageId}`}
               type="button"
-              aria-label={`album-cover-${id}`}
+              aria-label={`album-cover-${messageId}`}
               onClick={() => {
-                if (!isSharedBoard) onAlbumClick(id);
+                if (!isSharedBoard) onAlbumClick(index + 1);
               }}
               style={{
-                position: "absolute",
-                left:
-                  contentLeft +
-                  orig.x +
-                  shiftPx.x +
-                  coverOffsetPx +
-                  2 +
-                  GLOBAL_LEFT_PX,
-                top: orig.y + shiftPx.y + GLOBAL_DOWN_PX + coverOffsetPx,
-                width: 48,
-                height: 48,
+                gridColumn: index === 0 ? "2 / 3" : "4 / 5",
+                width: "60px",
+                height: "60px",
                 padding: 0,
                 border: "none",
                 background: "transparent",
-                zIndex: 20,
-                transition: "transform 120ms ease",
-                transform: "none",
                 cursor: "pointer",
+                transition: "transform 120ms ease",
               }}
+              className="hover:scale-105"
             >
-              {isSharedBoard
-                ? (() => {
-                    const sharedItem = item as SharedBoardMessage;
-                    return (
-                      <img
-                        src={sharedItem.musicCoverUrl}
-                        alt={`album-cover-${sharedItem.messageId}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                        }}
-                      />
-                    );
-                  })()
-                : (() => {
-                    const boardItem = item as BoardListItem;
-                    return (
-                      <img
-                        src={boardItem.musicCoverUrl}
-                        alt={`album-cover-${boardItem.messageId}`}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          display: "block",
-                        }}
-                      />
-                    );
-                  })()}
+              <img
+                src={musicCoverUrl}
+                alt={`album-cover-${messageId}`}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  objectFit: "cover",
+                  display: "block",
+                  borderRadius: "4px",
+                }}
+              />
             </button>
-          </div>
-        );
-      })}
+          );
+        })}
+
+        <div style={{ gridColumn: "5 / 6" }} />
+      </div>
+
+      {/* Rows 2-4 with 3 items each - separate grid */}
+      <div
+        className="absolute left-0 w-full"
+        style={{
+          top: "calc(13px + 60px + 25px)",
+          display: "grid",
+          gridTemplateColumns: "60px 60px 60px",
+          columnGap: `${horizontalGap}px`,
+          rowGap: "25px",
+          padding: "10px 15px",
+          justifyContent: "center",
+          marginLeft: "-3px",
+        }}
+      >
+        {boardList.slice(2, 11).map((item, index) => {
+          const messageId = isSharedBoard
+            ? (item as SharedBoardMessage).messageId
+            : (item as BoardListItem).messageId;
+          const musicCoverUrl = isSharedBoard
+            ? (item as SharedBoardMessage).musicCoverUrl
+            : (item as BoardListItem).musicCoverUrl;
+
+          return (
+            <button
+              key={`album-${messageId}`}
+              type="button"
+              aria-label={`album-cover-${messageId}`}
+              onClick={() => {
+                if (!isSharedBoard) onAlbumClick(index + 3);
+              }}
+              style={{
+                width: "60px",
+                height: "60px",
+                padding: 0,
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                transition: "transform 120ms ease",
+              }}
+              className="hover:scale-105"
+            >
+              <img
+                src={musicCoverUrl}
+                alt={`album-cover-${messageId}`}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  objectFit: "cover",
+                  display: "block",
+                  borderRadius: "4px",
+                }}
+              />
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
