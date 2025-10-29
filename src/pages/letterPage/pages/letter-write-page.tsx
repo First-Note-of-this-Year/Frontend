@@ -29,16 +29,21 @@ export default function LetterWritePage() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(LOCALSTORAGE_KEY);
-      if (!stored) return;
       const parsed: Partial<import("@/types/message").MessageData> =
-        JSON.parse(stored);
-      if (parsed.senderName) setAuthorName(parsed.senderName);
+        stored ? JSON.parse(stored) : {};
+      if (isFirstTimeJoin || isJoinPage) {
+        setAuthorName("과거의 나");
+      } else if (parsed.senderName) {
+        setAuthorName(parsed.senderName);
+      }
+
+      // Load other draft parts (content, cover) regardless
       if (parsed.content) setLetterContent(parsed.content);
       if (parsed.musicCoverUrl) setMusicCoverUrl(parsed.musicCoverUrl);
     } catch (_e) {
       // ignore
     }
-  }, []);
+  }, [isFirstTimeJoin, isJoinPage]);
 
   useEffect(() => {
     const fetchBoardInfo = async () => {
@@ -59,6 +64,9 @@ export default function LetterWritePage() {
     authorName.trim() !== "" &&
     letterContent.length <= 50 &&
     authorName.length <= 18;
+
+  // lock author input when it's the default '과거의 나'
+  const isAuthorLocked = authorName === "과거의 나";
 
   const handleSendClick = () => {
     if (isFormValid) {
@@ -225,13 +233,19 @@ export default function LetterWritePage() {
               }}
               placeholder="작성자"
               value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
+              onChange={(e) => {
+                if (isAuthorLocked) return;
+                setAuthorName(e.target.value);
+              }}
+              readOnly={isAuthorLocked}
+              aria-readonly={isAuthorLocked}
               aria-label="작성자"
               name="authorName"
               autoComplete="name"
               required
               maxLength={18}
               onInput={(e) => {
+                if (isAuthorLocked) return;
                 const target = e.target as HTMLInputElement;
                 const canvas = document.createElement("canvas");
                 const context = canvas.getContext("2d");
