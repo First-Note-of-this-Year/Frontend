@@ -2,8 +2,8 @@ export interface MessageData {
   shareUri: string;
   senderName: string;
   content: string;
-  musicTitle: string;
+  songTitle: string;
   artist: string;
-  musicCoverUrl: string;
-  musicUrl: string;
+  albumImageUrl: string;
+  songUrl: string;
 }

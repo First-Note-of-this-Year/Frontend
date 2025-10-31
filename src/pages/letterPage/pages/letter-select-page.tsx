@@ -57,10 +57,10 @@ export default function LetterSelectPage({
       const mapped: Music = {
         // mapping from localStorage data structure
         musicId: (parsed.musicId as string) ?? "",
-        musicTitle: (parsed.musicTitle as string) ?? "",
+        musicTitle: (parsed.songTitle as string) ?? "",
         artist: (parsed.artist as string) ?? "",
-        musicCoverUrl: (parsed.musicCoverUrl as string) ?? "",
-        musicUrl: (parsed.musicUrl as string) ?? "",
+        musicCoverUrl: (parsed.albumImageUrl as string) ?? "",
+        musicUrl: (parsed.songUrl as string) ?? "",
         prestreamingUrl: (parsed.prestreamingUrl as string) ?? "",
       };
 

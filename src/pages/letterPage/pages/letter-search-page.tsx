@@ -207,10 +207,10 @@ function MusicSearchPage() {
                 shareUri: "",
                 senderName: "",
                 content: "",
-                musicTitle: selectedSong.song_title,
+                songTitle: selectedSong.song_title,
                 artist: selectedSong.artist,
-                musicCoverUrl: selectedSong.album_cover,
-                musicUrl: selectedSong.streaming_url,
+                albumImageUrl: selectedSong.album_cover,
+                songUrl: selectedSong.streaming_url,
               };
               try {
                 localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));

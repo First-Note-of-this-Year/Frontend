@@ -39,7 +39,7 @@ export default function LetterWritePage() {
 
       // Load other draft parts (content, cover) regardless
       if (parsed.content) setLetterContent(parsed.content);
-      if (parsed.musicCoverUrl) setMusicCoverUrl(parsed.musicCoverUrl);
+      if (parsed.albumImageUrl) setMusicCoverUrl(parsed.albumImageUrl);
     } catch (_e) {
       // ignore
     }
