@@ -12,7 +12,7 @@ import { NavigationButton } from "@/components/ui/navigation-button";
 import { SearchInput } from "@/components/ui/search-input";
 import { MusicList } from "@/pages/letterPage/components/music-list";
 import type { MessageData } from "@/types/message";
-import type { Music as ApiMusic, MusicChart } from "@/types/song";
+import type { Music } from "@/types/music";
 
 type ListSong = {
   id: string;
@@ -41,24 +41,13 @@ function MusicSearchPage() {
     setSelectedSongs((prev) => (prev.includes(songId) ? [] : [songId]));
   };
 
-  const mapChartToListSong = useCallback(
-    (chart: MusicChart): ListSong => ({
-      id: chart.musicId,
-      song_title: chart.musicName,
-      artist: chart.artist,
-      album_cover: chart.musicCoverUrl,
-      streaming_url: chart.musicUrl,
-    }),
-    []
-  );
-
-  const mapApiMusicToListSong = useCallback(
-    (s: ApiMusic): ListSong => ({
-      id: s.musicId,
-      song_title: s.musicTitle,
-      artist: s.artist,
-      album_cover: s.musicCoverUrl,
-      streaming_url: s.musicUrl || s.prestreamingUrl || "",
+  const mapMusicToListSong = useCallback(
+    (music: Music): ListSong => ({
+      id: music.musicId,
+      song_title: music.musicTitle,
+      artist: music.artist,
+      album_cover: music.musicCoverUrl,
+      streaming_url: music.musicUrl || music.prestreamingUrl || "",
     }),
     []
   );
@@ -82,7 +71,7 @@ function MusicSearchPage() {
           return;
         }
 
-        setRecommended((chartArray as MusicChart[]).map(mapChartToListSong));
+        setRecommended((chartArray as Music[]).map(mapMusicToListSong));
       } catch (e) {
         console.error("Failed to load popular charts:", e);
         setRecommended([]);
@@ -91,7 +80,7 @@ function MusicSearchPage() {
     return () => {
       mounted = false;
     };
-  }, [mapChartToListSong]);
+  }, [mapMusicToListSong]);
 
   const performSearch = async (query: string) => {
     const q = query.trim();
@@ -103,7 +92,7 @@ function MusicSearchPage() {
     setLoading(true);
     try {
       const songs = await getSearchedSongs(q);
-      setResults(songs.map(mapApiMusicToListSong));
+      setResults(songs.map(mapMusicToListSong));
     } catch (_e) {
       setResults([]);
     } finally {

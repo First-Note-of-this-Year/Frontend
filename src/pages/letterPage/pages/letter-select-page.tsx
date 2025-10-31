@@ -4,7 +4,7 @@ import { getBoardInfo } from "@/apis/board";
 import PlayIcon from "@/assets/ic_play.svg?react";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
-import type { Music } from "@/types/song";
+import type { Music } from "@/types/music";
 import LetterStep from "../components/letter-step";
 
 interface LetterSelectPageProps {
