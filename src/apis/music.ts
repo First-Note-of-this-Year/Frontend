@@ -1,45 +1,46 @@
 import { API_ENDPOINTS } from "@/apis/config/endpoints";
 import { apiGet } from "@/lib/api";
-import type { Music, MusicChart } from "@/types/song";
+import type { Music } from "@/types/music";
+import type {
+  MusicSearchData,
+  PopularChartApiResponse,
+} from "@/apis/types/music";
+import type { ApiResponse } from "@/types/api";
 
-// API 응답의 가능한 구조 정의
-interface MusicSearchResponse {
-  data?:
-    | {
-        searchResult?: Music[];
-      }
-    | Music[];
-  items?: Music[];
-}
+export const getPopularMusicCharts = async (): Promise<Music[]> => {
+  const response = await apiGet<ApiResponse<PopularChartApiResponse[]>>(
+    API_ENDPOINTS.MUSIC.POPULAR_CHART
+  );
 
-export const getPopularMusicCharts = async (): Promise<MusicChart[]> => {
-  const data = await apiGet<MusicChart[]>(API_ENDPOINTS.MUSIC.POPULAR_CHART);
-  return data;
+  if (response?.data) {
+    return response.data.map((item) => ({
+      musicId: item.musicId,
+      musicTitle: item.songName,
+      artist: item.artist,
+      musicCoverUrl: item.albumImageUrl,
+      musicUrl: item.songUrl,
+      score: item.score,
+    }));
+  }
+  return [];
 };
 
 export const getSearchedSongs = async (query?: string): Promise<Music[]> => {
   const params = query ? { keyword: query } : undefined;
-  const data = await apiGet<
-    Music[] | MusicSearchResponse,
-    { keyword?: string }
-  >(API_ENDPOINTS.MUSIC.SEARCH, params);
+  const response = await apiGet<ApiResponse<MusicSearchData>, { keyword?: string }>(
+    API_ENDPOINTS.MUSIC.SEARCH,
+    params
+  );
 
-  if (Array.isArray(data)) return data;
-
-  const response = data as MusicSearchResponse;
-
-  // 중첩된 응답 구조 처리
-  const musicArray =
-    (Array.isArray(response.data) ? response.data : null) ??
-    (response.data && !Array.isArray(response.data)
-      ? response.data.searchResult
-      : null) ??
-    response.items;
-
-  if (!musicArray) {
-    console.warn("Unexpected API response structure:", data);
-    return [];
+  if (response?.data?.searchResult) {
+    return response.data.searchResult.map((item) => ({
+      musicId: item.prestreamingUrl || `${item.songTitle}-${item.artist}`,
+      musicTitle: item.songTitle,
+      artist: item.artist,
+      musicCoverUrl: item.coverImage,
+      musicUrl: item.prestreamingUrl,
+      prestreamingUrl: item.prestreamingUrl,
+    }));
   }
-
-  return musicArray;
+  return [];
 };
