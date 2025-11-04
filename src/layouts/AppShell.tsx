@@ -31,7 +31,7 @@ export default function AppShell({ children }: PropsWithChildren) {
     <div
       className={`h-dvh overflow-hidden ${isLetterSearch ? "bg-white text-black" : pathname === "/" ? "bg-[#212E5A] text-white" : "bg-[#412716] text-white"}`}
     >
-    {/* 새해 카운트다운 랜딩일 때 배경
+      {/* 새해 카운트다운 랜딩일 때 배경
     style={
         pathname === "/"
           ? {

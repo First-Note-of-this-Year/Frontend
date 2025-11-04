@@ -41,7 +41,10 @@ function LoginPage() {
         className="relative flex min-h-screen flex-col"
         style={{ minHeight: "100dvh" }}
       >
-        <div className="flex justify-center" style={{ marginTop: `${logoTop}px` }}>
+        <div
+          className="flex justify-center"
+          style={{ marginTop: `${logoTop}px` }}
+        >
           <LogoNewYearIcon />
         </div>
 

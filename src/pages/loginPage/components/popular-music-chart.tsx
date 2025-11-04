@@ -9,7 +9,9 @@ interface PopularMusicChartProps {
   chartMarginBottom: number;
 }
 
-export function PopularMusicChart({ chartMarginBottom }: PopularMusicChartProps) {
+export function PopularMusicChart({
+  chartMarginBottom,
+}: PopularMusicChartProps) {
   const [musicCharts, setMusicCharts] = useState<Music[]>([]);
   const [loading, setLoading] = useState(false);
   const [playingMusicId, setPlayingMusicId] = useState<string | null>(null);

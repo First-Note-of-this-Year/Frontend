@@ -5,7 +5,6 @@ import bgPaperLP from "@/assets/bg_paper_lp.webp";
 import { ROUTES } from "@/constants/routes";
 //import bgLandingNewYear from "@/assets/bg_landing_newyear.webp";
 
-
 export const routeBg: Record<string, string> = {
   [ROUTES.HOME]: bgLanding,
   [ROUTES.JOIN.NICKNAME]: bgPaper,
