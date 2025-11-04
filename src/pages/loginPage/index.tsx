@@ -1,9 +1,31 @@
+import { useState } from "react";
 import LogoIcon from "@/assets/ic_logo.svg?react";
+import LogoNewYearIcon from "@/assets/ic_logo_newyear.svg?react";
 import StarIcon from "@/assets/ic_star.svg?react";
 import { DDayCounter } from "@/pages/loginPage/components/dday-counter";
 import { KakaoLoginButton } from "@/pages/loginPage/components/kakao-login-button";
+import { PopularMusicChart } from "@/pages/loginPage/components/popular-music-chart";
 
 function LoginPage() {
+  const [isNewYear, setIsNewYear] = useState(true);
+
+  // 화면 높이 가져오기
+  const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
+  const rawRatio = screenHeight / 850;
+  const heightRatio = Math.max(0.3, Math.min(1, rawRatio * rawRatio));
+
+  // 각 요소의 기준 값
+  const baseLogoTop = 33;
+  const baseChartMarginBottom = 26;
+  const baseCounterTop = 230;
+  const baseHappyNewYearTop = 170;
+
+  // 비율에 따라 조정된 값
+  const logoTop = baseLogoTop * heightRatio;
+  const chartMarginBottom = baseChartMarginBottom * heightRatio;
+  const counterTop = baseCounterTop * heightRatio;
+  const happyNewYearTop = baseHappyNewYearTop * heightRatio;
+
   const handleKakaoLogin = () => {
     try {
       window.location.href = `${import.meta.env.VITE_SERVER_URL}/oauth2/authorization/kakao`;
@@ -12,6 +34,48 @@ function LoginPage() {
       alert("로그인 처리 중 오류가 발생했습니다.");
     }
   };
+
+  if (isNewYear) {
+    return (
+      <div
+        className="relative flex min-h-screen flex-col"
+        style={{ minHeight: "100dvh" }}
+      >
+        <div className="flex justify-center" style={{ marginTop: `${logoTop}px` }}>
+          <LogoNewYearIcon />
+        </div>
+
+        {/* Happy New Year 텍스트 */}
+        <div
+          className="-translate-x-1/2 absolute left-1/2"
+          style={{ top: `${happyNewYearTop}px` }}
+        >
+          <span className="whitespace-nowrap font-bold font-year text-[44px] text-gray-100">
+            Happy New Year
+          </span>
+        </div>
+
+        {/* 카운터 */}
+        <div
+          className="-translate-x-1/2 absolute left-1/2 flex justify-center"
+          style={{ top: `${counterTop}px` }}
+        >
+          <span className="font-counter font-extrabold text-[74px] text-gray-100">
+            00:00:00
+          </span>
+        </div>
+
+        <div className="mt-auto flex flex-col items-center pb-10">
+          <PopularMusicChart chartMarginBottom={chartMarginBottom} />
+
+          {/* 카카오 로그인 버튼 */}
+          <div className="flex w-full justify-center">
+            <KakaoLoginButton onClick={handleKakaoLogin} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

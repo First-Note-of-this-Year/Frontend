@@ -151,9 +151,25 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Dongle';
+    src: url('/fonts/Dongle-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-display: block;
+}
+
+@font-face {
+  font-family: "Exo";
+  src: url('/fonts/Exo-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @theme {
   --font-primary: 'Cafe24Danjunghae', sans-serif;
   --font-letter: 'Joseon100Years', serif;
+  --font-year: 'Dongle', serif;
+  --font-counter: 'Exo', sans-serif;
 
   /* Custom Color System */
   --color-red-100: #8e2d2d;
