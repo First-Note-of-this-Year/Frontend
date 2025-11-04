@@ -7,7 +7,7 @@ import { KakaoLoginButton } from "@/pages/loginPage/components/kakao-login-butto
 import { PopularMusicChart } from "@/pages/loginPage/components/popular-music-chart";
 
 function LoginPage() {
-  const [isNewYear, setIsNewYear] = useState(true);
+  const [isNewYear] = useState(true);
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
