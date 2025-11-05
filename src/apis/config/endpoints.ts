@@ -11,6 +11,9 @@ export const API_ENDPOINTS = {
     LOGOUT: "/auth/logout",
   },
 
+  // 시간 관련
+  TIME: "/time",
+
   // 보드 관련
   BOARD: {
     LIST: "/board",

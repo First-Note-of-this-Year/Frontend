@@ -1,15 +1,29 @@
 import type { PropsWithChildren } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { routeBg } from "./backgrounds";
+import { useTimeStore } from "@/stores/useTimeStore";
+import { getNewYearBackground, routeBg } from "./backgrounds";
 
 export default function AppShell({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
+  const { isNewYear, fetchServerTime } = useTimeStore();
 
-  const bgUrl =
-    routeBg[pathname] ??
-    Object.entries(routeBg).find(
-      ([key]) => key !== "/" && pathname.startsWith(key)
-    )?.[1];
+  // 서버 시간 가져오기
+  useEffect(() => {
+    fetchServerTime();
+  }, [fetchServerTime]);
+
+  // 새해 기간이면 새해 배경, 아니면 기본 배경
+  const bgUrl = isNewYear
+    ? (getNewYearBackground(pathname) ??
+      routeBg[pathname] ??
+      Object.entries(routeBg).find(
+        ([key]) => key !== "/" && pathname.startsWith(key)
+      )?.[1])
+    : (routeBg[pathname] ??
+      Object.entries(routeBg).find(
+        ([key]) => key !== "/" && pathname.startsWith(key)
+      )?.[1]);
 
   const isLetterSearch =
     pathname === "/letter/search" ||
@@ -30,15 +44,15 @@ export default function AppShell({ children }: PropsWithChildren) {
   return (
     <div
       className={`h-dvh overflow-hidden ${isLetterSearch ? "bg-white text-black" : pathname === "/" ? "bg-[#212E5A] text-white" : "bg-[#412716] text-white"}`}
-    >
-      {/* 새해 카운트다운 랜딩일 때 배경
-    style={
-        pathname === "/"
+      style={
+        pathname === "/" && isNewYear
           ? {
-              background: "linear-gradient(to bottom, #9C6A65 0%, #65659C 100%)",
+              background:
+                "linear-gradient(to bottom, #9C6A65 0%, #65659C 100%)",
             }
           : undefined
-      } */}
+      }
+    >
       <main
         className={`relative mx-auto h-full w-full max-w-[450px] bg-center bg-cover bg-no-repeat ${shouldRemovePadding ? "" : "p-4"}`}
         style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : undefined}
