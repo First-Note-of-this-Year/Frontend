@@ -29,8 +29,9 @@ export default function LetterWritePage() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(LOCALSTORAGE_KEY);
-      const parsed: Partial<import("@/types/message").MessageData> =
-        stored ? JSON.parse(stored) : {};
+      const parsed: Partial<import("@/types/message").MessageData> = stored
+        ? JSON.parse(stored)
+        : {};
       if (isFirstTimeJoin || isJoinPage) {
         setAuthorName("과거의 나");
       } else if (parsed.senderName) {

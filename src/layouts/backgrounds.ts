@@ -3,6 +3,7 @@ import bgLanding from "@/assets/bg_landing.webp";
 import bgPaper from "@/assets/bg_paper.webp";
 import bgPaperLP from "@/assets/bg_paper_lp.webp";
 import { ROUTES } from "@/constants/routes";
+//import bgLandingNewYear from "@/assets/bg_landing_newyear.webp";
 
 export const routeBg: Record<string, string> = {
   [ROUTES.HOME]: bgLanding,

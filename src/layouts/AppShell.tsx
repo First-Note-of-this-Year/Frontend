@@ -31,6 +31,14 @@ export default function AppShell({ children }: PropsWithChildren) {
     <div
       className={`h-dvh overflow-hidden ${isLetterSearch ? "bg-white text-black" : pathname === "/" ? "bg-[#212E5A] text-white" : "bg-[#412716] text-white"}`}
     >
+      {/* 새해 카운트다운 랜딩일 때 배경
+    style={
+        pathname === "/"
+          ? {
+              background: "linear-gradient(to bottom, #9C6A65 0%, #65659C 100%)",
+            }
+          : undefined
+      } */}
       <main
         className={`relative mx-auto h-full w-full max-w-[450px] bg-center bg-cover bg-no-repeat ${shouldRemovePadding ? "" : "p-4"}`}
         style={bgUrl ? { backgroundImage: `url(${bgUrl})` } : undefined}
