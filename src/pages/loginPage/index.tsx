@@ -1,13 +1,14 @@
-import { useState } from "react";
 import LogoIcon from "@/assets/ic_logo.svg?react";
 import LogoNewYearIcon from "@/assets/ic_logo_newyear.svg?react";
 import StarIcon from "@/assets/ic_star.svg?react";
 import { DDayCounter } from "@/pages/loginPage/components/dday-counter";
 import { KakaoLoginButton } from "@/pages/loginPage/components/kakao-login-button";
+import { NewYearCountdown } from "@/pages/loginPage/components/new-year-countdown";
 import { PopularMusicChart } from "@/pages/loginPage/components/popular-music-chart";
+import { useTimeStore } from "@/stores/useTimeStore";
 
 function LoginPage() {
-  const [isNewYear] = useState(false);
+  const { isNewYear } = useTimeStore();
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -63,9 +64,7 @@ function LoginPage() {
           className="-translate-x-1/2 absolute left-1/2 flex justify-center"
           style={{ top: `${counterTop}px` }}
         >
-          <span className="font-counter font-extrabold text-[74px] text-gray-100">
-            00:00:00
-          </span>
+          <NewYearCountdown />
         </div>
 
         <div className="mt-auto flex flex-col items-center pb-10">

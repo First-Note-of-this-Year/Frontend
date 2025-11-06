@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import bgbottom from "@/assets/bg_bottom.webp";
+import GarlandIcon from "@/assets/bg_garland.svg?react";
 import drawerIcon from "@/assets/ic_drawer.webp";
 import HatIcon from "@/assets/ic_hat.svg?react";
 import LpNormalIcon from "@/assets/ic_lp_normal.svg?react";
 import LpPlayingIcon from "@/assets/ic_lp_playing.svg?react";
 import windowIcon from "@/assets/ic_window_normal.webp";
+import windowNewYearIcon from "@/assets/ic_window_newyear.webp";
 import { Sidebar } from "@/components/ui/sidebar";
+import { useTimeStore } from "@/stores/useTimeStore";
 import { AlbumGrid } from "./components/album-grid";
 import { BoardHeader } from "./components/board-header";
 import { BottomNavigation } from "./components/bottom-navigation";
@@ -20,6 +23,7 @@ function BoardPage() {
   const { shareUri } = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLpPlaying, setIsLpPlaying] = useState(false);
+  const { isNewYear } = useTimeStore();
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -73,6 +77,27 @@ function BoardPage() {
         paddingBottom: 0,
       }}
     >
+      {/* Garland Icon - 200px clipped, centered at top (New Year only) */}
+      {isNewYear && (
+        <div
+          className="pointer-events-none fixed z-30"
+          style={{
+            top: 0,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "100vw",
+            maxWidth: "450px",
+            overflow: "hidden",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ marginTop: -200, marginLeft: -100, width: "fit-content" }}>
+            <GarlandIcon />
+          </div>
+        </div>
+      )}
+
       {/* Window Icon - 79px clipped on right, positioned at top */}
       <div
         className="pointer-events-none fixed z-10"
@@ -84,7 +109,7 @@ function BoardPage() {
         }}
       >
         <div style={{ marginRight: -79 }}>
-          <img src={windowIcon} alt="" aria-hidden />
+          <img src={isNewYear ? windowNewYearIcon : windowIcon} alt="" aria-hidden />
         </div>
       </div>
 
