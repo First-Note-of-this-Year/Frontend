@@ -1,6 +1,7 @@
 import BoardNoteIcon from "@/assets/ic_board_note.svg?react";
 import HamburgerIcon from "@/assets/ic_hamburger.svg?react";
 import HeaderIcon from "@/assets/ic_header_logo.svg?react";
+import { useTimeStore } from "@/stores/useTimeStore";
 
 interface TimeRemaining {
   d: number;
@@ -26,6 +27,8 @@ export function BoardHeader({
   screenWidth,
   onMenuClick,
 }: BoardHeaderProps) {
+  const { isNewYear } = useTimeStore();
+
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
   const rawRatio = screenHeight / 850;
@@ -80,7 +83,7 @@ export function BoardHeader({
         <HamburgerIcon />
       </button>
 
-      {/* Countdown Timer */}
+      {/* Countdown Timer / Happy New Year */}
       <div
         style={{
           position: "fixed",
@@ -90,9 +93,15 @@ export function BoardHeader({
           zIndex: 40,
         }}
       >
-        <span className="text-[12px] text-brown-200">
-          {`${timeRemaining.d} D ${timeRemaining.h} H ${timeRemaining.m} M ${timeRemaining.s} S`}
-        </span>
+        {isNewYear ? (
+          <span className="font-normal font-year text-[24px] text-brown-200">
+            HAPPY NEW YEAR
+          </span>
+        ) : (
+          <span className="text-[12px] text-brown-200">
+            {`${timeRemaining.d} D ${timeRemaining.h} H ${timeRemaining.m} M ${timeRemaining.s} S`}
+          </span>
+        )}
       </div>
 
       {/* Board Title and Count */}

@@ -4,6 +4,15 @@ import { useLocation } from "react-router-dom";
 import { useTimeStore } from "@/stores/useTimeStore";
 import { getNewYearBackground, routeBg } from "./backgrounds";
 
+const getRouteBackground = (pathname: string) => {
+  return (
+    routeBg[pathname] ??
+    Object.entries(routeBg).find(
+      ([key]) => key !== "/" && pathname.startsWith(key)
+    )?.[1]
+  );
+};
+
 export default function AppShell({ children }: PropsWithChildren) {
   const { pathname } = useLocation();
   const { isNewYear, fetchServerTime } = useTimeStore();
@@ -15,15 +24,8 @@ export default function AppShell({ children }: PropsWithChildren) {
 
   // 새해 기간이면 새해 배경, 아니면 기본 배경
   const bgUrl = isNewYear
-    ? (getNewYearBackground(pathname) ??
-      routeBg[pathname] ??
-      Object.entries(routeBg).find(
-        ([key]) => key !== "/" && pathname.startsWith(key)
-      )?.[1])
-    : (routeBg[pathname] ??
-      Object.entries(routeBg).find(
-        ([key]) => key !== "/" && pathname.startsWith(key)
-      )?.[1]);
+    ? getNewYearBackground(pathname) ?? getRouteBackground(pathname)
+    : getRouteBackground(pathname);
 
   const isLetterSearch =
     pathname === "/letter/search" ||
