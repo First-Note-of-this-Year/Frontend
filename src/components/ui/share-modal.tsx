@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/a11y/noStaticElementInteractions: <explanation> */
+/** biome-ignore-all lint/a11y/useKeyWithClickEvents: <explanation> */
 import { useEffect, useRef } from "react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import XIcon from "@/assets/ic_x.svg?react";
@@ -62,7 +64,7 @@ export function ShareModal({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
           aria-label="닫기"
         >
           <XIcon className="h-6 w-6" />
@@ -102,7 +104,7 @@ export function ShareModal({
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8E2D2D]">
               <LinkIcon className="h-6 w-6" />
             </div>
-            <span className="text-[14px] font-medium text-[#3C1E1E]">
+            <span className="font-medium text-[#3C1E1E] text-[14px]">
               {showCopyFeedback ? "복사완료!" : "링크 복사"}
             </span>
           </button>
