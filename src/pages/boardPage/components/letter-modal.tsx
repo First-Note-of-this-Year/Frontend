@@ -199,12 +199,28 @@ export function LetterModal({
 
       <div className="mx-auto flex w-60 flex-col gap-4">
         <div className="flex flex-row gap-2">
-          <div className="flex flex-1 flex-row items-center gap-1 rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
-            <p className="text-base text-white">
-              {messageDetail?.songTitle ?? "곡 제목"}
-            </p>
-            <p className="text-gray-500 text-xs">
-              {messageDetail?.artist ?? "가수"}
+          <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <div className="inline-flex animate-marquee whitespace-nowrap text-base text-white">
+                <span className="inline-block px-2">
+                  {messageDetail?.songTitle ?? "곡 제목"}
+                </span>
+                <span className="inline-block px-2">
+                  {messageDetail?.songTitle ?? "곡 제목"}
+                </span>
+                <span className="inline-block px-2">
+                  {messageDetail?.songTitle ?? "곡 제목"}
+                </span>
+                <span className="inline-block px-2">
+                  {messageDetail?.songTitle ?? "곡 제목"}
+                </span>
+              </div>
+            </div>
+
+            <p className="whitespace-nowrap text-gray-500 text-xs">
+              {messageDetail?.artist && messageDetail.artist.length > 4
+                ? `${messageDetail.artist.slice(0, 4)}...`
+                : (messageDetail?.artist ?? "가수")}
             </p>
           </div>
 
