@@ -20,6 +20,8 @@ type ListSong = {
   artist: string;
   album_cover: string;
   streaming_url: string;
+  itunesUrl?: string;
+  youtubeUrl?: string;
 };
 
 function MusicSearchPage() {
@@ -48,6 +50,8 @@ function MusicSearchPage() {
       artist: music.artist,
       album_cover: music.coverImage,
       streaming_url: music.songUrl || music.itunesUrl || "",
+      itunesUrl: music.itunesUrl,
+      youtubeUrl: music.youtubeUrl,
     }),
     []
   );
@@ -211,6 +215,9 @@ function MusicSearchPage() {
                 artist: selectedSong.artist,
                 coverImage: selectedSong.album_cover,
                 songUrl: selectedSong.streaming_url,
+                itunesUrl: selectedSong.itunesUrl || "",
+                youtubeUrl: selectedSong.youtubeUrl || "",
+                mine: isJoinPage || isFirstTimeJoin,
               };
               try {
                 localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));

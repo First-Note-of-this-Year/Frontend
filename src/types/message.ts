@@ -6,7 +6,7 @@ export interface MessageData {
   artist: string;
   coverImage: string;
   songUrl: string;
-  itunesUrl?: string;
-  youtubeUrl?: string;
+  itunesUrl: string;
+  youtubeUrl: string;
   mine?: boolean;
 }
