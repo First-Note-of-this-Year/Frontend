@@ -20,7 +20,7 @@ export function useBoardData(shareUri?: string) {
 
   const { data: sharedBoardData } = useQuery({
     queryKey: ["sharedBoard", shareUri, currentPage],
-    queryFn: () => getSharedBoard(shareUri ?? "", currentPage, 11),
+    queryFn: () => getSharedBoard(shareUri ?? "", currentPage),
     enabled: isSharedBoard && Boolean(shareUri),
   });
 
@@ -66,7 +66,7 @@ export function useBoardData(shareUri?: string) {
   // fetch current user's board list (paginated) when not viewing a shared board
   const { data: currentUserBoardList } = useQuery({
     queryKey: ["currentUserBoardList", currentPage],
-    queryFn: () => getBoardList(currentPage, 11, "desc"),
+    queryFn: () => getBoardList(currentPage),
     enabled: !isSharedBoard,
   });
 
@@ -81,21 +81,93 @@ export function useBoardData(shareUri?: string) {
   useEffect(() => {
     // handle shared board data
     if (isSharedBoard && sharedBoardData?.data) {
-      setBoardList(sharedBoardData.data.content ?? []);
+      let contentList = sharedBoardData.data.content ?? [];
+      
+      // 1페이지일 때 6번째 위치(인덱스 5)에 더미 아이템 삽입 (개발자 코멘트용)
+      if (currentPage === 0) {
+        const dummyItem: SharedBoardMessage = {
+          messageId: "developer-comment-placeholder",
+          musicId: "",
+          coverImage: "",
+        };
+        
+        // 메시지가 5개 미만이면 빈 공간을 채워서 6번째 위치에 하트가 오도록 함
+        if (contentList.length < 5) {
+          // 5개가 될 때까지 빈 아이템 추가
+          const emptyItemsNeeded = 5 - contentList.length;
+          const emptyItems: SharedBoardMessage[] = Array(emptyItemsNeeded).fill(null).map((_, i) => ({
+            messageId: `empty-${i}`,
+            musicId: "",
+            coverImage: "",
+          }));
+          contentList = [...contentList, ...emptyItems];
+        }
+        
+        // 6번째 위치(인덱스 5)에 하트 삽입
+        contentList = [
+          ...contentList.slice(0, 5),
+          dummyItem,
+          ...contentList.slice(5),
+        ];
+      }
+      
+      setBoardList(contentList);
       setTotalPages(sharedBoardData.data.totalPages ?? 1);
       setBoardTotalElements(sharedBoardData.data.totalElements ?? 0);
     }
-  }, [isSharedBoard, sharedBoardData]);
+  }, [isSharedBoard, sharedBoardData, currentPage]);
 
   useEffect(() => {
     // handle current user board data
     if (!isSharedBoard && currentUserBoardList) {
       const data = currentUserBoardList.data;
-      setBoardList(data.content ?? []);
+      let contentList = data.content ?? [];
+      
+      // 1페이지일 때 6번째 위치(인덱스 5)에 더미 아이템 삽입 (개발자 코멘트용)
+      if (currentPage === 0) {
+        const dummyItem: BoardListItem = {
+          messageId: "developer-comment-placeholder",
+          sender: "",
+          content: "",
+          musicId: "",
+          songTitle: "",
+          artist: "",
+          coverImage: "",
+          songUrl: "",
+          read: true,
+        };
+        
+        // 메시지가 5개 미만이면 빈 공간을 채워서 6번째 위치에 하트가 오도록 함
+        if (contentList.length < 5) {
+          // 5개가 될 때까지 빈 아이템 추가
+          const emptyItemsNeeded = 5 - contentList.length;
+          const emptyItems: BoardListItem[] = Array(emptyItemsNeeded).fill(null).map((_, i) => ({
+            messageId: `empty-${i}`,
+            sender: "",
+            content: "",
+            musicId: "",
+            songTitle: "",
+            artist: "",
+            coverImage: "",
+            songUrl: "",
+            read: true,
+          }));
+          contentList = [...contentList, ...emptyItems];
+        }
+        
+        // 6번째 위치(인덱스 5)에 하트 삽입
+        contentList = [
+          ...contentList.slice(0, 5),
+          dummyItem,
+          ...contentList.slice(5),
+        ];
+      }
+      
+      setBoardList(contentList);
       setBoardTotalElements(data.totalElements ?? data.content?.length ?? 0);
       setTotalPages(data.totalPages ?? 1);
     }
-  }, [isSharedBoard, currentUserBoardList]);
+  }, [isSharedBoard, currentUserBoardList, currentPage]);
 
   return {
     currentPage,
