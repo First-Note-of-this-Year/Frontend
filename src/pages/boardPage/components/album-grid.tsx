@@ -59,9 +59,9 @@ export function AlbumGrid({
           const messageId = isSharedBoard
             ? (item as SharedBoardMessage).messageId
             : (item as BoardListItem).messageId;
-          const musicCoverUrl = isSharedBoard
-            ? (item as SharedBoardMessage).musicCoverUrl
-            : (item as BoardListItem).musicCoverUrl;
+          const coverImage = isSharedBoard
+            ? (item as SharedBoardMessage).coverImage
+            : (item as BoardListItem).coverImage;
 
           return (
             <button
@@ -84,7 +84,7 @@ export function AlbumGrid({
               className="hover:scale-105"
             >
               <img
-                src={musicCoverUrl}
+                src={coverImage}
                 alt={`album-cover-${messageId}`}
                 style={{
                   width: "60px",
@@ -119,9 +119,9 @@ export function AlbumGrid({
           const messageId = isSharedBoard
             ? (item as SharedBoardMessage).messageId
             : (item as BoardListItem).messageId;
-          const musicCoverUrl = isSharedBoard
-            ? (item as SharedBoardMessage).musicCoverUrl
-            : (item as BoardListItem).musicCoverUrl;
+          const coverImage = isSharedBoard
+            ? (item as SharedBoardMessage).coverImage
+            : (item as BoardListItem).coverImage;
 
           return (
             <button
@@ -143,7 +143,7 @@ export function AlbumGrid({
               className="hover:scale-105"
             >
               <img
-                src={musicCoverUrl}
+                src={coverImage}
                 alt={`album-cover-${messageId}`}
                 style={{
                   width: "60px",

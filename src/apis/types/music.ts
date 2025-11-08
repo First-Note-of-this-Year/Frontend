@@ -2,16 +2,18 @@ export interface MusicSearchApiResponse {
   songTitle: string;
   artist: string;
   coverImage: string;
-  prestreamingUrl: string;
+  itunesUrl: string;
+  youtubeUrl: string;
 }
 
 export interface PopularChartApiResponse {
   musicId: string;
-  songName: string;
+  songTitle: string;
   artist: string;
-  albumImageUrl: string;
+  coverImage: string;
   songUrl: string;
   score: number;
+  itunesUrl: string;
 }
 
 export interface MusicSearchData {

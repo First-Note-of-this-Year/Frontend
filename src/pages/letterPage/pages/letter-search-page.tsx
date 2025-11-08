@@ -44,10 +44,10 @@ function MusicSearchPage() {
   const mapMusicToListSong = useCallback(
     (music: Music): ListSong => ({
       id: music.musicId,
-      song_title: music.musicTitle,
+      song_title: music.songTitle,
       artist: music.artist,
-      album_cover: music.musicCoverUrl,
-      streaming_url: music.musicUrl || music.prestreamingUrl || "",
+      album_cover: music.coverImage,
+      streaming_url: music.songUrl || music.itunesUrl || "",
     }),
     []
   );
@@ -205,11 +205,11 @@ function MusicSearchPage() {
               if (!selectedSong) return;
               const draft: Partial<MessageData> = {
                 shareUri: "",
-                senderName: "",
+                sender: "",
                 content: "",
                 songTitle: selectedSong.song_title,
                 artist: selectedSong.artist,
-                albumImageUrl: selectedSong.album_cover,
+                coverImage: selectedSong.album_cover,
                 songUrl: selectedSong.streaming_url,
               };
               try {

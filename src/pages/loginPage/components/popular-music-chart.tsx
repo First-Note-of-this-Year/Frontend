@@ -86,8 +86,8 @@ export function PopularMusicChart({
             >
               {/* 앨범 커버 */}
               <img
-                src={music.musicCoverUrl}
-                alt={music.musicTitle}
+                src={music.coverImage}
+                alt={music.songTitle}
                 style={{
                   width: "57px",
                   height: "57px",
@@ -120,7 +120,7 @@ export function PopularMusicChart({
                     textOverflow: "ellipsis",
                   }}
                 >
-                  {music.musicTitle}
+                  {music.songTitle}
                 </p>
                 <p
                   style={{

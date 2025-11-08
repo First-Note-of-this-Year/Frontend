@@ -51,9 +51,9 @@ export function useLetterModal(
         if (!mounted) return;
         setMessageDetail(res.data ?? null);
 
-        // Start playing music if musicUrl is available
-        if (res.data?.musicUrl) {
-          playAudio(res.data.musicUrl).catch((error) => {
+        // Start playing music if songUrl is available
+        if (res.data?.songUrl) {
+          playAudio(res.data.songUrl).catch((error) => {
             console.error("Failed to start audio playback:", error);
           });
         }

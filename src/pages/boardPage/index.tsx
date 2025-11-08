@@ -90,7 +90,7 @@ function BoardPage() {
 
       <BoardHeader
         ownerNickname={ownerNickname}
-        messageCount={
+        messagesCount={
           boardInfoQuery?.data?.data?.messageCount ??
           (isSharedBoard
             ? sharedBoardData?.data?.totalElements

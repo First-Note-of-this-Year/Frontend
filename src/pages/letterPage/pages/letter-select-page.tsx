@@ -31,7 +31,7 @@ export default function LetterSelectPage({
       if (!shareUri) return;
       try {
         const response = await getBoardInfo(shareUri);
-        setRecipientNickname(response.data.name);
+        setRecipientNickname(response.data.nickname);
       } catch (error) {
         console.error("Failed to fetch board info:", error);
       }
@@ -57,11 +57,12 @@ export default function LetterSelectPage({
       const mapped: Music = {
         // mapping from localStorage data structure
         musicId: (parsed.musicId as string) ?? "",
-        musicTitle: (parsed.songTitle as string) ?? "",
+        songTitle: (parsed.songTitle as string) ?? "",
         artist: (parsed.artist as string) ?? "",
-        musicCoverUrl: (parsed.albumImageUrl as string) ?? "",
-        musicUrl: (parsed.songUrl as string) ?? "",
-        prestreamingUrl: (parsed.prestreamingUrl as string) ?? "",
+        coverImage: (parsed.coverImage as string) ?? "",
+        songUrl: (parsed.songUrl as string) ?? "",
+        itunesUrl: (parsed.itunesUrl as string) ?? "",
+        youtubeUrl: (parsed.youtubeUrl as string) ?? "",
       };
 
       console.log("mapped music:", mapped); // 디버그용
@@ -123,11 +124,11 @@ export default function LetterSelectPage({
 
       <div className="mx-auto flex w-60 flex-col gap-4">
         <div className="relative flex h-60 w-60 items-center justify-center self-center rounded bg-white/10 backdrop-blur-md">
-          {displayedMusic?.musicCoverUrl ? (
+          {displayedMusic?.coverImage ? (
             <img
               aria-label="album-cover"
               className="h-52 w-52"
-              src={displayedMusic.musicCoverUrl}
+              src={displayedMusic.coverImage}
             />
           ) : (
             <div className="h-52 w-52 rounded bg-gray-500" />
@@ -137,7 +138,7 @@ export default function LetterSelectPage({
         <div className="flex flex-row gap-2">
           <div className="flex flex-1 flex-row items-center gap-1 rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
             <p className="text-base text-white">
-              {displayedMusic?.musicTitle || "곡 제목"}
+              {displayedMusic?.songTitle || "곡 제목"}
             </p>
             <p className="text-gray-500 text-xs">
               {displayedMusic?.artist || "가수"}
@@ -153,11 +154,11 @@ export default function LetterSelectPage({
         </div>
       </div>
 
-      {displayedMusic?.musicCoverUrl ? (
+      {displayedMusic?.coverImage ? (
         <img
           aria-label="album-cover"
           className="-translate-x-1/2 -bottom-22 absolute left-1/2 z-0 h-44 w-44 transform"
-          src={displayedMusic.musicCoverUrl}
+          src={displayedMusic.coverImage}
         />
       ) : (
         <div className="-translate-x-1/2 -bottom-20 absolute left-1/2 h-40 w-40 transform bg-gray-500" />
