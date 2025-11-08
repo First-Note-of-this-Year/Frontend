@@ -13,7 +13,7 @@ export default function UserProfilePage() {
   const queryClient = useQueryClient();
   const profileImageInputId = useId();
   const [nickname, setNickname] = useState("");
-  const [, setProfileImageFile] = useState<File | null>(null);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string>("");
   const [hasNicknameError, setHasNicknameError] = useState(false);
 
@@ -65,12 +65,16 @@ export default function UserProfilePage() {
       return;
     }
 
-    // 기존 프로필 이미지를 함께 전송
-    const currentProfileImage = boardInfo?.data.profileImage || "";
-    updateBoardMutation.mutate({
-      nickname,
-      profileImage: currentProfileImage,
-    });
+    // FormData 생성
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+
+    // 새 이미지가 선택된 경우에만 파일 추가
+    if (profileImageFile) {
+      formData.append("profileImage", profileImageFile);
+    }
+
+    updateBoardMutation.mutate(formData);
   };
 
   return (

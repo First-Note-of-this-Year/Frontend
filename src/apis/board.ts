@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "@/apis/config/endpoints";
-import { apiGet, apiPatch, apiPost } from "@/lib/api";
+import { apiGet, apiPatchFormData, apiPost } from "@/lib/api";
 import type {
   BoardInfoResponse,
   BoardListResponse,
@@ -8,7 +8,6 @@ import type {
   CreateBoardResponse,
   GetBoardShareResponse,
   SharedBoardResponse,
-  UpdateBoardRequest,
   UpdateBoardResponse,
 } from "@/types/board";
 
@@ -74,10 +73,10 @@ export const getBoardList = async (
 
 //보드 프로필 수정
 export const updateBoard = async (
-  request: UpdateBoardRequest
+  formData: FormData
 ): Promise<UpdateBoardResponse> => {
-  return apiPatch<UpdateBoardResponse, UpdateBoardRequest>(
+  return apiPatchFormData<UpdateBoardResponse>(
     API_ENDPOINTS.BOARD.UPDATE,
-    request
+    formData
   );
 };
