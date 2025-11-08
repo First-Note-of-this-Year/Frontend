@@ -3,13 +3,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/apis/auth";
 import { getBoardInfo } from "@/apis/board";
-import BellIcon from "@/assets/ic_bell.svg?react";
+import QusetionIcon from "@/assets/ic_question.svg?react";
 import HeadsetIcon from "@/assets/ic_headset.svg?react";
-import MegaphoneIcon from "@/assets/ic_megaphone.svg?react";
 import MusicNoteIcon from "@/assets/ic_music_note.svg?react";
 import PersonIcon from "@/assets/ic_person.svg?react";
 import SignOutIcon from "@/assets/ic_sign_out.svg?react";
-import VideoIcon from "@/assets/ic_video.svg?react";
 import XIcon from "@/assets/ic_x.svg?react";
 import { Alert } from "@/components/ui/alert";
 
@@ -54,6 +52,10 @@ export function Sidebar({
 
   const handleNavigateProfile = () => {
     navigate("/user/profile");
+  };
+
+  const handleNavigateInquiry = () => {
+    navigate("/user/inquiry");
   };
 
   return (
@@ -114,29 +116,23 @@ export function Sidebar({
                   마이 프로필
                 </div>
               </button>
-              <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
-                <div className="relative h-10 w-10">
-                  <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
-                  <BellIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
-                </div>
-                <div className="font-semibold text-base text-black leading-snug tracking-wide">
-                  알림 설정
-                </div>
-              </div>
             </div>
             <div className="h-0 w-60 outline outline-[#E6E6E6] outline-offset-[-0.50px]" />
             <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
               <div className="relative h-10 w-10">
                 <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
-                <VideoIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
+                <QusetionIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
               </div>
               <div className="font-semibold text-base text-black leading-snug tracking-wide">
-                올해의 첫 소리 사용 방법
+                사용 방법
               </div>
             </div>
-            <div className="h-0 w-60 outline outline-[#E6E6E6] outline-offset-[-0.50px]" />
             <div className="flex flex-col">
-              <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
+              <button
+                type="button"
+                onClick={handleNavigateInquiry}
+                className="flex h-12 w-full items-center gap-3 overflow-hidden py-2 text-left transition-colors hover:bg-neutral-200"
+              >
                 <div className="relative h-10 w-10">
                   <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
                   <HeadsetIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
@@ -144,16 +140,7 @@ export function Sidebar({
                 <div className="font-semibold text-base text-black leading-snug tracking-wide">
                   문의사항
                 </div>
-              </div>
-              <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
-                <div className="relative h-10 w-10">
-                  <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
-                  <MegaphoneIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
-                </div>
-                <div className="font-semibold text-base text-neutral-800 leading-snug tracking-wide">
-                  공지사항
-                </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
