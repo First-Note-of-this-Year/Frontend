@@ -26,7 +26,7 @@ export function Sidebar({
 
   const { data: boardInfo } = useQuery({
     queryKey: ["boardInfo", shareUri],
-    queryFn: () => getBoardInfo(shareUri!),
+    queryFn: () => getBoardInfo(shareUri as string),
     enabled: Boolean(shareUri),
   });
 

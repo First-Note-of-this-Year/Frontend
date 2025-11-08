@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBoardInfo, getBoardShare, updateBoard } from "@/apis/board";
 import CameraIcon from "@/assets/ic_camera.svg?react";
@@ -11,6 +11,7 @@ import { NicknameInput } from "@/components/ui/nickname-input";
 export default function UserProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const profileImageInputId = useId();
   const [nickname, setNickname] = useState("");
   const [, setProfileImageFile] = useState<File | null>(null);
   const [profileImagePreview, setProfileImagePreview] = useState<string>("");
@@ -23,7 +24,7 @@ export default function UserProfilePage() {
 
   const { data: boardInfo } = useQuery({
     queryKey: ["boardInfo", shareData?.data.shareUri],
-    queryFn: () => getBoardInfo(shareData!.data.shareUri),
+    queryFn: () => getBoardInfo(shareData?.data.shareUri as string),
     enabled: !!shareData?.data.shareUri,
   });
 
@@ -101,7 +102,7 @@ export default function UserProfilePage() {
           )}
         </div>
         <label
-          htmlFor="profile-image-input"
+          htmlFor={profileImageInputId}
           className="absolute top-[77px] left-[73px] h-10 w-10 cursor-pointer"
         >
           <div className="absolute top-0 left-0 h-10 w-10 rounded-full bg-neutral-400 backdrop-blur-[9.75px]" />
@@ -110,7 +111,7 @@ export default function UserProfilePage() {
           </div>
         </label>
         <input
-          id="profile-image-input"
+          id={profileImageInputId}
           type="file"
           accept="image/*"
           onChange={handleImageChange}
