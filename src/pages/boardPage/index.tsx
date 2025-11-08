@@ -10,7 +10,9 @@ import LpNormalIcon from "@/assets/ic_lp_normal.webp";
 import LpPlayingIcon from "@/assets/ic_lp_playing.webp";
 import windowNewYearIcon from "@/assets/ic_window_newyear.webp";
 import windowIcon from "@/assets/ic_window_normal.webp";
+import { ShareModal } from "@/components/ui/share-modal";
 import { Sidebar } from "@/components/ui/sidebar";
+import { useShareModal } from "@/hooks/useShareModal";
 import { useTimeStore } from "@/stores/useTimeStore";
 import { AlbumGrid } from "./components/album-grid";
 import { BoardHeader } from "./components/board-header";
@@ -70,6 +72,18 @@ function BoardPage() {
     toggleAudio,
     closeModal,
   } = useLetterModal(isSharedBoard, boardList, sharedBoardData);
+
+  const {
+    isShareModalOpen,
+    showCopyFeedback,
+    openShareModal,
+    closeShareModal,
+    handleKakaoShare,
+    handleLinkCopy,
+  } = useShareModal({
+    shareUri: isSharedBoard ? shareUri : currentUserBoard?.data?.shareUri,
+    ownerNickname,
+  });
 
   return (
     <div
@@ -183,6 +197,16 @@ function BoardPage() {
         isSharedBoard={isSharedBoard}
         shareUri={shareUri}
         bottomGroupRef={bottomGroupRef}
+        onShareClick={openShareModal}
+      />
+
+      {/* Share Modal */}
+      <ShareModal
+        isOpen={isShareModalOpen}
+        onClose={closeShareModal}
+        onKakaoShare={handleKakaoShare}
+        onLinkCopy={handleLinkCopy}
+        showCopyFeedback={showCopyFeedback}
       />
 
       {/* Background bottom image */}
