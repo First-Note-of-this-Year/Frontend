@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
     INFO: "/board/info",
     INFO_BY_SHARE_URI: (shareUri: string) => `/board/info/${shareUri}`,
     CREATE: "/board/create",
+    UPDATE: "/board/update",
   },
 
   // 메시지 관련

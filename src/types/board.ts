@@ -102,3 +102,23 @@ export interface BoardMessageResponse {
   message: string;
   data: BoardMessageData;
 }
+
+export interface UpdateBoardRequest {
+  nickname?: string;
+  profileImage?: string;
+}
+
+export interface UpdateBoardData {
+  boardId: string;
+  userId: string;
+  nickname: string;
+  profileImage: string;
+  shareUri: string;
+}
+
+export interface UpdateBoardResponse {
+  success: boolean;
+  code: number;
+  message: string;
+  data: UpdateBoardData;
+}
