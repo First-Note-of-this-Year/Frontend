@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAudio } from "@/hooks/useAudio";
+import { useTimeStore } from "@/stores/useTimeStore";
 import type {
   BoardListItem,
   SharedBoardMessage,
@@ -16,8 +17,10 @@ export function useLetterModal(
   const [messageDetail, setMessageDetail] = useState<
     import("@/types/board").BoardMessageData | null
   >(null);
+  const [showToast, setShowToast] = useState(false);
 
   const { isPlaying, playAudio, stopAudio, toggleAudio } = useAudio();
+  const { isNewYear } = useTimeStore();
 
   useEffect(() => {
     if (letterOpenId !== null) {
@@ -35,8 +38,17 @@ export function useLetterModal(
         return;
       }
 
-      // determine messageId from current data (shared or boardList)
+      // 새해가 아니면 토스트 표시하고 리턴
+      if (!isNewYear) {
+        setShowToast(true);
+        setLetterOpenId(null);
+        return;
+      }
+
       const posIndex = letterOpenId - 1;
+      const isDeveloperComment = posIndex === 5;
+
+      // determine messageId from current data (shared or boardList)
       const sharedContent = sharedBoardData?.data?.content ?? [];
       const possible = isSharedBoard
         ? sharedContent[posIndex]
@@ -45,7 +57,6 @@ export function useLetterModal(
       if (!messageId) return;
 
       // 개발자 코멘트는 상세 정보를 불러오지 않음 (항상 6번째 위치, 인덱스 5)
-      const isDeveloperComment = posIndex === 5;
       if (isDeveloperComment) {
         if (!mounted) return;
         setMessageDetail({
@@ -95,6 +106,7 @@ export function useLetterModal(
     sharedBoardData,
     playAudio,
     stopAudio,
+    isNewYear,
   ]);
 
   const closeModal = () => {
@@ -110,5 +122,7 @@ export function useLetterModal(
     isPlaying,
     toggleAudio,
     closeModal,
+    showToast,
+    setShowToast,
   };
 }
