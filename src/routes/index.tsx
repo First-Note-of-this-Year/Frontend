@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import OAuthCallback from "@/pages/oauth/callback";
 import UserProfilePage from "@/pages/userPage/pages/user-profile-page";
+import UserInquiryPage from "@/pages/userPage/pages/user-inquiry-page";
 import { ROUTES } from "../constants/routes";
 import {
   BoardPage,
@@ -106,6 +107,14 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute requireBoard={true}>
             <UserProfilePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path={ROUTES.USER.INQUIRY}
+        element={
+          <ProtectedRoute requireBoard={true}>
+            <UserInquiryPage />
           </ProtectedRoute>
         }
       />

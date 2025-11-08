@@ -26,6 +26,7 @@ export const ROUTES = {
   },
   USER: {
     PROFILE: "/user/profile",
+    INQUIRY: "/user/inquiry",
   },
   ERROR: "*",
 } as const;
