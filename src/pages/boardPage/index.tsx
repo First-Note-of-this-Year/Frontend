@@ -6,8 +6,8 @@ import drawerIcon from "@/assets/ic_drawer.webp";
 import HatIcon from "@/assets/ic_hat.svg?react";
 import LpNormalIcon from "@/assets/ic_lp_normal.svg?react";
 import LpPlayingIcon from "@/assets/ic_lp_playing.svg?react";
-import windowIcon from "@/assets/ic_window_normal.webp";
 import windowNewYearIcon from "@/assets/ic_window_newyear.webp";
+import windowIcon from "@/assets/ic_window_normal.webp";
 import { Sidebar } from "@/components/ui/sidebar";
 import { useTimeStore } from "@/stores/useTimeStore";
 import { AlbumGrid } from "./components/album-grid";
@@ -92,7 +92,9 @@ function BoardPage() {
             justifyContent: "center",
           }}
         >
-          <div style={{ marginTop: -200, marginLeft: -100, width: "fit-content" }}>
+          <div
+            style={{ marginTop: -200, marginLeft: -100, width: "fit-content" }}
+          >
             <GarlandIcon />
           </div>
         </div>
@@ -109,7 +111,11 @@ function BoardPage() {
         }}
       >
         <div style={{ marginRight: -79 }}>
-          <img src={isNewYear ? windowNewYearIcon : windowIcon} alt="" aria-hidden />
+          <img
+            src={isNewYear ? windowNewYearIcon : windowIcon}
+            alt=""
+            aria-hidden
+          />
         </div>
       </div>
 
