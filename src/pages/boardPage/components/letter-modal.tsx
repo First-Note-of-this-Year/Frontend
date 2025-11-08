@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import BgLetter from "@/assets/bg_letterpaper.webp";
 import PlayIcon from "@/assets/ic_play.svg?react";
 import StampWebp from "@/assets/ic_stamp.webp";
@@ -15,6 +16,8 @@ interface LetterModalProps {
   onToggleAudio: () => void;
 }
 
+const MARQUEE_REPEAT = [1, 2, 3, 4] as const;
+
 export function LetterModal({
   isOpen,
   letterOpenId,
@@ -25,6 +28,18 @@ export function LetterModal({
   onClose,
   onToggleAudio,
 }: LetterModalProps) {
+  const textRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  useEffect(() => {
+    if (textRef.current && containerRef.current && messageDetail?.songTitle) {
+      const textWidth = textRef.current.scrollWidth;
+      const containerWidth = containerRef.current.clientWidth;
+      setShouldAnimate(textWidth > containerWidth);
+    }
+  }, [messageDetail?.songTitle]);
+
   if (!isOpen || letterOpenId === null) return null;
 
   return (
@@ -200,20 +215,20 @@ export function LetterModal({
       <div className="mx-auto flex w-60 flex-col gap-4">
         <div className="flex flex-row gap-2">
           <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <div className="inline-flex animate-marquee whitespace-nowrap text-base text-white">
-                <span className="inline-block px-2">
-                  {messageDetail?.songTitle ?? "곡 제목"}
-                </span>
-                <span className="inline-block px-2">
-                  {messageDetail?.songTitle ?? "곡 제목"}
-                </span>
-                <span className="inline-block px-2">
-                  {messageDetail?.songTitle ?? "곡 제목"}
-                </span>
-                <span className="inline-block px-2">
-                  {messageDetail?.songTitle ?? "곡 제목"}
-                </span>
+            <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
+              <div
+                ref={textRef}
+                className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
+              >
+                {shouldAnimate ? (
+                  MARQUEE_REPEAT.map((num) => (
+                    <span key={num} className="inline-block px-2">
+                      {messageDetail?.songTitle ?? "곡 제목"}
+                    </span>
+                  ))
+                ) : (
+                  <span>{messageDetail?.songTitle ?? "곡 제목"}</span>
+                )}
               </div>
             </div>
 
