@@ -63,3 +63,15 @@ export const apiPutFormData = async <T>(
   });
   return response.data;
 };
+
+export const apiPatchFormData = async <T>(
+  url: string,
+  formData: FormData
+): Promise<T> => {
+  const response = await axiosInstance.patch<T>(url, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
