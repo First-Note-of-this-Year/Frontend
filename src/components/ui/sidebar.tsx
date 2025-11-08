@@ -85,7 +85,7 @@ export function Sidebar({
 
             <div className="flex flex-col gap-1">
               <div className="font-bold text-neutral-800 text-xl leading-7 tracking-wide">
-                {boardInfo?.data?.name || nickname} 님
+                {boardInfo?.data?.nickname || nickname} 님
               </div>
               <div className="inline-flex w-fit items-center gap-1 rounded bg-stone-300/30 px-2 py-2 backdrop-blur-[3.02px]">
                 <div className="relative h-3 w-3 overflow-hidden">

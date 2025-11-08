@@ -24,7 +24,7 @@ export default function LetterGuidePage({
   });
 
   const computedNickname =
-    boardInfoQuery.data?.data?.name ?? (nickname as string);
+    boardInfoQuery.data?.data?.nickname ?? (nickname as string);
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/letter/guide";
