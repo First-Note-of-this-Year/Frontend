@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import XIcon from "@/assets/ic_x.svg?react";
+import { ShareButton } from "./share-button";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -78,36 +79,25 @@ export function ShareModal({
         {/* Share Options */}
         <div className="flex gap-4">
           {/* Kakao Share Button */}
-          <button
-            type="button"
+          <ShareButton
             onClick={onKakaoShare}
-            className="flex flex-1 flex-col items-center gap-3 rounded-xl bg-[#F5F5F5] p-4 transition-all hover:bg-[#E8E8E8] focus:outline-none focus:ring-2 focus:ring-gray-300"
-          >
-            <div className="flex h-12 w-12 items-center justify-center">
+            icon={
               <img
                 src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
                 alt="카카오톡"
                 className="h-12 w-12"
               />
-            </div>
-            <span className="font-medium text-[#3C1E1E] text-[14px]">
-              카카오톡
-            </span>
-          </button>
+            }
+            label="카카오톡"
+          />
 
           {/* Link Copy Button */}
-          <button
-            type="button"
+          <ShareButton
             onClick={onLinkCopy}
-            className="flex flex-1 flex-col items-center gap-3 rounded-xl bg-[#F5F5F5] p-4 transition-all hover:bg-[#E8E8E8] focus:outline-none focus:ring-2 focus:ring-gray-300"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8E2D2D]">
-              <LinkIcon className="h-6 w-6" />
-            </div>
-            <span className="font-medium text-[#3C1E1E] text-[14px]">
-              {showCopyFeedback ? "복사완료!" : "링크 복사"}
-            </span>
-          </button>
+            icon={<LinkIcon className="h-6 w-6" />}
+            label={showCopyFeedback ? "복사완료!" : "링크 복사"}
+            iconBgColor="#8E2D2D"
+          />
         </div>
 
         {/* Feedback Message */}
