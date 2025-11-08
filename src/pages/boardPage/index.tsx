@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import bgbottom from "@/assets/bg_bottom.webp";
 import GarlandIcon from "@/assets/bg_garland.svg?react";
 import drawerIcon from "@/assets/ic_drawer.webp";
+import bonsaiNormal from "@/assets/ic_bonsai_normal.webp";
+import bonsaiNewYear from "@/assets/ic_bonsai_newyear.webp";
 import HatIcon from "@/assets/ic_hat.svg?react";
-import LpNormalIcon from "@/assets/ic_lp_normal.svg?react";
-import LpPlayingIcon from "@/assets/ic_lp_playing.svg?react";
+import LpNormalIcon from "@/assets/ic_lp_normal.webp";
+import LpPlayingIcon from "@/assets/ic_lp_playing.webp";
 import windowNewYearIcon from "@/assets/ic_window_newyear.webp";
 import windowIcon from "@/assets/ic_window_normal.webp";
 import { Sidebar } from "@/components/ui/sidebar";
@@ -115,6 +117,7 @@ function BoardPage() {
             src={isNewYear ? windowNewYearIcon : windowIcon}
             alt=""
             aria-hidden
+            style={{ width: 266, height: "auto", display: "block" }}
           />
         </div>
       </div>
@@ -208,6 +211,23 @@ function BoardPage() {
         }}
       />
 
+      {/* Bonsai Icon - positioned 5px left of Hat */}
+      <div
+        className="pointer-events-none fixed z-10"
+        style={{
+          bottom: 65 + 150,
+          right: screenWidth >= 450 ? `calc(50% - 225px + 36px)` : 36,
+          width: "fit-content",
+        }}
+      >
+        <img
+          src={isNewYear ? bonsaiNewYear : bonsaiNormal}
+          alt=""
+          aria-hidden
+          style={{ width: 68, height: "auto", display: "block" }}
+        />
+      </div>
+
       {/* Hat Icon - 31px clipped on right, 6px below drawer top */}
       <div
         className="pointer-events-none fixed z-10"
@@ -229,13 +249,18 @@ function BoardPage() {
         onClick={() => setIsLpPlaying(!isLpPlaying)}
         className="fixed z-10 cursor-pointer"
         style={{
-          top: "50%",
+          top: `calc(50% - ${(1 - heightRatio) * 50}px)`,
           transform: "translateY(-50%)",
           right: screenWidth >= 450 ? `calc(50% - 225px + 18px)` : 18,
         }}
         aria-label={isLpPlaying ? "LP 정지" : "LP 재생"}
       >
-        {isLpPlaying ? <LpPlayingIcon /> : <LpNormalIcon />}
+        <img
+          src={isLpPlaying ? LpPlayingIcon : LpNormalIcon}
+          alt=""
+          aria-hidden
+          style={{ width: 80, height: "auto", display: "block" }}
+        />
       </button>
 
       {/* Sidebar */}
