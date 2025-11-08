@@ -34,6 +34,7 @@ export const useKakaoShare = () => {
           templateId,
           templateArgs: {
             shareUri: encodedShareUri,
+            ownerNickname: ownerNickname || "사용자",
           },
         });
       } catch (error) {
