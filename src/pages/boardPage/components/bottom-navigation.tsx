@@ -11,6 +11,7 @@ interface BottomNavigationProps {
   isSharedBoard: boolean;
   shareUri?: string;
   bottomGroupRef: React.RefObject<HTMLDivElement | null>;
+  onShareClick?: () => void;
 }
 
 export function BottomNavigation({
@@ -21,6 +22,7 @@ export function BottomNavigation({
   isSharedBoard,
   shareUri,
   bottomGroupRef,
+  onShareClick,
 }: BottomNavigationProps) {
   return (
     <div
@@ -46,6 +48,7 @@ export function BottomNavigation({
             className="w-full"
             isSharedBoard={isSharedBoard}
             shareUri={shareUri}
+            onShareClick={onShareClick}
           />
         </div>
       </div>

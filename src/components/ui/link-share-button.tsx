@@ -1,8 +1,6 @@
 import type * as React from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
-import { useShare } from "@/hooks/useShare";
 import { cn } from "@/lib/utils";
 
 interface LinkShareButtonProps extends React.ComponentProps<"button"> {
@@ -14,6 +12,7 @@ interface LinkShareButtonProps extends React.ComponentProps<"button"> {
   onShareError?: (error: unknown) => void;
   isSharedBoard?: boolean;
   shareUri?: string;
+  onShareClick?: () => void;
 }
 
 function LinkShareButton({
@@ -21,17 +20,14 @@ function LinkShareButton({
   label = "링크 공유하기",
   Icon,
   children,
-  onShareSuccess,
-  onShareError,
   isSharedBoard = false,
   shareUri,
+  onShareClick,
   ...props
 }: LinkShareButtonProps) {
-  const { shareBoard, isSharing } = useShare();
-  const [showCopyFeedback, setShowCopyFeedback] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (isSharedBoard) {
       // preserve the shareUri when navigating into the letter flow
       if (shareUri) navigate(`/letter/guide/${shareUri}`);
@@ -39,25 +35,8 @@ function LinkShareButton({
       return;
     }
 
-    try {
-      const result = await shareBoard();
-
-      if (result.success) {
-        if (result.method === "clipboard") {
-          onShareSuccess?.(result.method, result.url);
-          setShowCopyFeedback(true);
-          setTimeout(() => setShowCopyFeedback(false), 3000);
-        } else {
-          onShareSuccess?.(result.method);
-        }
-      } else {
-        onShareError?.(result.error);
-        console.error("Share failed with error:", result.error);
-      }
-    } catch (error) {
-      console.error("LinkShareButton: Error in handleClick:", error);
-      onShareError?.(error);
-    }
+    // 공유 모달 열기
+    onShareClick?.();
   };
 
   return (
@@ -75,20 +54,11 @@ function LinkShareButton({
         className
       )}
       onClick={handleClick}
-      disabled={!isSharedBoard && isSharing}
       {...props}
     >
       {children ?? (
         <>
-          <span>
-            {isSharedBoard
-              ? label
-              : isSharing
-                ? "공유 중..."
-                : showCopyFeedback
-                  ? "링크가 복사되었습니다!"
-                  : label}
-          </span>
+          <span>{label}</span>
           {Icon && <Icon className="h-[20px] w-[20px]" />}
         </>
       )}
