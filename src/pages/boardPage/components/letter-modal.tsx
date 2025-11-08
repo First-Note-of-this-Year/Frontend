@@ -16,6 +16,8 @@ interface LetterModalProps {
   onToggleAudio: () => void;
 }
 
+const MARQUEE_REPEAT = [1, 2, 3, 4] as const;
+
 export function LetterModal({
   isOpen,
   letterOpenId,
@@ -219,20 +221,11 @@ export function LetterModal({
                 className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
               >
                 {shouldAnimate ? (
-                  <>
-                    <span className="inline-block px-2">
+                  MARQUEE_REPEAT.map((num) => (
+                    <span key={num} className="inline-block px-2">
                       {messageDetail?.songTitle ?? "곡 제목"}
                     </span>
-                    <span className="inline-block px-2">
-                      {messageDetail?.songTitle ?? "곡 제목"}
-                    </span>
-                    <span className="inline-block px-2">
-                      {messageDetail?.songTitle ?? "곡 제목"}
-                    </span>
-                    <span className="inline-block px-2">
-                      {messageDetail?.songTitle ?? "곡 제목"}
-                    </span>
-                  </>
+                  ))
                 ) : (
                   <span>{messageDetail?.songTitle ?? "곡 제목"}</span>
                 )}
