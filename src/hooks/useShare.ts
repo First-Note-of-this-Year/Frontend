@@ -19,7 +19,7 @@ export const useShare = () => {
     setIsSharing(true);
     try {
       const response = await getBoardShare();
-      const shareUrl = `${window.location.origin}/board/${response.data.shareUri}`;
+      const shareUrl = `https://www.firstsori.site/board/${response.data.shareUri}`;
       console.log("Generated share URL:", shareUrl);
 
       const shareData: ShareData = {
