@@ -71,12 +71,12 @@ export function useBoardData(shareUri?: string) {
   });
 
   useEffect(() => {
-    // prefer boardInfo name when available (applies to shared and own board)
-    const nameFromInfo = boardInfoQuery.data?.data?.name;
-    if (nameFromInfo && nameFromInfo !== ownerNickname) {
-      setOwnerNickname(nameFromInfo);
+    // prefer boardInfo nickname when available (applies to shared and own board)
+    const nicknameFromInfo = boardInfoQuery.data?.data?.nickname;
+    if (nicknameFromInfo && nicknameFromInfo !== ownerNickname) {
+      setOwnerNickname(nicknameFromInfo);
     }
-  }, [boardInfoQuery.data?.data?.name, ownerNickname]);
+  }, [boardInfoQuery.data?.data?.nickname, ownerNickname]);
 
   useEffect(() => {
     // handle shared board data

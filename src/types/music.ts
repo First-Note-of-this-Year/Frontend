@@ -1,9 +1,10 @@
 export interface Music {
   musicId: string;
-  musicTitle: string;
+  songTitle: string;
   artist: string;
-  musicCoverUrl: string;
-  musicUrl: string;
-  prestreamingUrl?: string;
+  coverImage: string;
+  songUrl: string;
+  itunesUrl?: string;
+  youtubeUrl?: string;
   score?: number;
 }

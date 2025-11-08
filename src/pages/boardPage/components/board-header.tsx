@@ -12,7 +12,7 @@ interface TimeRemaining {
 
 interface BoardHeaderProps {
   ownerNickname: string;
-  messageCount?: number;
+  messagesCount?: number;
   timeRemaining: TimeRemaining;
   screenWidth: number;
   profileImage?: string;
@@ -22,7 +22,7 @@ interface BoardHeaderProps {
 
 export function BoardHeader({
   ownerNickname,
-  messageCount,
+  messagesCount,
   timeRemaining,
   screenWidth,
   onMenuClick,
@@ -141,7 +141,7 @@ export function BoardHeader({
           >
             <BoardNoteIcon style={{ width: 12, height: 12 }} />
             <span className="ml-1 whitespace-nowrap font-bold">
-              총 {messageCount ?? "00"} 개 음반
+              총 {messagesCount ?? "00"} 개 음반
             </span>
           </div>
         </div>

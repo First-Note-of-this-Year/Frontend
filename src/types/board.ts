@@ -19,7 +19,7 @@ export interface GetBoardShareResponse {
 export interface SharedBoardMessage {
   messageId: string;
   musicId: string;
-  musicCoverUrl: string;
+  coverImage: string;
 }
 
 export interface SharedBoardData {
@@ -43,13 +43,13 @@ export interface SharedBoardInfo {
 
 export interface BoardListItem {
   messageId: string;
-  senderName: string;
+  sender: string;
   content: string;
   musicId: string;
-  musicName: string;
+  songTitle: string;
   artist: string;
-  musicCoverUrl: string;
-  musicUrl: string;
+  coverImage: string;
+  songUrl: string;
   read: boolean;
 }
 
@@ -69,7 +69,7 @@ export interface BoardListResponse {
 }
 
 export interface BoardInfoData {
-  name: string;
+  nickname: string;
   profileImage: string;
   messageCount: number;
   serverTime: string;
@@ -84,13 +84,16 @@ export interface BoardInfoResponse {
 
 export interface BoardMessageData {
   messageId: string;
-  senderName: string;
+  sender: string;
   content: string;
   musicId?: string | null;
-  musicName?: string | null;
+  songTitle?: string | null;
   artist?: string | null;
-  musicCoverUrl?: string | null;
-  musicUrl?: string | null;
+  coverImage?: string | null;
+  songUrl?: string | null;
+  itunesUrl?: string | null;
+  youtubeUrl?: string | null;
+  mine?: boolean;
 }
 
 export interface BoardMessageResponse {

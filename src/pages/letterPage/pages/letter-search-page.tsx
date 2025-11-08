@@ -20,6 +20,8 @@ type ListSong = {
   artist: string;
   album_cover: string;
   streaming_url: string;
+  itunesUrl?: string;
+  youtubeUrl?: string;
 };
 
 function MusicSearchPage() {
@@ -44,10 +46,12 @@ function MusicSearchPage() {
   const mapMusicToListSong = useCallback(
     (music: Music): ListSong => ({
       id: music.musicId,
-      song_title: music.musicTitle,
+      song_title: music.songTitle,
       artist: music.artist,
-      album_cover: music.musicCoverUrl,
-      streaming_url: music.musicUrl || music.prestreamingUrl || "",
+      album_cover: music.coverImage,
+      streaming_url: music.songUrl || music.itunesUrl || "",
+      itunesUrl: music.itunesUrl,
+      youtubeUrl: music.youtubeUrl,
     }),
     []
   );
@@ -205,12 +209,15 @@ function MusicSearchPage() {
               if (!selectedSong) return;
               const draft: Partial<MessageData> = {
                 shareUri: "",
-                senderName: "",
+                sender: "",
                 content: "",
                 songTitle: selectedSong.song_title,
                 artist: selectedSong.artist,
-                albumImageUrl: selectedSong.album_cover,
+                coverImage: selectedSong.album_cover,
                 songUrl: selectedSong.streaming_url,
+                itunesUrl: selectedSong.itunesUrl || "",
+                youtubeUrl: selectedSong.youtubeUrl || "",
+                mine: isJoinPage || isFirstTimeJoin,
               };
               try {
                 localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));

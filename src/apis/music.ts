@@ -15,11 +15,12 @@ export const getPopularMusicCharts = async (): Promise<Music[]> => {
   if (response?.data) {
     return response.data.map((item) => ({
       musicId: item.musicId,
-      musicTitle: item.songName,
+      songTitle: item.songTitle,
       artist: item.artist,
-      musicCoverUrl: item.albumImageUrl,
-      musicUrl: item.songUrl,
+      coverImage: item.coverImage,
+      songUrl: item.songUrl,
       score: item.score,
+      itunesUrl: item.itunesUrl,
     }));
   }
   return [];
@@ -34,12 +35,13 @@ export const getSearchedSongs = async (query?: string): Promise<Music[]> => {
 
   if (response?.data?.searchResult) {
     return response.data.searchResult.map((item) => ({
-      musicId: item.prestreamingUrl || `${item.songTitle}-${item.artist}`,
-      musicTitle: item.songTitle,
+      musicId: item.itunesUrl || `${item.songTitle}-${item.artist}`,
+      songTitle: item.songTitle,
       artist: item.artist,
-      musicCoverUrl: item.coverImage,
-      musicUrl: item.prestreamingUrl,
-      prestreamingUrl: item.prestreamingUrl,
+      coverImage: item.coverImage,
+      songUrl: item.itunesUrl || item.youtubeUrl || "",
+      itunesUrl: item.itunesUrl,
+      youtubeUrl: item.youtubeUrl,
     }));
   }
   return [];

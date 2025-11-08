@@ -21,7 +21,7 @@ export default function LetterWritePage() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [letterContent, setLetterContent] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [musicCoverUrl, setMusicCoverUrl] = useState<string | null>(null);
+  const [coverImage, setCoverImage] = useState<string | null>(null);
   const [recipientNickname, setRecipientNickname] = useState("닉네임");
 
   const LOCALSTORAGE_KEY = "messageDraft";
@@ -34,13 +34,13 @@ export default function LetterWritePage() {
         : {};
       if (isFirstTimeJoin || isJoinPage) {
         setAuthorName("과거의 나");
-      } else if (parsed.senderName) {
-        setAuthorName(parsed.senderName);
+      } else if (parsed.sender) {
+        setAuthorName(parsed.sender);
       }
 
       // Load other draft parts (content, cover) regardless
       if (parsed.content) setLetterContent(parsed.content);
-      if (parsed.albumImageUrl) setMusicCoverUrl(parsed.albumImageUrl);
+      if (parsed.coverImage) setCoverImage(parsed.coverImage);
     } catch (_e) {
       // ignore
     }
@@ -51,7 +51,7 @@ export default function LetterWritePage() {
       if (!shareUri) return;
       try {
         const response = await getBoardInfo(shareUri);
-        setRecipientNickname(response.data.name);
+        setRecipientNickname(response.data.nickname);
       } catch (error) {
         console.error("Failed to fetch board info:", error);
       }
@@ -74,7 +74,7 @@ export default function LetterWritePage() {
       try {
         const stored = localStorage.getItem(LOCALSTORAGE_KEY);
         const draft: Partial<MessageData> = stored ? JSON.parse(stored) : {};
-        draft.senderName = authorName;
+        draft.sender = authorName;
         draft.content = letterContent;
         draft.shareUri = shareUri ?? draft.shareUri ?? "";
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));
@@ -92,7 +92,7 @@ export default function LetterWritePage() {
       try {
         const stored = localStorage.getItem(LOCALSTORAGE_KEY);
         const draft: Partial<MessageData> = stored ? JSON.parse(stored) : {};
-        draft.senderName = authorName;
+        draft.sender = authorName;
         draft.content = letterContent;
         draft.shareUri = shareUri ?? draft.shareUri ?? "";
 
@@ -170,7 +170,7 @@ export default function LetterWritePage() {
         {/* 음악 앨범 사진 */}
         <div className="-translate-y-[90.625px] dynamic-bottom-position absolute right-0 h-[108.75px] w-[108.75px] overflow-hidden rounded-md bg-gray-300">
           <img
-            src={musicCoverUrl ?? "/path/to/album-image.jpg"}
+            src={coverImage ?? "/path/to/album-image.jpg"}
             alt="앨범 커버"
             className="h-full w-full object-cover"
           />
@@ -200,7 +200,7 @@ export default function LetterWritePage() {
           <div className="mb-4 flex justify-end">
             <div className="h-[26px] w-[26px] overflow-hidden rounded-sm bg-gray-300">
               <img
-                src={musicCoverUrl ?? "/path/to/album-image.jpg"}
+                src={coverImage ?? "/path/to/album-image.jpg"}
                 alt="앨범 커버"
                 className="h-full w-full object-cover"
               />
