@@ -34,7 +34,10 @@ export const useTimeStore = create<TimeState>((set) => ({
       set({ serverTime, isNewYear, isLoading: false });
     } catch (error) {
       set({
-        error: error instanceof Error ? error.message : "서버 시간을 가져오는데 실패했습니다",
+        error:
+          error instanceof Error
+            ? error.message
+            : "서버 시간을 가져오는데 실패했습니다",
         isLoading: false,
       });
     }
