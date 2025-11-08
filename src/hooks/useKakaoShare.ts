@@ -27,14 +27,13 @@ export const useKakaoShare = () => {
         return;
       }
 
-      console.log("Kakao share - shareUri:", shareUri);
-      console.log("Kakao share - ownerNickname:", ownerNickname);
+      const encodedShareUri = encodeURIComponent(shareUri);
 
       try {
         window.Kakao.Share.sendCustom({
           templateId,
           templateArgs: {
-            shareUri: shareUri,
+            shareUri: encodedShareUri,
           },
         });
       } catch (error) {
