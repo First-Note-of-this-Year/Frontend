@@ -96,8 +96,10 @@ axiosInstance.interceptors.response.use(
       const originalRequest = error.config;
 
       // skipAuthRedirect 플래그가 있으면 리다이렉트하지 않음
-      const headers = originalRequest?.headers as Record<string, unknown> | undefined;
-      const skipRedirect = headers?.skipAuthRedirect === 'true';
+      const headers = originalRequest?.headers as
+        | Record<string, unknown>
+        | undefined;
+      const skipRedirect = headers?.skipAuthRedirect === "true";
       if (skipRedirect) {
         return Promise.reject(error);
       }
