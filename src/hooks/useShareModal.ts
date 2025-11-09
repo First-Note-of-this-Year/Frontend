@@ -33,7 +33,7 @@ export const useShareModal = ({
 
   const handleLinkCopy = useCallback(async () => {
     try {
-      const result = await shareBoard();
+      const result = await shareBoard(shareUri);
 
       if (result.success && result.method === "clipboard") {
         setShowCopyFeedback(true);
@@ -51,7 +51,7 @@ export const useShareModal = ({
       console.error("Link copy error:", error);
       alert("링크 복사에 실패했습니다.");
     }
-  }, [shareBoard, closeShareModal]);
+  }, [shareBoard, shareUri, closeShareModal]);
 
   return {
     isShareModalOpen,
