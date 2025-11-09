@@ -28,6 +28,7 @@ export function useBoardData(shareUri?: string) {
     queryKey: ["currentUserBoard"],
     queryFn: () => getBoardShare(),
     enabled: !isSharedBoard,
+    retry: false,
   });
 
   // prefer route shareUri when present, otherwise use current user's shareUri
