@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBoardInfo } from "@/apis/board";
 import PlayIcon from "@/assets/ic_play.svg?react";
@@ -12,6 +12,8 @@ interface LetterSelectPageProps {
   music?: Music;
 }
 
+const MARQUEE_REPEAT = [1, 2, 3, 4] as const;
+
 export default function LetterSelectPage({
   nickname = "닉네임",
   music,
@@ -22,9 +24,22 @@ export default function LetterSelectPage({
   const [recipientNickname, setRecipientNickname] = useState(nickname);
   // local music loaded from search draft if `music` prop isn't provided
   const [localMusic, setLocalMusic] = useState<Music | undefined>(music);
+  const textRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/letter/select";
+
+  const displayedMusic = localMusic ?? music;
+
+  useEffect(() => {
+    if (textRef.current && containerRef.current && displayedMusic?.songTitle) {
+      const textWidth = textRef.current.scrollWidth;
+      const containerWidth = containerRef.current.clientWidth;
+      setShouldAnimate(textWidth > containerWidth);
+    }
+  }, [displayedMusic?.songTitle]);
 
   useEffect(() => {
     const fetchBoardInfo = async () => {
@@ -73,8 +88,6 @@ export default function LetterSelectPage({
       console.warn("Failed to parse messageDraft from localStorage:", err);
     }
   }, [music]);
-
-  const displayedMusic = localMusic ?? music;
 
   const handleClick = () => {
     if (isJoinPage) {
@@ -136,12 +149,28 @@ export default function LetterSelectPage({
         </div>
 
         <div className="flex flex-row gap-2">
-          <div className="flex flex-1 flex-row items-center gap-1 rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
-            <p className="text-base text-white">
-              {displayedMusic?.songTitle || "곡 제목"}
-            </p>
-            <p className="text-gray-500 text-xs">
-              {displayedMusic?.artist || "가수"}
+          <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
+            <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
+              <div
+                ref={textRef}
+                className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
+              >
+                {shouldAnimate ? (
+                  MARQUEE_REPEAT.map((num) => (
+                    <span key={num} className="inline-block px-2">
+                      {displayedMusic?.songTitle ?? "곡 제목"}
+                    </span>
+                  ))
+                ) : (
+                  <span>{displayedMusic?.songTitle ?? "곡 제목"}</span>
+                )}
+              </div>
+            </div>
+
+            <p className="whitespace-nowrap text-gray-500 text-xs">
+              {displayedMusic?.artist && displayedMusic.artist.length > 4
+                ? `${displayedMusic.artist.slice(0, 4)}...`
+                : (displayedMusic?.artist ?? "가수")}
             </p>
           </div>
 
