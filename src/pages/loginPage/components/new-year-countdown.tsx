@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTimeStore } from "@/stores/useTimeStore";
 
 export function NewYearCountdown() {
-  const { serverTime } = useTimeStore();
+  const { serverTime, isAfterNewYear } = useTimeStore();
   const [timeLeft, setTimeLeft] = useState("00:00:00");
   const startTimeRef = useRef<number>(0);
   const serverTimeRef = useRef<Date | null>(null);
@@ -23,9 +23,20 @@ export function NewYearCountdown() {
 
       const currentYear = currentTime.getFullYear();
 
-      // 현재가 12월이면 다음해 1월 1일, 1월이면 올해 1월 1일 (이미 지났으므로 00:00:00)
-      const targetYear =
-        currentTime.getMonth() === 11 ? currentYear + 1 : currentYear;
+      // 1월 1일 ~ 1월 14일 사이면 1월 1일부터 경과 시간 계산
+      if (isAfterNewYear) {
+        const newYear = new Date(currentYear, 0, 1, 0, 0, 0, 0);
+        const diff = currentTime.getTime() - newYear.getTime();
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
+
+      // 12월이면 다음해 1월 1일 계산
+      const targetYear = currentYear + 1;
       const newYear = new Date(targetYear, 0, 1, 0, 0, 0, 0);
 
       const diff = newYear.getTime() - currentTime.getTime();
@@ -50,7 +61,7 @@ export function NewYearCountdown() {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [serverTime]);
+  }, [serverTime, isAfterNewYear]);
 
   return (
     <span className="font-counter font-extrabold text-[74px] text-gray-100">
