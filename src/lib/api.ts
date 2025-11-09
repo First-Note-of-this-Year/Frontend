@@ -8,6 +8,19 @@ export const apiGet = async <T, P = undefined>(
   return response.data;
 };
 
+export const apiGetPublic = async <T, P = undefined>(
+  url: string,
+  params?: P
+): Promise<T> => {
+  const response = await axiosInstance.get<T>(url, { 
+    params,
+    headers: {
+      skipAuthRedirect: 'true'
+    }
+  });
+  return response.data;
+};
+
 export const apiPost = async <T, B = undefined>(
   url: string,
   body?: B
