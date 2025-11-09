@@ -5,11 +5,13 @@ import { NavigationButton } from "@/components/ui/navigation-button";
 import { NicknameInput } from "@/components/ui/nickname-input";
 import { PageLayout } from "@/components/ui/page-layout";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinNicknamePage() {
   const [nickname, setNickname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const isNicknameValid =
     nickname.trim().length > 0 && nickname.trim().length <= 6;
@@ -21,6 +23,12 @@ export default function JoinNicknamePage() {
       setIsLoading(true);
       const response = await createBoard({ nickname: nickname.trim() });
       console.log("보드 생성 성공:", response);
+      setLoggedIn(true, {
+        boardShare: {
+          boardId: response.boardId,
+          shareUri: response.shareUri,
+        },
+      });
       navigate(
         ROUTES.JOIN.GUIDE_WITH_SHARE.replace(":shareUri", response.shareUri)
       );

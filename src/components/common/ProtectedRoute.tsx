@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { getBoardShare } from "@/apis/board";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,25 +14,22 @@ export default function ProtectedRoute({
   redirectTo = ROUTES.BOARD,
   requireBoard = false,
 }: ProtectedRouteProps) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasBoard, setHasBoard] = useState<boolean | null>(null);
+  const {
+    isLoggedIn,
+    isCheckingAuth,
+    hasFetchedAuth,
+    boardShare,
+    checkAuth,
+  } = useAuthStore();
+  const hasBoard = Boolean(boardShare?.boardId);
 
   useEffect(() => {
-    const checkBoardStatus = async () => {
-      try {
-        const boardShareData = await getBoardShare();
-        const boardExists = boardShareData.data.boardId !== null;
-        setHasBoard(boardExists);
-      } catch (error) {
-        console.error("보드 상태 확인 실패:", error);
-        setHasBoard(false);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    if (!hasFetchedAuth && !isCheckingAuth) {
+      void checkAuth();
+    }
+  }, [checkAuth, hasFetchedAuth, isCheckingAuth]);
 
-    checkBoardStatus();
-  }, []);
+  const isLoading = isCheckingAuth || !hasFetchedAuth;
 
   if (isLoading) {
     return (
@@ -43,6 +40,10 @@ export default function ProtectedRoute({
         </div>
       </div>
     );
+  }
+
+  if (!isLoggedIn) {
+    return <Navigate to={ROUTES.HOME} replace />;
   }
 
   if (requireBoard && !hasBoard) {

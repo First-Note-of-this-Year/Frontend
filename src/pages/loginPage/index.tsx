@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LogoIcon from "@/assets/ic_logo.svg?react";
 import LogoNewYearIcon from "@/assets/ic_logo_newyear.svg?react";
 import StarIcon from "@/assets/ic_star.svg?react";
@@ -5,10 +7,14 @@ import { DDayCounter } from "@/pages/loginPage/components/dday-counter";
 import { KakaoLoginButton } from "@/pages/loginPage/components/kakao-login-button";
 import { NewYearCountdown } from "@/pages/loginPage/components/new-year-countdown";
 import { PopularMusicChart } from "@/pages/loginPage/components/popular-music-chart";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useTimeStore } from "@/stores/useTimeStore";
 
 function LoginPage() {
   const { isNewYear } = useTimeStore();
+  const navigate = useNavigate();
+  const { isLoggedIn, isCheckingAuth, hasFetchedAuth, checkAuth } =
+    useAuthStore();
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -27,6 +33,14 @@ function LoginPage() {
   const counterTop = baseCounterTop * heightRatio;
   const happyNewYearTop = baseHappyNewYearTop * heightRatio;
 
+  useEffect(() => {
+    if (!hasFetchedAuth && !isCheckingAuth) {
+      void checkAuth();
+    }
+  }, [checkAuth, hasFetchedAuth, isCheckingAuth]);
+
+  const isAuthResolved = hasFetchedAuth && !isCheckingAuth;
+
   const handleKakaoLogin = () => {
     try {
       window.location.href = `${import.meta.env.VITE_SERVER_URL}/oauth2/authorization/kakao`;
@@ -34,6 +48,10 @@ function LoginPage() {
       console.error("카카오 로그인 URL 생성 실패:", error);
       alert("로그인 처리 중 오류가 발생했습니다.");
     }
+  };
+
+  const handleGoToBoard = () => {
+    navigate("/board");
   };
 
   if (isNewYear) {
@@ -70,9 +88,22 @@ function LoginPage() {
         <div className="mt-auto flex flex-col items-center pb-10">
           <PopularMusicChart chartMarginBottom={chartMarginBottom} />
 
-          {/* 카카오 로그인 버튼 */}
+          {/* 로그인 상태에 따른 버튼 */}
           <div className="flex w-full justify-center">
-            <KakaoLoginButton onClick={handleKakaoLogin} />
+            {isAuthResolved && (
+              isLoggedIn ? (
+                <button
+                  type="button"
+                  onClick={handleGoToBoard}
+                  className="flex flex-1 items-center justify-center whitespace-nowrap rounded-lg bg-[#8E2D2D] px-[136px] py-3 font-semibold text-white transition-colors hover:bg-[#7A2525]"
+                  style={{ maxWidth: "390px" }}
+                >
+                  LP 보드판으로 이동
+                </button>
+              ) : (
+                <KakaoLoginButton onClick={handleKakaoLogin} />
+              )
+            )}
           </div>
         </div>
       </div>
@@ -126,9 +157,22 @@ function LoginPage() {
       </div>
 
       <div className="flex flex-col-reverse items-center justify-center pb-10">
-        {/* 카카오 로그인 버튼 */}
+        {/* 로그인 상태에 따른 버튼 */}
         <div className="flex w-full justify-center">
-          <KakaoLoginButton onClick={handleKakaoLogin} />
+          {isAuthResolved && (
+            isLoggedIn ? (
+              <button
+                type="button"
+                onClick={handleGoToBoard}
+                className="flex flex-1 items-center justify-center whitespace-nowrap rounded-lg bg-[#8E2D2D] px-[136px] py-3 font-semibold text-white transition-colors hover:bg-[#7A2525]"
+                style={{ maxWidth: "390px" }}
+              >
+                LP 보드판으로 이동
+              </button>
+            ) : (
+              <KakaoLoginButton onClick={handleKakaoLogin} />
+            )
+          )}
         </div>
 
         {/* 디데이 표기 창 */}

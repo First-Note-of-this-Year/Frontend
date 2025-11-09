@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getBoardShare } from "@/apis/board";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const checkAuth = useAuthStore((state) => state.checkAuth);
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -16,12 +17,11 @@ export default function OAuthCallback() {
         navigate("/");
         return;
       }
-      console.log("카카오 로그인 성공!!!!!!");
 
       try {
-        const boardShareData = await getBoardShare();
+        const boardShareData = await checkAuth({ force: true });
 
-        if (boardShareData.data.boardId === null) {
+        if (!boardShareData || boardShareData.boardId === null) {
           navigate("/join/nickname");
         } else {
           navigate("/board");
@@ -35,7 +35,7 @@ export default function OAuthCallback() {
     const timer = setTimeout(handleCallback, 100);
 
     return () => clearTimeout(timer);
-  }, [searchParams, navigate]);
+  }, [checkAuth, searchParams, navigate]);
 
   return (
     <div className="flex h-screen items-center justify-center bg-white">

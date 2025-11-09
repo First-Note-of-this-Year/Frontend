@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import BoardNoteIcon from "@/assets/ic_board_note.svg?react";
 import HamburgerIcon from "@/assets/ic_hamburger.svg?react";
 import HeaderIcon from "@/assets/ic_header_logo.svg?react";
@@ -28,6 +29,7 @@ export function BoardHeader({
   onMenuClick,
 }: BoardHeaderProps) {
   const { isNewYear } = useTimeStore();
+  const navigate = useNavigate();
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -53,8 +55,10 @@ export function BoardHeader({
   return (
     <>
       {/* Header Logo */}
-      <div
-        className="fixed z-40"
+      <button
+        type="button"
+        onClick={() => navigate("/")}
+        className="fixed z-40 cursor-pointer transition-opacity hover:opacity-70"
         style={{
           top: logoTop,
           left:
@@ -62,9 +66,10 @@ export function BoardHeader({
               ? `calc(50% - 225px + ${horizontalPadding}px)`
               : horizontalPadding,
         }}
+        aria-label="홈으로 이동"
       >
         <HeaderIcon />
-      </div>
+      </button>
 
       {/* Hamburger Menu */}
       <button
