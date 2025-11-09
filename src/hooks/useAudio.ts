@@ -34,6 +34,15 @@ export function useAudio(): UseAudioReturn {
         newAudio.onabort = () => reject(new Error("Audio loading aborted"));
       });
 
+      // 새 오디오를 재생하기 전에 다시 한번 확인
+      if (audioRef.current) {
+        const prevAudio = audioRef.current;
+        prevAudio.pause();
+        prevAudio.currentTime = 0;
+        prevAudio.src = "";
+        prevAudio.load();
+      }
+
       audioRef.current = newAudio;
       await newAudio.play();
       setIsPlaying(true);
