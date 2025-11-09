@@ -3,12 +3,12 @@ import type {
   MusicSearchData,
   PopularChartApiResponse,
 } from "@/apis/types/music";
-import { apiGet } from "@/lib/api";
+import { apiGetPublic } from "@/lib/api";
 import type { ApiResponse } from "@/types/api";
 import type { Music } from "@/types/music";
 
 export const getPopularMusicCharts = async (): Promise<Music[]> => {
-  const response = await apiGet<ApiResponse<PopularChartApiResponse[]>>(
+  const response = await apiGetPublic<ApiResponse<PopularChartApiResponse[]>>(
     API_ENDPOINTS.MUSIC.POPULAR_CHART
   );
 
@@ -28,7 +28,7 @@ export const getPopularMusicCharts = async (): Promise<Music[]> => {
 
 export const getSearchedSongs = async (query?: string): Promise<Music[]> => {
   const params = query ? { keyword: query } : undefined;
-  const response = await apiGet<
+  const response = await apiGetPublic<
     ApiResponse<MusicSearchData>,
     { keyword?: string }
   >(API_ENDPOINTS.MUSIC.SEARCH, params);
