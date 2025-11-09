@@ -25,8 +25,14 @@ export function useCountdown(serverTimeStr?: string) {
       const elapsed = Date.now() - startClient;
       const currentServer = new Date(serverNow.getTime() + elapsed);
 
-      const year = currentServer.getUTCFullYear();
-      const target = new Date(Date.UTC(year + 1, 0, 1, 0, 0, 0));
+      // 현재 서버 시간의 년도를 가져와서 다음 해 1월 1일 00:00:00 (로컬 시간) 계산
+      const year = currentServer.getFullYear();
+      const month = currentServer.getMonth();
+      
+      // 현재가 12월이면 다음해 1월 1일, 그 외에는 올해 1월 1일 (이미 지났으므로 0)
+      const targetYear = month === 11 ? year + 1 : year + 1;
+      const target = new Date(targetYear, 0, 1, 0, 0, 0, 0);
+      
       let diffMs = target.getTime() - currentServer.getTime();
       if (diffMs < 0) diffMs = 0;
 
