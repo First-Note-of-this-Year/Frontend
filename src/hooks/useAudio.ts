@@ -12,9 +12,13 @@ export function useAudio(): UseAudioReturn {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const playAudio = useCallback(async (songUrl: string) => {
+    // 기존 오디오가 있으면 정리
     if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
+      const oldAudio = audioRef.current;
+      oldAudio.pause();
+      oldAudio.currentTime = 0;
+      oldAudio.src = "";
+      oldAudio.load();
       audioRef.current = null;
       setIsPlaying(false);
     }
@@ -41,9 +45,11 @@ export function useAudio(): UseAudioReturn {
 
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      audioRef.current.src = "";
+      const audio = audioRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = "";
+      audio.load();
       audioRef.current = null;
       setIsPlaying(false);
     }
