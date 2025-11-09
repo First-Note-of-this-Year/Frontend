@@ -135,7 +135,7 @@ export default function LetterSelectPage({
         className="absolute top-0 right-0 pt-26 sm:pt-36 md:pt-40"
       />
 
-      <div className="mx-auto flex w-60 flex-col gap-4">
+      <div className="relative z-10 mx-auto flex w-60 flex-col gap-4">
         <div className="relative flex h-60 w-60 items-center justify-center self-center rounded bg-white/10 backdrop-blur-md">
           {displayedMusic?.coverImage ? (
             <img
