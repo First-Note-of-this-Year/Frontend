@@ -16,6 +16,9 @@ interface LetterModalProps {
   onToggleAudio: () => void;
 }
 
+// 개발자 코멘트 판단 함수 (항상 6번째 위치, letterOpenId는 1-based)
+const isDeveloperComment = (letterOpenId: number | null) => letterOpenId === 6;
+
 const MARQUEE_REPEAT = [1, 2, 3, 4] as const;
 
 export function LetterModal({
@@ -41,6 +44,8 @@ export function LetterModal({
   }, [messageDetail?.songTitle]);
 
   if (!isOpen || letterOpenId === null) return null;
+
+  const isDevComment = isDeveloperComment(letterOpenId);
 
   return (
     <div
@@ -72,7 +77,7 @@ export function LetterModal({
         style={{
           position: "absolute",
           left: "50%",
-          top: "calc(50% - 300px)",
+          top: isDevComment ? "calc(50% - 270px)" : "calc(50% - 300px)",
           transform: "translateX(-50%)",
           width: 200,
           height: 200,
@@ -124,7 +129,7 @@ export function LetterModal({
           To. {ownerNickname}
         </div>
 
-        {/* read-only display box below the To. label: 294x225, font-letter 17px */}
+        {/* read-only display box below the To. label: 294x225, font-letter 17px (개발자 코멘트는 14.5px) */}
         <div
           className="font-letter"
           style={{
@@ -133,7 +138,7 @@ export function LetterModal({
             left: 23,
             width: 294,
             height: 225,
-            fontSize: 17,
+            fontSize: isDevComment ? 14.5 : 17,
             background: "transparent",
             color: "#000",
             lineHeight: "1.2",
@@ -165,7 +170,7 @@ export function LetterModal({
           From. {messageDetail?.sender}
         </div>
 
-        {messageDetail?.coverImage ? (
+        {!isDevComment && (messageDetail?.coverImage ? (
           <img
             src={messageDetail.coverImage}
             alt={`album-${letterOpenId ?? ""}`}
@@ -195,7 +200,7 @@ export function LetterModal({
               borderRadius: 4,
             }}
           />
-        )}
+        ))}
 
         <img
           src={StampWebp}
@@ -212,51 +217,53 @@ export function LetterModal({
         />
       </div>
 
-      <div className="mx-auto flex w-60 flex-col gap-4">
-        <div className="flex flex-row gap-2">
-          <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
-            <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
-              <div
-                ref={textRef}
-                className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
-              >
-                {shouldAnimate ? (
-                  MARQUEE_REPEAT.map((num) => (
-                    <span key={num} className="inline-block px-2">
-                      {messageDetail?.songTitle ?? "곡 제목"}
-                    </span>
-                  ))
-                ) : (
-                  <span>{messageDetail?.songTitle ?? "곡 제목"}</span>
-                )}
+      {!isDevComment && (
+        <div className="mx-auto flex w-60 flex-col gap-4">
+          <div className="flex flex-row gap-2">
+            <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
+              <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
+                <div
+                  ref={textRef}
+                  className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
+                >
+                  {shouldAnimate ? (
+                    MARQUEE_REPEAT.map((num) => (
+                      <span key={num} className="inline-block px-2">
+                        {messageDetail?.songTitle ?? "곡 제목"}
+                      </span>
+                    ))
+                  ) : (
+                    <span>{messageDetail?.songTitle ?? "곡 제목"}</span>
+                  )}
+                </div>
               </div>
+
+              <p className="whitespace-nowrap text-gray-500 text-xs">
+                {messageDetail?.artist && messageDetail.artist.length > 4
+                  ? `${messageDetail.artist.slice(0, 4)}...`
+                  : (messageDetail?.artist ?? "가수")}
+              </p>
             </div>
 
-            <p className="whitespace-nowrap text-gray-500 text-xs">
-              {messageDetail?.artist && messageDetail.artist.length > 4
-                ? `${messageDetail.artist.slice(0, 4)}...`
-                : (messageDetail?.artist ?? "가수")}
-            </p>
+            <button
+              type="button"
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md"
+              onClick={(e) => {
+                // prevent overlay click from closing modal when Play button is clicked
+                e.stopPropagation();
+                onToggleAudio();
+              }}
+              onKeyDown={(e) => {
+                // ensure keyboard interaction also does not close the modal
+                e.stopPropagation();
+              }}
+              aria-label={isPlaying ? "pause" : "play"}
+            >
+              <PlayIcon />
+            </button>
           </div>
-
-          <button
-            type="button"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md"
-            onClick={(e) => {
-              // prevent overlay click from closing modal when Play button is clicked
-              e.stopPropagation();
-              onToggleAudio();
-            }}
-            onKeyDown={(e) => {
-              // ensure keyboard interaction also does not close the modal
-              e.stopPropagation();
-            }}
-            aria-label={isPlaying ? "pause" : "play"}
-          >
-            <PlayIcon />
-          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

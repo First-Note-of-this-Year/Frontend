@@ -12,6 +12,7 @@ import windowNewYearIcon from "@/assets/ic_window_newyear.webp";
 import windowIcon from "@/assets/ic_window_normal.webp";
 import { ShareModal } from "@/components/ui/share-modal";
 import { Sidebar } from "@/components/ui/sidebar";
+import { Toast } from "@/components/ui/toast";
 import { useShareModal } from "@/hooks/useShareModal";
 import { useTimeStore } from "@/stores/useTimeStore";
 import { AlbumGrid } from "./components/album-grid";
@@ -71,6 +72,8 @@ function BoardPage() {
     isPlaying,
     toggleAudio,
     closeModal,
+    showToast,
+    setShowToast,
   } = useLetterModal(isSharedBoard, boardList, sharedBoardData);
 
   const {
@@ -310,6 +313,13 @@ function BoardPage() {
           />
         </div>
       )}
+
+      {/* Toast */}
+      <Toast
+        isOpen={showToast}
+        message="편지는 1월 1일 이후에 볼 수 있어요"
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
