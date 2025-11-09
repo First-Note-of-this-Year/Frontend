@@ -48,6 +48,15 @@ export const getBoardInfo = async (
   );
 };
 
+// shared 보드 정보 반환
+export const getSharedBoardInfo = async (
+  shareUri: string
+): Promise<BoardInfoResponse> => {
+  return apiGetPublic<BoardInfoResponse>(
+    API_ENDPOINTS.BOARD.SHARED_BOARD(shareUri)
+  );
+};
+
 //보드 상세 메세지 반환
 export const getBoardDetail = async (
   messageId: string
@@ -56,11 +65,12 @@ export const getBoardDetail = async (
 };
 
 //보드 리스트 반환
-export const getBoardList = async (
-  page = 0
-): Promise<BoardListResponse> => {
+export const getBoardList = async (page = 0): Promise<BoardListResponse> => {
   const params = { pageNumber: page };
-  return apiGet<BoardListResponse, typeof params>(API_ENDPOINTS.BOARD.LIST, params);
+  return apiGet<BoardListResponse, typeof params>(
+    API_ENDPOINTS.BOARD.LIST,
+    params
+  );
 };
 
 //보드 프로필 수정
