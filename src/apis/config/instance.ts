@@ -95,6 +95,11 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       const originalRequest = error.config;
 
+      // skipAuthRedirect 플래그가 있으면 리다이렉트하지 않음
+      if (originalRequest?.headers?.skipAuthRedirect) {
+        return Promise.reject(error);
+      }
+
       if (
         originalRequest &&
         !originalRequest.url?.includes(API_ENDPOINTS.AUTH.REISSUE)
