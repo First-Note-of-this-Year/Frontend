@@ -5,6 +5,7 @@ import {
   getBoardList,
   getBoardShare,
   getSharedBoard,
+  getSharedBoardInfo,
 } from "@/apis/board";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
 
@@ -55,10 +56,11 @@ export function useBoardData(shareUri?: string) {
 
   // boardInfo query: fetch automatically when a shareUri (route or current user) exists
   const boardInfoQuery = useQuery({
-    queryKey: ["boardInfo", computedShareUri],
+    queryKey: ["boardInfo", computedShareUri, isSharedBoard],
     queryFn: ({ queryKey }) => {
       const uri = queryKey[1] as string;
-      return getBoardInfo(uri);
+      const isShared = queryKey[2] as boolean;
+      return isShared ? getSharedBoardInfo(uri) : getBoardInfo(uri);
     },
     enabled: Boolean(computedShareUri),
   });
@@ -82,7 +84,7 @@ export function useBoardData(shareUri?: string) {
     // handle shared board data
     if (isSharedBoard && sharedBoardData?.data) {
       let contentList = sharedBoardData.data.content ?? [];
-      
+
       // 1페이지일 때 6번째 위치(인덱스 5)에 더미 아이템 삽입 (개발자 코멘트용)
       if (currentPage === 0) {
         const dummyItem: SharedBoardMessage = {
@@ -90,19 +92,21 @@ export function useBoardData(shareUri?: string) {
           musicId: "",
           coverImage: "",
         };
-        
+
         // 메시지가 5개 미만이면 빈 공간을 채워서 6번째 위치에 하트가 오도록 함
         if (contentList.length < 5) {
           // 5개가 될 때까지 빈 아이템 추가
           const emptyItemsNeeded = 5 - contentList.length;
-          const emptyItems: SharedBoardMessage[] = Array(emptyItemsNeeded).fill(null).map((_, i) => ({
-            messageId: `empty-${i}`,
-            musicId: "",
-            coverImage: "",
-          }));
+          const emptyItems: SharedBoardMessage[] = Array(emptyItemsNeeded)
+            .fill(null)
+            .map((_, i) => ({
+              messageId: `empty-${i}`,
+              musicId: "",
+              coverImage: "",
+            }));
           contentList = [...contentList, ...emptyItems];
         }
-        
+
         // 6번째 위치(인덱스 5)에 하트 삽입
         contentList = [
           ...contentList.slice(0, 5),
@@ -110,7 +114,7 @@ export function useBoardData(shareUri?: string) {
           ...contentList.slice(5),
         ];
       }
-      
+
       setBoardList(contentList);
       setTotalPages(sharedBoardData.data.totalPages ?? 1);
       setBoardTotalElements(sharedBoardData.data.totalElements ?? 0);
@@ -122,7 +126,7 @@ export function useBoardData(shareUri?: string) {
     if (!isSharedBoard && currentUserBoardList) {
       const data = currentUserBoardList.data;
       let contentList = data.content ?? [];
-      
+
       // 1페이지일 때 6번째 위치(인덱스 5)에 더미 아이템 삽입 (개발자 코멘트용)
       if (currentPage === 0) {
         const dummyItem: BoardListItem = {
@@ -136,25 +140,27 @@ export function useBoardData(shareUri?: string) {
           songUrl: "",
           read: true,
         };
-        
+
         // 메시지가 5개 미만이면 빈 공간을 채워서 6번째 위치에 하트가 오도록 함
         if (contentList.length < 5) {
           // 5개가 될 때까지 빈 아이템 추가
           const emptyItemsNeeded = 5 - contentList.length;
-          const emptyItems: BoardListItem[] = Array(emptyItemsNeeded).fill(null).map((_, i) => ({
-            messageId: `empty-${i}`,
-            sender: "",
-            content: "",
-            musicId: "",
-            songTitle: "",
-            artist: "",
-            coverImage: "",
-            songUrl: "",
-            read: true,
-          }));
+          const emptyItems: BoardListItem[] = Array(emptyItemsNeeded)
+            .fill(null)
+            .map((_, i) => ({
+              messageId: `empty-${i}`,
+              sender: "",
+              content: "",
+              musicId: "",
+              songTitle: "",
+              artist: "",
+              coverImage: "",
+              songUrl: "",
+              read: true,
+            }));
           contentList = [...contentList, ...emptyItems];
         }
-        
+
         // 6번째 위치(인덱스 5)에 하트 삽입
         contentList = [
           ...contentList.slice(0, 5),
@@ -162,7 +168,7 @@ export function useBoardData(shareUri?: string) {
           ...contentList.slice(5),
         ];
       }
-      
+
       setBoardList(contentList);
       setBoardTotalElements(data.totalElements ?? data.content?.length ?? 0);
       setTotalPages(data.totalPages ?? 1);
