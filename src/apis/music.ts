@@ -39,7 +39,7 @@ export const getSearchedSongs = async (query?: string): Promise<Music[]> => {
       songTitle: item.songTitle,
       artist: item.artist,
       coverImage: item.coverImage,
-      songUrl: item.itunesUrl || item.youtubeUrl || "",
+      songUrl: item.songUrl,
       itunesUrl: item.itunesUrl,
       youtubeUrl: item.youtubeUrl,
     }));
