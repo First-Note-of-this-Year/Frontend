@@ -66,6 +66,7 @@ export function AlbumGrid({
           const coverImage = isSharedBoard
             ? (item as SharedBoardMessage).coverImage
             : (item as BoardListItem).coverImage;
+          const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index);
           const isEmpty = messageId?.startsWith('empty-');
 
@@ -100,6 +101,7 @@ export function AlbumGrid({
                 background: "transparent",
                 cursor: "pointer",
                 transition: "transform 120ms ease",
+                position: "relative",
               }}
               className="hover:scale-105"
             >
@@ -114,17 +116,32 @@ export function AlbumGrid({
                   }}
                 />
               ) : (
-                <img
-                  src={coverImage}
-                  alt={`album-cover-${messageId}`}
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                    display: "block",
-                    borderRadius: "4px",
-                  }}
-                />
+                <>
+                  <img
+                    src={coverImage}
+                    alt={`album-cover-${messageId}`}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                      display: "block",
+                      borderRadius: "4px",
+                    }}
+                  />
+                  {isRead && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "60px",
+                        height: "60px",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  )}
+                </>
               )}
             </button>
           );
@@ -154,6 +171,7 @@ export function AlbumGrid({
           const coverImage = isSharedBoard
             ? (item as SharedBoardMessage).coverImage
             : (item as BoardListItem).coverImage;
+          const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index + 2);
           const isEmpty = messageId?.startsWith('empty-');
 
@@ -186,6 +204,7 @@ export function AlbumGrid({
                 background: "transparent",
                 cursor: "pointer",
                 transition: "transform 120ms ease",
+                position: "relative",
               }}
               className="hover:scale-105"
             >
@@ -200,17 +219,32 @@ export function AlbumGrid({
                   }}
                 />
               ) : (
-                <img
-                  src={coverImage}
-                  alt={`album-cover-${messageId}`}
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                    display: "block",
-                    borderRadius: "4px",
-                  }}
-                />
+                <>
+                  <img
+                    src={coverImage}
+                    alt={`album-cover-${messageId}`}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                      display: "block",
+                      borderRadius: "4px",
+                    }}
+                  />
+                  {isRead && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "60px",
+                        height: "60px",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  )}
+                </>
               )}
             </button>
           );
