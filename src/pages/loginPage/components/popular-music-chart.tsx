@@ -3,6 +3,7 @@ import { getPopularMusicCharts } from "@/apis/music";
 import ChartBarIcon from "@/assets/ic_chartbar.svg?react";
 import LandingPauseIcon from "@/assets/ic_landing_pause.svg?react";
 import LandingPlayIcon from "@/assets/ic_landing_play.svg?react";
+import { useAudio } from "@/hooks/useAudio";
 import type { Music } from "@/types/music";
 
 interface PopularMusicChartProps {
@@ -15,6 +16,8 @@ export function PopularMusicChart({
   const [musicCharts, setMusicCharts] = useState<Music[]>([]);
   const [loading, setLoading] = useState(false);
   const [playingMusicId, setPlayingMusicId] = useState<string | null>(null);
+
+  const { isPlaying, playAudio, stopAudio } = useAudio();
 
   // 인기 차트 불러오기
   useEffect(() => {
@@ -32,6 +35,13 @@ export function PopularMusicChart({
 
     fetchCharts();
   }, []);
+
+  // 컴포넌트 언마운트 시 오디오 정지
+  useEffect(() => {
+    return () => {
+      stopAudio();
+    };
+  }, [stopAudio]);
 
   return (
     <>
@@ -140,16 +150,32 @@ export function PopularMusicChart({
               <button
                 type="button"
                 onClick={() => {
-                  setPlayingMusicId(
-                    playingMusicId === music.musicId ? null : music.musicId
-                  );
+                  // 현재 재생 중인 음악을 다시 클릭하면 정지
+                  if (playingMusicId === music.musicId && isPlaying) {
+                    stopAudio();
+                    setPlayingMusicId(null);
+                    return;
+                  }
+
+                  // 다른 음악을 선택하면 재생
+                  setPlayingMusicId(music.musicId);
+                  if (music.songUrl || music.itunesUrl) {
+                    playAudio(music.songUrl || music.itunesUrl || "").catch(
+                      (error) => {
+                        console.error("Failed to play preview:", error);
+                        setPlayingMusicId(null);
+                      }
+                    );
+                  }
                 }}
                 style={{ marginLeft: "17px" }}
                 aria-label={
-                  playingMusicId === music.musicId ? "일시정지" : "재생"
+                  playingMusicId === music.musicId && isPlaying
+                    ? "일시정지"
+                    : "재생"
                 }
               >
-                {playingMusicId === music.musicId ? (
+                {playingMusicId === music.musicId && isPlaying ? (
                   <LandingPauseIcon />
                 ) : (
                   <LandingPlayIcon />

@@ -10,6 +10,7 @@ import { getPopularMusicCharts, getSearchedSongs } from "@/apis/music";
 import { BackButton } from "@/components/ui/back-button";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { SearchInput } from "@/components/ui/search-input";
+import { useAudio } from "@/hooks/useAudio";
 import { MusicList } from "@/pages/letterPage/components/music-list";
 import type { MessageData } from "@/types/message";
 import type { Music } from "@/types/music";
@@ -37,11 +38,9 @@ function MusicSearchPage() {
   const [selectedSongs, setSelectedSongs] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const LOCALSTORAGE_KEY = "messageDraft";
+  const { playAudio, stopAudio } = useAudio();
 
-  const toggleSongSelection = (songId: string) => {
-    setSelectedSongs((prev) => (prev.includes(songId) ? [] : [songId]));
-  };
+  const LOCALSTORAGE_KEY = "messageDraft";
 
   const mapMusicToListSong = useCallback(
     (music: Music): ListSong => ({
@@ -117,6 +116,35 @@ function MusicSearchPage() {
     selectedSongs.length > 0
       ? (displayedSongs.find((song) => song.id === selectedSongs[0]) ?? null)
       : null;
+
+  const toggleSongSelection = (songId: string) => {
+    setSelectedSongs((prev) => {
+      const newSelection = prev.includes(songId) ? [] : [songId];
+
+      // 선택이 해제되면 오디오 정지
+      if (newSelection.length === 0) {
+        stopAudio();
+        return newSelection;
+      }
+
+      // 새로 선택된 노래의 미리듣기 재생
+      const selectedSong = displayedSongs.find((song) => song.id === songId);
+      if (selectedSong?.streaming_url) {
+        playAudio(selectedSong.streaming_url).catch((error) => {
+          console.error("Failed to play preview:", error);
+        });
+      }
+
+      return newSelection;
+    });
+  };
+
+  // 페이지를 벗어날 때 오디오 정지
+  useEffect(() => {
+    return () => {
+      stopAudio();
+    };
+  }, [stopAudio]);
 
   return (
     <div className="relative flex h-full w-full flex-col bg-gray-100">
