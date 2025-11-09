@@ -7,9 +7,9 @@ interface AuthState {
   isCheckingAuth: boolean;
   hasFetchedAuth: boolean;
   boardShare: GetBoardShareResponse["data"] | null;
-  checkAuth: (
-    options?: { force?: boolean }
-  ) => Promise<GetBoardShareResponse["data"] | null>;
+  checkAuth: (options?: {
+    force?: boolean;
+  }) => Promise<GetBoardShareResponse["data"] | null>;
   setLoggedIn: (
     value: boolean,
     options?: { boardShare?: GetBoardShareResponse["data"] | null }
@@ -69,7 +69,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       isLoggedIn: false,
       isCheckingAuth: false,
       hasFetchedAuth: true,
-      hasFetchedAuth: false,
       boardShare: null,
     });
   },
