@@ -36,14 +36,10 @@ export function useAudio(): UseAudioReturn {
 
       // 새 오디오를 재생하기 전에 다시 한번 확인
       if (audioRef.current !== null) {
-        const prevAudio = audioRef.current;
-        // @ts-expect-error - TypeScript의 타입 추론 문제로 인한 임시 처리
+        const prevAudio = audioRef.current as HTMLAudioElement;
         prevAudio.pause();
-        // @ts-expect-error - TypeScript의 타입 추론 문제로 인한 임시 처리
         prevAudio.currentTime = 0;
-        // @ts-expect-error - TypeScript의 타입 추론 문제로 인한 임시 처리
         prevAudio.src = "";
-        // @ts-expect-error - TypeScript의 타입 추론 문제로 인한 임시 처리
         prevAudio.load();
       }
 
