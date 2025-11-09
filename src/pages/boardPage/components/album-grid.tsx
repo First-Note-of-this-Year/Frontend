@@ -10,6 +10,7 @@ interface AlbumGridProps {
   onComputeShift: () => void;
   onAlbumClick: (id: number) => void;
   screenWidth: number;
+  currentPage: number;
 }
 
 export function AlbumGrid({
@@ -20,6 +21,7 @@ export function AlbumGrid({
   onComputeShift,
   onAlbumClick,
   screenWidth,
+  currentPage,
 }: AlbumGridProps) {
   // Calculate responsive gaps
   // 390px 기준: 나머지 열 10px, 첫 번째 열 22px
@@ -31,7 +33,8 @@ export function AlbumGrid({
     screenWidth >= 390 ? 14 : Math.max(7, 14 - (390 - screenWidth) * 0.08);
 
   // Helper function to check if position is developer comment (always at index 5 on first page)
-  const isDeveloperCommentPosition = (globalIndex: number) => globalIndex === 5;
+  const isDeveloperCommentPosition = (globalIndex: number) => 
+    currentPage === 0 && globalIndex === 5;
 
   return (
     <div ref={shelfWrapperRef} className="relative mb-8 inline-block">

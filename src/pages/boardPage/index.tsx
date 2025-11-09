@@ -174,6 +174,7 @@ function BoardPage() {
           onComputeShift={computeShift}
           onAlbumClick={setLetterOpenId}
           screenWidth={screenWidth}
+          currentPage={currentPage}
         />
 
         <LetterModal
