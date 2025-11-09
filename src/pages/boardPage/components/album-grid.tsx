@@ -1,4 +1,5 @@
 import ShelfBg from "@/assets/bg_shelf.webp";
+import HeartIcon from "@/assets/ic_heart.svg";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
 
 interface AlbumGridProps {
@@ -28,6 +29,9 @@ export function AlbumGrid({
     screenWidth >= 390 ? 22 : Math.max(15, 22 - (390 - screenWidth) * 0.07);
   const sideMargin =
     screenWidth >= 390 ? 14 : Math.max(7, 14 - (390 - screenWidth) * 0.08);
+
+  // Helper function to check if position is developer comment (always at index 5 on first page)
+  const isDeveloperCommentPosition = (globalIndex: number) => globalIndex === 5;
 
   return (
     <div ref={shelfWrapperRef} className="relative mb-8 inline-block">
@@ -62,6 +66,22 @@ export function AlbumGrid({
           const coverImage = isSharedBoard
             ? (item as SharedBoardMessage).coverImage
             : (item as BoardListItem).coverImage;
+          const isDeveloperComment = isDeveloperCommentPosition(index);
+          const isEmpty = messageId?.startsWith('empty-');
+
+          // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
+          if (isEmpty) {
+            return (
+              <div
+                key={`album-${messageId}`}
+                style={{
+                  gridColumn: index === 0 ? "2 / 3" : "4 / 5",
+                  width: "60px",
+                  height: "60px",
+                }}
+              />
+            );
+          }
 
           return (
             <button
@@ -69,7 +89,7 @@ export function AlbumGrid({
               type="button"
               aria-label={`album-cover-${messageId}`}
               onClick={() => {
-                if (!isSharedBoard) onAlbumClick(index + 1);
+                onAlbumClick(index + 1);
               }}
               style={{
                 gridColumn: index === 0 ? "2 / 3" : "4 / 5",
@@ -83,17 +103,29 @@ export function AlbumGrid({
               }}
               className="hover:scale-105"
             >
-              <img
-                src={coverImage}
-                alt={`album-cover-${messageId}`}
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  objectFit: "cover",
-                  display: "block",
-                  borderRadius: "4px",
-                }}
-              />
+              {isDeveloperComment ? (
+                <img
+                  src={HeartIcon}
+                  alt="developer-comment"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <img
+                  src={coverImage}
+                  alt={`album-cover-${messageId}`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                    display: "block",
+                    borderRadius: "4px",
+                  }}
+                />
+              )}
             </button>
           );
         })}
@@ -122,6 +154,21 @@ export function AlbumGrid({
           const coverImage = isSharedBoard
             ? (item as SharedBoardMessage).coverImage
             : (item as BoardListItem).coverImage;
+          const isDeveloperComment = isDeveloperCommentPosition(index + 2);
+          const isEmpty = messageId?.startsWith('empty-');
+
+          // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
+          if (isEmpty) {
+            return (
+              <div
+                key={`album-${messageId}`}
+                style={{
+                  width: "60px",
+                  height: "60px",
+                }}
+              />
+            );
+          }
 
           return (
             <button
@@ -129,7 +176,7 @@ export function AlbumGrid({
               type="button"
               aria-label={`album-cover-${messageId}`}
               onClick={() => {
-                if (!isSharedBoard) onAlbumClick(index + 3);
+                onAlbumClick(index + 3);
               }}
               style={{
                 width: "60px",
@@ -142,17 +189,29 @@ export function AlbumGrid({
               }}
               className="hover:scale-105"
             >
-              <img
-                src={coverImage}
-                alt={`album-cover-${messageId}`}
-                style={{
-                  width: "60px",
-                  height: "60px",
-                  objectFit: "cover",
-                  display: "block",
-                  borderRadius: "4px",
-                }}
-              />
+              {isDeveloperComment ? (
+                <img
+                  src={HeartIcon}
+                  alt="developer-comment"
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <img
+                  src={coverImage}
+                  alt={`album-cover-${messageId}`}
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                    display: "block",
+                    borderRadius: "4px",
+                  }}
+                />
+              )}
             </button>
           );
         })}

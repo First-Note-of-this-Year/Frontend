@@ -29,19 +29,13 @@ export const getBoardShare = async (): Promise<GetBoardShareResponse> => {
 //공유 보드 메세지 반환
 export const getSharedBoard = async (
   shareUri: string,
-  page: number = 0,
-  size: number = 10,
-  sort: string = "desc"
+  page: number = 0
 ): Promise<SharedBoardResponse> => {
-  // send pagination/sort as query params on GET
-  const qs = new URLSearchParams({
-    page: page.toString(),
-    size: size.toString(),
-    sort,
-  }).toString();
+  const params = { pageNumber: page };
 
-  return apiGet<SharedBoardResponse>(
-    `${API_ENDPOINTS.BOARD.SHARED_BOARD(shareUri)}?${qs}`
+  return apiGet<SharedBoardResponse, typeof params>(
+    API_ENDPOINTS.BOARD.SHARED_BOARD(shareUri),
+    params
   );
 };
 
@@ -63,12 +57,10 @@ export const getBoardDetail = async (
 
 //보드 리스트 반환
 export const getBoardList = async (
-  page = 0,
-  size = 10,
-  sort = "desc"
+  page = 0
 ): Promise<BoardListResponse> => {
-  const body = { page, size, sort } as unknown as object;
-  return apiGet<BoardListResponse, object>(API_ENDPOINTS.BOARD.LIST, body);
+  const params = { pageNumber: page };
+  return apiGet<BoardListResponse, typeof params>(API_ENDPOINTS.BOARD.LIST, params);
 };
 
 //보드 프로필 수정
