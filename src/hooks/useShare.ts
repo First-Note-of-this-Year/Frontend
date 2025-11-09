@@ -15,11 +15,21 @@ type ShareResult =
 export const useShare = () => {
   const [isSharing, setIsSharing] = useState(false);
 
-  const shareBoard = async (): Promise<ShareResult> => {
+  const shareBoard = async (providedShareUri?: string): Promise<ShareResult> => {
     setIsSharing(true);
     try {
-      const response = await getBoardShare();
-      const shareUrl = `https://www.firstsori.site/board/${response.data.shareUri}`;
+      let shareUri: string;
+
+      if (providedShareUri) {
+        // 공유 보드 페이지에서 이미 shareUri를 알고 있는 경우
+        shareUri = providedShareUri;
+      } else {
+        // 내 보드 페이지에서 shareUri를 가져와야 하는 경우
+        const response = await getBoardShare();
+        shareUri = response.data.shareUri;
+      }
+
+      const shareUrl = `https://www.firstsori.site/board/${shareUri}`;
       console.log("Generated share URL:", shareUrl);
 
       const shareData: ShareData = {
