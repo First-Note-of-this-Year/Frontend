@@ -1,5 +1,5 @@
 import { API_ENDPOINTS } from "@/apis/config/endpoints";
-import { apiGet, apiPatchFormData, apiPost } from "@/lib/api";
+import { apiGet, apiGetPublic, apiPatchFormData, apiPost } from "@/lib/api";
 import type {
   BoardInfoResponse,
   BoardListResponse,
@@ -33,7 +33,7 @@ export const getSharedBoard = async (
 ): Promise<SharedBoardResponse> => {
   const params = { pageNumber: page };
 
-  return apiGet<SharedBoardResponse, typeof params>(
+  return apiGetPublic<SharedBoardResponse, typeof params>(
     API_ENDPOINTS.BOARD.SHARED_BOARD(shareUri),
     params
   );
@@ -43,7 +43,7 @@ export const getSharedBoard = async (
 export const getBoardInfo = async (
   shareUri: string
 ): Promise<BoardInfoResponse> => {
-  return apiGet<BoardInfoResponse>(
+  return apiGetPublic<BoardInfoResponse>(
     API_ENDPOINTS.BOARD.INFO_BY_SHARE_URI(shareUri)
   );
 };
