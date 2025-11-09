@@ -20,7 +20,7 @@ export function useLetterModal(
   const [showToast, setShowToast] = useState(false);
 
   const { isPlaying, playAudio, stopAudio, toggleAudio } = useAudio();
-  const { isNewYear } = useTimeStore();
+  const { isAfterNewYear } = useTimeStore();
 
   useEffect(() => {
     if (letterOpenId !== null) {
@@ -38,8 +38,8 @@ export function useLetterModal(
         return;
       }
 
-      // 새해가 아니면 토스트 표시하고 리턴
-      if (!isNewYear) {
+      // 새해가 시작되지 않았으면 토스트 표시하고 리턴
+      if (!isAfterNewYear) {
         setShowToast(true);
         setLetterOpenId(null);
         return;
@@ -106,7 +106,7 @@ export function useLetterModal(
     sharedBoardData,
     playAudio,
     stopAudio,
-    isNewYear,
+    isAfterNewYear,
   ]);
 
   const closeModal = () => {

@@ -11,7 +11,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useTimeStore } from "@/stores/useTimeStore";
 
 function LoginPage() {
-  const { isNewYear } = useTimeStore();
+  const { isNewYear, isAfterNewYear } = useTimeStore();
   const navigate = useNavigate();
   const { isLoggedIn, isCheckingAuth, hasFetchedAuth, checkAuth } =
     useAuthStore();
@@ -67,13 +67,13 @@ function LoginPage() {
           <LogoNewYearIcon />
         </div>
 
-        {/* Happy New Year 텍스트 */}
+        {/* Happy New Year / 새해가 시작된지 텍스트 */}
         <div
           className="-translate-x-1/2 absolute left-1/2"
           style={{ top: `${happyNewYearTop}px` }}
         >
           <span className="whitespace-nowrap font-bold font-year text-[44px] text-gray-100">
-            Happy New Year
+            {isAfterNewYear ? "새해가 시작된지" : "Happy New Year"}
           </span>
         </div>
 
