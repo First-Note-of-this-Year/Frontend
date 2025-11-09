@@ -22,6 +22,17 @@ export default function AppShell({ children }: PropsWithChildren) {
     fetchServerTime();
   }, [fetchServerTime]);
 
+  // 전역 스크롤 방지
+  useEffect(() => {
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, []);
+
   // 새해 기간이면 새해 배경, 아니면 기본 배경
   const bgUrl = isNewYear
     ? (getNewYearBackground(pathname) ?? getRouteBackground(pathname))
