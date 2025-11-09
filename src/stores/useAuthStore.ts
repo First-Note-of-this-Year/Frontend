@@ -68,7 +68,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({
       isLoggedIn: false,
       isCheckingAuth: false,
-      hasFetchedAuth: false,
+      hasFetchedAuth: true,
       boardShare: null,
     });
   },
