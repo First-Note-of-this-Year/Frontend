@@ -103,6 +103,14 @@ export default function AppRoutes() {
         }
       />
       <Route
+        path={ROUTES.JOIN.COMPLETE_WITH_SHARE}
+        element={
+          <ProtectedRoute requireBoard={false}>
+            <LetterCompletePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path={ROUTES.USER.PROFILE}
         element={
           <ProtectedRoute requireBoard={true}>
