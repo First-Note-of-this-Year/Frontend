@@ -67,7 +67,7 @@ function BoardPage() {
   const {
     overlayRef,
     letterOpenId,
-    setLetterOpenId,
+    handleAlbumClick,
     messageDetail,
     isPlaying,
     toggleAudio,
@@ -172,7 +172,7 @@ function BoardPage() {
           shelfRef={shelfRef}
           shelfWrapperRef={shelfWrapperRef}
           onComputeShift={computeShift}
-          onAlbumClick={setLetterOpenId}
+          onAlbumClick={handleAlbumClick}
           screenWidth={screenWidth}
           currentPage={currentPage}
         />
