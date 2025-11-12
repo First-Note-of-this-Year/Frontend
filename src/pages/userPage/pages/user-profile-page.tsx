@@ -107,17 +107,10 @@ export default function UserProfilePage() {
       reader.onloadend = () => {
         const base64String = reader.result as string;
         requestBody.profileImage = base64String;
-        console.log(
-          "프로필 이미지 base64:",
-          `${base64String.substring(0, 100)}...`
-        );
-        console.log("프로필 이미지 전체 길이:", base64String.length);
-        console.log("프로필 수정 요청:", requestBody);
         updateBoardMutation.mutate(requestBody);
       };
       reader.readAsDataURL(profileImageFile);
     } else {
-      console.log("프로필 수정 요청 (이미지 없음):", requestBody);
       updateBoardMutation.mutate(requestBody);
     }
   };
