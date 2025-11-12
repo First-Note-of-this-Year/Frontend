@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import imageCompression from "browser-image-compression";
 import { getBoardInfo, getBoardShare, updateBoard } from "@/apis/board";
 import CameraIcon from "@/assets/ic_camera.svg?react";
 import DefaultProfileImage from "@/assets/obj_default_profile.svg?react";
@@ -41,15 +42,43 @@ export default function UserProfilePage() {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setProfileImageFile(file);
+    if (!file) return;
+
+    // 파일 크기 체크 (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("이미지 크기는 5MB 이하만 업로드 가능합니다.");
+      e.target.value = "";
+      return;
+    }
+
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1000,
+        useWebWorker: true,
+        fileType: "image/jpeg",
+        initialQuality: 0.9,
+      };
+
+      // 이미지 압축
+      const compressedFile = await imageCompression(file, options);
+
+      setProfileImageFile(compressedFile);
+
+      // 미리보기 생성
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImagePreview(reader.result as string);
+        const result = reader.result as string;
+        setProfileImagePreview(result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("이미지 압축 실패:", error);
+      alert("이미지 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      e.target.value = "";
     }
   };
 
@@ -59,22 +88,31 @@ export default function UserProfilePage() {
       return;
     }
 
-    // 닉네임이 입력되지 않았으면 그냥 뒤로가기
-    if (!nickname || nickname.trim() === "") {
+    // 수정 사항 없는 경우
+    if ((!nickname || nickname.trim() === "") && !profileImageFile) {
       navigate("/board");
       return;
     }
 
-    // FormData 생성
-    const formData = new FormData();
-    formData.append("nickname", nickname);
+    const requestBody: { nickname?: string; profileImage?: string } = {};
 
-    // 새 이미지가 선택된 경우에만 파일 추가
-    if (profileImageFile) {
-      formData.append("profileImage", profileImageFile);
+    // 닉네임이 입력된 경우 추가
+    if (nickname && nickname.trim() !== "") {
+      requestBody.nickname = nickname;
     }
 
-    updateBoardMutation.mutate(formData);
+    // 새 이미지가 선택된 경우 base64 인코딩된 이미지 추가
+    if (profileImageFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        requestBody.profileImage = base64String;
+        updateBoardMutation.mutate(requestBody);
+      };
+      reader.readAsDataURL(profileImageFile);
+    } else {
+      updateBoardMutation.mutate(requestBody);
+    }
   };
 
   return (
