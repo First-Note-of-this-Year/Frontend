@@ -47,7 +47,8 @@ export default function UserProfilePage() {
       setProfileImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImagePreview(reader.result as string);
+        const result = reader.result as string;
+        setProfileImagePreview(result);
       };
       reader.readAsDataURL(file);
     }
@@ -59,22 +60,39 @@ export default function UserProfilePage() {
       return;
     }
 
-    // 닉네임이 입력되지 않았으면 그냥 뒤로가기
-    if (!nickname || nickname.trim() === "") {
+    // 수정 사항 없는 경우
+    if ((!nickname || nickname.trim() === "") && !profileImageFile) {
       navigate("/board");
       return;
     }
 
-    // FormData 생성
-    const formData = new FormData();
-    formData.append("nickname", nickname);
+    // JSON body 생성
+    const requestBody: { nickname?: string; profileImage?: string } = {};
 
-    // 새 이미지가 선택된 경우에만 파일 추가
-    if (profileImageFile) {
-      formData.append("profileImage", profileImageFile);
+    // 닉네임이 입력된 경우 추가
+    if (nickname && nickname.trim() !== "") {
+      requestBody.nickname = nickname;
     }
 
-    updateBoardMutation.mutate(formData);
+    // 새 이미지가 선택된 경우 base64 인코딩된 이미지 추가
+    if (profileImageFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        requestBody.profileImage = base64String;
+        console.log(
+          "프로필 이미지 base64:",
+          base64String.substring(0, 100) + "..."
+        );
+        console.log("프로필 이미지 전체 길이:", base64String.length);
+        console.log("프로필 수정 요청:", requestBody);
+        updateBoardMutation.mutate(requestBody);
+      };
+      reader.readAsDataURL(profileImageFile);
+    } else {
+      console.log("프로필 수정 요청 (이미지 없음):", requestBody);
+      updateBoardMutation.mutate(requestBody);
+    }
   };
 
   return (
