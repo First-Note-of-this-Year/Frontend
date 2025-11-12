@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import imageCompression from "browser-image-compression";
 import { getBoardInfo, getBoardShare, updateBoard } from "@/apis/board";
 import CameraIcon from "@/assets/ic_camera.svg?react";
 import DefaultProfileImage from "@/assets/obj_default_profile.svg?react";
@@ -41,16 +42,43 @@ export default function UserProfilePage() {
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setProfileImageFile(file);
+    if (!file) return;
+
+    // 파일 크기 체크 (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("이미지 크기는 5MB 이하만 업로드 가능합니다.");
+      e.target.value = "";
+      return;
+    }
+
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1000,
+        useWebWorker: true,
+        fileType: "image/jpeg",
+        initialQuality: 0.9,
+      };
+
+      // 이미지 압축
+      const compressedFile = await imageCompression(file, options);
+
+      setProfileImageFile(compressedFile);
+
+      // 미리보기 생성
       const reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result as string;
         setProfileImagePreview(result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("이미지 압축 실패:", error);
+      alert("이미지 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+      e.target.value = "";
     }
   };
 
@@ -66,7 +94,6 @@ export default function UserProfilePage() {
       return;
     }
 
-    // JSON body 생성
     const requestBody: { nickname?: string; profileImage?: string } = {};
 
     // 닉네임이 입력된 경우 추가
@@ -82,7 +109,7 @@ export default function UserProfilePage() {
         requestBody.profileImage = base64String;
         console.log(
           "프로필 이미지 base64:",
-          base64String.substring(0, 100) + "..."
+          `${base64String.substring(0, 100)}...`
         );
         console.log("프로필 이미지 전체 길이:", base64String.length);
         console.log("프로필 수정 요청:", requestBody);
