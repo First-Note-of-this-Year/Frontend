@@ -23,19 +23,14 @@ export function NewYearCountdown() {
       const elapsed = Date.now() - startTimeRef.current;
       const currentTime = new Date(serverTimeRef.current.getTime() + elapsed);
 
-      // 로컬 타임존 기준으로 년/월/일 확인 (서버가 한국 시각을 보냄)
+      // 로컬 타임존 기준으로 년/월/일 확인
       const currentYear = currentTime.getFullYear();
       const month = currentTime.getMonth();
       const day = currentTime.getDate();
 
-      // 1월 1일 자정 (로컬 타임존 기준)
-      const newYear = new Date(currentYear, 0, 1, 0, 0, 0, 0);
-
-      // 현재 시간 기준으로 1월 1일 ~ 1월 14일 사이인지 동적 확인
-      const isCurrentlyAfterNewYear = month === 0 && day >= 1 && day <= 14;
-
-      // 1월 1일 ~ 1월 14일 사이면 1월 1일부터 경과 시간 계산
-      if (isCurrentlyAfterNewYear) {
+      // 1월 1일 ~ 1월 14일이면 무조건 카운트업 모드
+      if (month === 0 && day >= 1 && day <= 14) {
+        const newYear = new Date(currentYear, 0, 1, 0, 0, 0, 0);
         const diff = currentTime.getTime() - newYear.getTime();
 
         const hours = Math.floor(diff / (1000 * 60 * 60));
@@ -45,11 +40,12 @@ export function NewYearCountdown() {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
       }
 
-      // 12월이면 다음해 1월 1일까지 카운트다운
+      // 12월이면 다음해 1월 1일까지 카운트다운 (1초 느리게)
       const nextYear = new Date(currentYear + 1, 0, 1, 0, 0, 0, 0);
-      const diff = nextYear.getTime() - currentTime.getTime();
+      const diff = nextYear.getTime() - currentTime.getTime() + 1000; // 1초 빼기
 
       if (diff <= 0) {
+        // 새해가 지났지만 아직 1월이 아님 (타임존 차이)
         return "00:00:00";
       }
 
