@@ -38,13 +38,6 @@ export function useLetterModal(
         return;
       }
 
-      // 새해가 시작되지 않았으면 토스트 표시하고 리턴
-      if (!isAfterNewYear) {
-        setShowToast(true);
-        setLetterOpenId(null);
-        return;
-      }
-
       const posIndex = letterOpenId - 1;
       const isDeveloperComment = posIndex === 5;
 
@@ -106,7 +99,6 @@ export function useLetterModal(
     sharedBoardData,
     playAudio,
     stopAudio,
-    isAfterNewYear,
   ]);
 
   const closeModal = () => {
@@ -114,10 +106,21 @@ export function useLetterModal(
     stopAudio();
   };
 
+  const handleAlbumClick = (id: number) => {
+    // 새해가 시작되지 않았으면 토스트 표시하고 리턴
+    if (!isAfterNewYear) {
+      setShowToast(true);
+      return;
+    }
+    // 새해가 시작되었으면 편지 열기
+    setLetterOpenId(id);
+  };
+
   return {
     overlayRef,
     letterOpenId,
     setLetterOpenId,
+    handleAlbumClick,
     messageDetail,
     isPlaying,
     toggleAudio,
