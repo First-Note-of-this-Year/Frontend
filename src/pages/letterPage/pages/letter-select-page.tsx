@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBoardInfo } from "@/apis/board";
 import PlayIcon from "@/assets/ic_play.svg?react";
+import PauseIcon from "@/assets/ic_pause.svg?react";
 import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
+import { useAudio } from "@/hooks/useAudio";
 import type { Music } from "@/types/music";
 import LetterStep from "../components/letter-step";
 
@@ -28,6 +30,7 @@ export default function LetterSelectPage({
   const textRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [shouldAnimate, setShouldAnimate] = useState(false);
+  const { isPlaying, playAudio, stopAudio } = useAudio();
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/letter/select";
@@ -101,6 +104,18 @@ export default function LetterSelectPage({
       }
     } else {
       navigate(shareUri ? `/letter/write/${shareUri}` : "/letter/write");
+    }
+  };
+
+  const handleToggleAudio = () => {
+    if (!displayedMusic?.songUrl) return;
+
+    if (isPlaying) {
+      stopAudio();
+    } else {
+      playAudio(displayedMusic.songUrl).catch((error) => {
+        console.error("Failed to play audio:", error);
+      });
     }
   };
 
@@ -178,8 +193,10 @@ export default function LetterSelectPage({
           <button
             type="button"
             className="flex h-12 w-12 items-center justify-center rounded-full bg-black/10 backdrop-blur-md"
+            onClick={handleToggleAudio}
+            aria-label={isPlaying ? "pause" : "play"}
           >
-            <PlayIcon />
+            {isPlaying ? <PauseIcon className="text-white" /> : <PlayIcon />}
           </button>
         </div>
 

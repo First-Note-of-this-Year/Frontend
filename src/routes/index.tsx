@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import ProtectedRoute from "@/components/common/ProtectedRoute";
 import OAuthCallback from "@/pages/oauth/callback";
 import UserInquiryPage from "@/pages/userPage/pages/user-inquiry-page";
@@ -18,6 +19,19 @@ import {
 } from "../pages";
 
 export default function AppRoutes() {
+  const location = useLocation();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: 라우트 변경 시마다 오디오 중지
+  useEffect(() => {
+    const audioElements = document.querySelectorAll("audio");
+    audioElements.forEach((audio) => {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.src = "";
+      audio.load();
+    });
+  }, [location.pathname]);
+
   return (
     <Routes>
       <Route path={ROUTES.HOME} element={<LoginPage />} />
