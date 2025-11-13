@@ -7,6 +7,7 @@ import {
 } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getPopularMusicCharts, getSearchedSongs } from "@/apis/music";
+import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
 import { BackButton } from "@/components/ui/back-button";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -199,32 +200,49 @@ function MusicSearchPage() {
 
       <div className="mt-auto">
         <div
-          className="flex h-[104px] items-start px-4 pt-4"
+          className="flex flex-col items-start gap-3 px-4 pt-4 pb-4"
           style={{
             backgroundColor: selectedSong ? "rgba(142, 45, 45, 0.03)" : "white",
           }}
         >
           {selectedSong ? (
-            <div className="flex w-full items-center">
-              <div className="h-[42px] w-[42px] overflow-hidden rounded-md bg-gray-300">
-                <img
-                  src={selectedSong.album_cover}
-                  alt={`${selectedSong.song_title} 앨범 커버`}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
+            <>
+              <div className="flex w-full items-center">
+                <div className="h-[42px] w-[42px] overflow-hidden rounded-md bg-gray-300">
+                  <img
+                    src={selectedSong.album_cover}
+                    alt={`${selectedSong.song_title} 앨범 커버`}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+                <div className="ml-4 flex-1">
+                  <h3 className="font-semibold text-[16px] text-gray-700">
+                    {selectedSong.song_title}
+                  </h3>
+                  <p className="font-normal text-[12px] text-gray-500">
+                    {selectedSong.artist}
+                  </p>
+                </div>
               </div>
-              <div className="ml-4 flex-1">
-                <h3 className="font-semibold text-[16px] text-gray-700">
-                  {selectedSong.song_title}
-                </h3>
-                <p className="font-normal text-[12px] text-gray-500">
-                  {selectedSong.artist}
-                </p>
-              </div>
-            </div>
+              {selectedSong.itunesUrl && (
+                <div className="mb-2 flex w-full items-center justify-between gap-2">
+                  <p className="text-center text-[10px] text-gray-500">
+                    Provided courtesy of iTunes
+                  </p>
+                  <a
+                    href={selectedSong.itunesUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Get it on iTunes Store"
+                  >
+                    <ITunesBadge className="h-8" />
+                  </a>
+                </div>
+              )}
+            </>
           ) : (
             <div className="w-full"></div>
           )}

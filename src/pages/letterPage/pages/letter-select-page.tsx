@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBoardInfo } from "@/apis/board";
 import PlayIcon from "@/assets/ic_play.svg?react";
+import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
 import type { Music } from "@/types/music";
@@ -181,6 +182,22 @@ export default function LetterSelectPage({
             <PlayIcon />
           </button>
         </div>
+
+        {displayedMusic?.itunesUrl && (
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <a
+              href={displayedMusic.itunesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Get it on iTunes Store"
+            >
+              <ITunesBadge className="h-10" />
+            </a>
+            <p className="text-center text-white/60 text-xs">
+              Provided courtesy of iTunes
+            </p>
+          </div>
+        )}
       </div>
 
       {displayedMusic?.coverImage ? (

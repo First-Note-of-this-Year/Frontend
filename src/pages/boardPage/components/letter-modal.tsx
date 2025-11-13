@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import BgLetter from "@/assets/bg_letterpaper.webp";
 import PlayIcon from "@/assets/ic_play.svg?react";
+import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
 import StampWebp from "@/assets/ic_stamp.webp";
 import ObjLp from "@/assets/obj_lp.webp";
 import type { BoardMessageData } from "@/types/board";
@@ -170,37 +171,38 @@ export function LetterModal({
           From. {messageDetail?.sender}
         </div>
 
-        {!isDevComment && (messageDetail?.coverImage ? (
-          <img
-            src={messageDetail.coverImage}
-            alt={`album-${letterOpenId ?? ""}`}
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: 23,
-              right: 23,
-              width: 30,
-              height: 30,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
-        ) : (
-          <img
-            src={ObjLp}
-            alt={`album-${letterOpenId ?? ""}`}
-            aria-hidden
-            style={{
-              position: "absolute",
-              top: 23,
-              right: 23,
-              width: 30,
-              height: 30,
-              objectFit: "cover",
-              borderRadius: 4,
-            }}
-          />
-        ))}
+        {!isDevComment &&
+          (messageDetail?.coverImage ? (
+            <img
+              src={messageDetail.coverImage}
+              alt={`album-${letterOpenId ?? ""}`}
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 23,
+                right: 23,
+                width: 30,
+                height: 30,
+                objectFit: "cover",
+                borderRadius: 4,
+              }}
+            />
+          ) : (
+            <img
+              src={ObjLp}
+              alt={`album-${letterOpenId ?? ""}`}
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: 23,
+                right: 23,
+                width: 30,
+                height: 30,
+                objectFit: "cover",
+                borderRadius: 4,
+              }}
+            />
+          ))}
 
         <img
           src={StampWebp}
@@ -221,7 +223,10 @@ export function LetterModal({
         <div className="mx-auto flex w-60 flex-col gap-4">
           <div className="flex flex-row gap-2">
             <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
-              <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
+              <div
+                ref={containerRef}
+                className="min-w-0 flex-1 overflow-hidden"
+              >
                 <div
                   ref={textRef}
                   className={`inline-flex whitespace-nowrap text-base text-white ${shouldAnimate ? "animate-marquee" : "justify-center"}`}
@@ -262,6 +267,24 @@ export function LetterModal({
               <PlayIcon />
             </button>
           </div>
+
+          {messageDetail?.itunesUrl && (
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <a
+                href={messageDetail.itunesUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Get it on iTunes Store"
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+              >
+                <ITunesBadge className="h-10" />
+              </a>
+              <p className="text-center text-white/60 text-xs">
+                Provided courtesy of iTunes
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>
