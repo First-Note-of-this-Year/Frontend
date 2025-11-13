@@ -74,11 +74,9 @@ export default function LetterGuidePage({
       <p className="mt-8 text-lg text-red-200">
         앨범 커버가 대표적으로 보여요!
       </p>
-      <div className="px-4">
         <button type="button" onClick={handleSearchClick} className="w-full">
           <SearchInput className="mt-3 max-w-full" />
         </button>
-      </div>
     </PageLayout>
   );
 }
