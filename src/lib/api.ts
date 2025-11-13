@@ -12,11 +12,12 @@ export const apiGetPublic = async <T, P = undefined>(
   url: string,
   params?: P
 ): Promise<T> => {
-  const response = await axiosInstance.get<T>(url, { 
+  const response = await axiosInstance.get<T>(url, {
     params,
     headers: {
-      skipAuthRedirect: 'true'
-    }
+      skipAuthRedirect: "true",
+    },
+    withCredentials: false,
   });
   return response.data;
 };
