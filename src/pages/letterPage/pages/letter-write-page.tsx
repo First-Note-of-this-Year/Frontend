@@ -103,13 +103,7 @@ export default function LetterWritePage() {
         localStorage.removeItem(LOCALSTORAGE_KEY);
 
         if (isJoinPage) {
-          if (isFirstTimeJoin) {
             navigate("/join/complete");
-          } else {
-            navigate(
-              shareUri ? `/letter/complete/${shareUri}` : "/letter/complete"
-            );
-          }
         } else {
           navigate(
             shareUri ? `/letter/complete/${shareUri}` : "/letter/complete"

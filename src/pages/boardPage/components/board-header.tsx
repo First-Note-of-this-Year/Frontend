@@ -28,7 +28,7 @@ export function BoardHeader({
   screenWidth,
   onMenuClick,
 }: BoardHeaderProps) {
-  const { isNewYear } = useTimeStore();
+  const { isAfterNewYear } = useTimeStore();
   const navigate = useNavigate();
 
   // 화면 높이 가져오기
@@ -98,7 +98,7 @@ export function BoardHeader({
           zIndex: 40,
         }}
       >
-        {isNewYear ? (
+        {isAfterNewYear ? (
           <span className="font-normal font-year text-[24px] text-brown-200">
             HAPPY NEW YEAR
           </span>

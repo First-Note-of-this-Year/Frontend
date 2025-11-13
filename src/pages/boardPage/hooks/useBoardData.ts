@@ -5,7 +5,6 @@ import {
   getBoardList,
   getBoardShare,
   getSharedBoard,
-  getSharedBoardInfo,
 } from "@/apis/board";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
 
@@ -59,8 +58,7 @@ export function useBoardData(shareUri?: string) {
     queryKey: ["boardInfo", computedShareUri, isSharedBoard],
     queryFn: ({ queryKey }) => {
       const uri = queryKey[1] as string;
-      const isShared = queryKey[2] as boolean;
-      return isShared ? getSharedBoardInfo(uri) : getBoardInfo(uri);
+      return getBoardInfo(uri);
     },
     enabled: Boolean(computedShareUri),
   });
