@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -14,20 +14,22 @@ export default function ProtectedRoute({
   redirectTo = ROUTES.BOARD,
   requireBoard = false,
 }: ProtectedRouteProps) {
-  const {
-    isLoggedIn,
-    isCheckingAuth,
-    hasFetchedAuth,
-    boardShare,
-    checkAuth,
-  } = useAuthStore();
+  const { shareUri } = useParams();
+  const { isLoggedIn, isCheckingAuth, hasFetchedAuth, boardShare, checkAuth } =
+    useAuthStore();
   const hasBoard = Boolean(boardShare?.boardId);
 
+  const isPublicShare = Boolean(shareUri);
+
   useEffect(() => {
-    if (!hasFetchedAuth && !isCheckingAuth) {
+    if (!isPublicShare && !hasFetchedAuth && !isCheckingAuth) {
       void checkAuth();
     }
-  }, [checkAuth, hasFetchedAuth, isCheckingAuth]);
+  }, [checkAuth, hasFetchedAuth, isCheckingAuth, isPublicShare]);
+
+  if (isPublicShare) {
+    return <>{children}</>;
+  }
 
   const isLoading = isCheckingAuth || !hasFetchedAuth;
 
