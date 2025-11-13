@@ -150,7 +150,7 @@ export default function LetterSelectPage({
         </div>
 
         <div className="flex flex-row gap-2">
-          <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-white/10 px-4 py-3 backdrop-blur-md">
+          <div className="flex flex-1 flex-row items-center gap-1 overflow-hidden rounded-md bg-black/10 px-4 py-3 backdrop-blur-md">
             <div ref={containerRef} className="min-w-0 flex-1 overflow-hidden">
               <div
                 ref={textRef}
@@ -168,7 +168,7 @@ export default function LetterSelectPage({
               </div>
             </div>
 
-            <p className="whitespace-nowrap text-gray-500 text-xs">
+            <p className="whitespace-nowrap text-gray-200 text-xs">
               {displayedMusic?.artist && displayedMusic.artist.length > 4
                 ? `${displayedMusic.artist.slice(0, 4)}...`
                 : (displayedMusic?.artist ?? "가수")}
@@ -177,7 +177,7 @@ export default function LetterSelectPage({
 
           <button
             type="button"
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10 backdrop-blur-md"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-black/10 backdrop-blur-md"
           >
             <PlayIcon />
           </button>
