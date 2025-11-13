@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import BgLetter from "@/assets/bg_letterpaper.webp";
 import PlayIcon from "@/assets/ic_play.svg?react";
+import PauseIcon from "@/assets/ic_pause.svg?react";
 import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
 import StampWebp from "@/assets/ic_stamp.webp";
 import ObjLp from "@/assets/obj_lp.webp";
@@ -264,7 +265,7 @@ export function LetterModal({
               }}
               aria-label={isPlaying ? "pause" : "play"}
             >
-              <PlayIcon />
+              {isPlaying ? <PauseIcon className="text-white" /> : <PlayIcon />}
             </button>
           </div>
 
