@@ -18,6 +18,7 @@ export default function JoinCompletePage() {
           지금 확인하러 갈까요?
         </>
       }
+      showBackButton={false}
       bottomContent={
         <NavigationButton
           className="w-full"
