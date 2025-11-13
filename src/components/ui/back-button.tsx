@@ -21,7 +21,7 @@ export function BackButton({ onClick, className }: BackButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className={className}
+      className={`mb-3 ${className || ""}`}
       aria-label="뒤로가기"
     >
       <ArrowLeftIcon />
