@@ -2,23 +2,31 @@ import { create } from "zustand";
 import { getServerTime } from "@/apis/time";
 
 /**
- * 서버 시간이 12월 31일 ~ 1월 14일 사이인지 확인
+ * 서버 시간(UTC)을 한국 시간으로 변환
+ */
+const convertToKST = (serverTime: string): Date => {
+  const utcDate = new Date(serverTime);
+  return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+};
+
+/**
+ * 서버 시간이 12월 31일 ~ 1월 14일 사이인지 확인 (한국 시간 기준)
  */
 const checkIsNewYearPeriod = (serverTime: string): boolean => {
-  const date = new Date(serverTime);
-  const month = date.getMonth();
-  const day = date.getDate();
+  const kstDate = convertToKST(serverTime);
+  const month = kstDate.getMonth();
+  const day = kstDate.getDate();
 
   return (month === 11 && day === 31) || (month === 0 && day <= 14);
 };
 
 /**
- * 서버 시간이 1월 1일 ~ 1월 14일 사이인지 확인
+ * 서버 시간이 1월 1일 ~ 1월 14일 사이인지 확인 (한국 시간 기준)
  */
 const checkIsAfterNewYear = (serverTime: string): boolean => {
-  const date = new Date(serverTime);
-  const month = date.getMonth();
-  const day = date.getDate();
+  const kstDate = convertToKST(serverTime);
+  const month = kstDate.getMonth();
+  const day = kstDate.getDate();
 
   return month === 0 && day >= 1 && day <= 14;
 };
@@ -57,10 +65,7 @@ export const useTimeStore = create<TimeState>((set) => ({
 
       // 12월이고 아직 새해가 아니라면, 1월 1일 00:00:00까지의 시간 계산
       if (!isAfterNewYear) {
-        // 서버 시간(UTC)을 한국 시간으로 변환
-        const utcDate = new Date(serverTime);
-        const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
-        
+        const kstDate = convertToKST(serverTime);
         const currentYear = kstDate.getFullYear();
         const month = kstDate.getMonth();
         

@@ -58,7 +58,7 @@ export function BoardHeader({
       <button
         type="button"
         onClick={() => navigate("/")}
-        className="fixed z-40 cursor-pointer transition-opacity hover:opacity-70"
+        className="fixed z-20 cursor-pointer transition-opacity hover:opacity-70"
         style={{
           top: logoTop,
           left:
@@ -75,7 +75,7 @@ export function BoardHeader({
       <button
         type="button"
         onClick={onMenuClick}
-        className="fixed z-40 cursor-pointer"
+        className="fixed z-20 cursor-pointer"
         style={{
           top: hamburgerTop,
           right:
@@ -95,7 +95,7 @@ export function BoardHeader({
           left: "50%",
           transform: "translateX(-50%)",
           top: timerTop,
-          zIndex: 40,
+          zIndex: 20,
         }}
       >
         {isAfterNewYear ? (
@@ -111,7 +111,7 @@ export function BoardHeader({
 
       {/* Board Title and Count */}
       <div
-        className="fixed z-40"
+        className="fixed z-10"
         style={{
           top: titleTop,
           left:
