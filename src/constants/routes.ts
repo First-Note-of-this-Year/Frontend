@@ -13,6 +13,7 @@ export const ROUTES = {
     WRITE: "/join/letter/write",
     WRITE_WITH_SHARE: "/join/letter/write/:shareUri",
     COMPLETE: "/join/complete",
+    COMPLETE_WITH_SHARE: "/join/letter/complete/:shareUri",
   },
   LETTER: {
     GUIDE: "/letter/guide/:shareUri",
