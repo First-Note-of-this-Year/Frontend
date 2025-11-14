@@ -189,19 +189,7 @@ export function PopularMusicChart({
                     );
                   }
                 }}
-                style={{ 
-                  marginLeft: "17px",
-                  width: "33px",
-                  height: "33px",
-                  padding: 0,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "transparent",
-                  border: "none",
-                  flexShrink: 0,
-                  WebkitTapHighlightColor: "transparent",
-                }}
+                style={{ marginLeft: "17px" }}
                 aria-label={
                   playingMusicId === music.musicId && isPlaying
                     ? "일시정지"
@@ -209,23 +197,9 @@ export function PopularMusicChart({
                 }
               >
                 {playingMusicId === music.musicId && isPlaying ? (
-                  <LandingPauseIcon 
-                    style={{ 
-                      width: "33px", 
-                      height: "33px", 
-                      display: "block",
-                      pointerEvents: "none",
-                    }} 
-                  />
+                  <LandingPauseIcon />
                 ) : (
-                  <LandingPlayIcon 
-                    style={{ 
-                      width: "33px", 
-                      height: "33px", 
-                      display: "block",
-                      pointerEvents: "none",
-                    }} 
-                  />
+                  <LandingPlayIcon />
                 )}
               </button>
             </div>
