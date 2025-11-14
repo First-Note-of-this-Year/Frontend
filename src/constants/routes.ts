@@ -23,7 +23,7 @@ export const ROUTES = {
     COMPLETE: "/letter/complete/:shareUri",
   },
   OAUTH: {
-    CALLBACK: "/login/oauth2/code/kakao",
+    CALLBACK: "/oauth/callback",
   },
   USER: {
     PROFILE: "/user/profile",
