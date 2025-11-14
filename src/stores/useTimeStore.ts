@@ -1,12 +1,14 @@
 import { create } from "zustand";
-import { getServerTime } from "@/apis/time";
+// import { getServerTime } from "@/apis/time";
 
 /**
  * 서버 시간(UTC)을 한국 시간으로 변환
  */
 const convertToKST = (serverTime: string): Date => {
   const utcDate = new Date(serverTime);
-  return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+  return new Date(utcDate.getTime());
+  // 기존
+  // return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
 };
 
 /**
@@ -52,7 +54,9 @@ export const useTimeStore = create<TimeState>((set) => ({
   fetchServerTime: async () => {
     set({ isLoading: true, error: null });
     try {
-      const serverTime = await getServerTime();
+      // 데모데이 임시 수정: 로컬 시간 사용
+      const serverTime = new Date().toISOString();
+      // const serverTime = await getServerTime();
       const isNewYear = checkIsNewYearPeriod(serverTime);
       const isAfterNewYear = checkIsAfterNewYear(serverTime);
       set({ serverTime, isNewYear, isAfterNewYear, isLoading: false });
@@ -68,30 +72,39 @@ export const useTimeStore = create<TimeState>((set) => ({
         const kstDate = convertToKST(serverTime);
         const currentYear = kstDate.getFullYear();
         const month = kstDate.getMonth();
-        
+
         // 12월인 경우에만 타이머 설정
         if (month === 11) {
           // 다음해 1월 1일 00:00:00 (한국 시간)
           const nextYearKST = new Date(currentYear + 1, 0, 1, 0, 0, 0, 0);
-          
+
           // 새해까지 남은 시간 계산
           const serverNow = kstDate.getTime();
           const timeUntilNewYear = nextYearKST.getTime() - serverNow;
-          
+
           if (timeUntilNewYear > 0) {
             newYearTimeoutId = setTimeout(() => {
-              // 타이머가 실행될 때 실제로 새해가 맞는지 다시 확인
+              // 데모데이 임시 수정: 로컬 시간 사용
+              const newServerTime = new Date().toISOString();
+              const actualIsAfterNewYear = checkIsAfterNewYear(newServerTime);
+              set({
+                serverTime: newServerTime,
+                isAfterNewYear: actualIsAfterNewYear,
+              });
+
+              /* 기존
               getServerTime().then((newServerTime) => {
                 const actualIsAfterNewYear = checkIsAfterNewYear(newServerTime);
-                set({ 
+                set({
                   serverTime: newServerTime,
-                  isAfterNewYear: actualIsAfterNewYear 
+                  isAfterNewYear: actualIsAfterNewYear
                 });
               }).catch((error) => {
                 console.error("Failed to fetch server time on new year:", error);
                 // 에러가 발생해도 클라이언트 시간 기준으로 isAfterNewYear를 true로 설정
                 set({ isAfterNewYear: true });
               });
+              */
               newYearTimeoutId = null;
             }, timeUntilNewYear);
           }
