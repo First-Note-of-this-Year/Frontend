@@ -74,7 +74,7 @@ function BoardPage() {
     closeModal,
     showToast,
     setShowToast,
-  } = useLetterModal(isSharedBoard, boardList, sharedBoardData);
+  } = useLetterModal(isSharedBoard, boardList, sharedBoardData, currentPage);
 
   const {
     isShareModalOpen,

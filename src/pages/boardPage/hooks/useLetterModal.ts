@@ -11,7 +11,8 @@ import type {
 export function useLetterModal(
   isSharedBoard: boolean,
   boardList: BoardListItem[] | SharedBoardMessage[],
-  sharedBoardData?: SharedBoardResponse
+  sharedBoardData?: SharedBoardResponse,
+  currentPage?: number
 ) {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const [letterOpenId, setLetterOpenId] = useState<number | null>(null);
@@ -44,7 +45,7 @@ export function useLetterModal(
       }
 
       const posIndex = letterOpenId - 1;
-      const isDeveloperComment = posIndex === 5;
+      const isDeveloperComment = currentPage === 0 && posIndex === 5;
 
       // determine messageId from current data (shared or boardList)
       const sharedContent = sharedBoardData?.data?.content ?? [];
@@ -92,12 +93,12 @@ export function useLetterModal(
       stopAudio();
     };
   }, [
-    letterOpenId,
-    isSharedBoard,
-    boardList,
-    sharedBoardData,
-    playAudio,
+    letterOpenId, 
+    isSharedBoard, 
+    boardList, 
+    sharedBoardData, 
     stopAudio,
+    currentPage
   ]);
 
   const closeModal = () => {
