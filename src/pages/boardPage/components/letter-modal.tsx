@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import BgLetter from "@/assets/bg_letterpaper.webp";
 import PlayIcon from "@/assets/ic_play.svg?react";
 import PauseIcon from "@/assets/ic_pause.svg?react";
-import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
+import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 import StampWebp from "@/assets/ic_stamp.webp";
 import ObjLp from "@/assets/obj_lp.webp";
 import type { BoardMessageData } from "@/types/board";
@@ -39,9 +39,17 @@ export function LetterModal({
 
   useEffect(() => {
     if (textRef.current && containerRef.current && messageDetail?.songTitle) {
-      const textWidth = textRef.current.scrollWidth;
-      const containerWidth = containerRef.current.clientWidth;
-      setShouldAnimate(textWidth > containerWidth);
+      setShouldAnimate(false);
+
+      requestAnimationFrame(() => {
+        if (textRef.current && containerRef.current) {
+          const textWidth = textRef.current.scrollWidth;
+          const containerWidth = containerRef.current.clientWidth;
+          setShouldAnimate(textWidth > containerWidth);
+        }
+      });
+    } else {
+      setShouldAnimate(false);
     }
   }, [messageDetail?.songTitle]);
 
@@ -279,7 +287,7 @@ export function LetterModal({
                 onClick={(e) => e.stopPropagation()}
                 onKeyDown={(e) => e.stopPropagation()}
               >
-                <ITunesBadge className="h-10" />
+                <ITunesBadge className="h-4" />
               </a>
               <p className="text-center text-white/60 text-xs">
                 Provided courtesy of iTunes

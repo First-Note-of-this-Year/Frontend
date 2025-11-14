@@ -5,6 +5,7 @@ import LandingPauseIcon from "@/assets/ic_landing_pause.svg?react";
 import LandingPlayIcon from "@/assets/ic_landing_play.svg?react";
 import { useAudio } from "@/hooks/useAudio";
 import type { Music } from "@/types/music";
+import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 
 interface PopularMusicChartProps {
   chartMarginBottom: number;
@@ -62,10 +63,30 @@ export function PopularMusicChart({
             fontSize: "16px",
             fontWeight: "bold",
             color: "#F5F5F5",
+            flex: 1,
           }}
         >
           올해의 첫 소리 TOP 10
         </span>
+        <div className="flex flex-col items-end">
+          <a
+            href={
+              playingMusicId
+                ? musicCharts.find((m) => m.musicId === playingMusicId)
+                    ?.itunesUrl || "https://music.apple.com/kr/"
+                : "https://music.apple.com/kr/"
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Get it on iTunes Store"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ITunesBadge className="h-4" />
+          </a>
+          <p className="text-center text-[8px] text-white/60">
+            Provided courtesy of iTunes
+          </p>
+        </div>
       </div>
 
       {/* 음악 차트 영역 */}
