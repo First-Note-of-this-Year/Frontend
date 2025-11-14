@@ -100,7 +100,7 @@ function BoardPage() {
       {/* Garland Icon - 200px clipped, centered at top (New Year only) */}
       {isNewYear && (
         <div
-          className="pointer-events-none fixed z-30"
+          className="pointer-events-none fixed z-20"
           style={{
             top: 0,
             left: "50%",
