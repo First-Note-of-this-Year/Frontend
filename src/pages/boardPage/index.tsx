@@ -74,6 +74,7 @@ function BoardPage() {
     closeModal,
     showToast,
     setShowToast,
+    toastMessage,
   } = useLetterModal(isSharedBoard, boardList, sharedBoardData, currentPage);
 
   const {
@@ -318,7 +319,7 @@ function BoardPage() {
       {/* Toast */}
       <Toast
         isOpen={showToast}
-        message="편지는 1월 1일 이후에 볼 수 있어요"
+        message={toastMessage}
         onClose={() => setShowToast(false)}
       />
     </div>

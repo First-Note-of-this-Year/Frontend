@@ -107,15 +107,16 @@ export function useLetterModal(
   };
 
   const handleAlbumClick = (id: number) => {
-    // 새해가 시작되지 않았으면 토스트 표시하고 리턴
-    if (!isAfterNewYear) {
-      setToastMessage("편지는 1월 1일 이후에 볼 수 있어요");
+    // 공유 보드에서 비로그인 상태로 접근 시
+    if (isSharedBoard && !isLoggedIn) {
+      setToastMessage("타인의 메시지는 볼 수 없습니다");
       setShowToast(true);
       return;
     }
 
-    if (isSharedBoard && !isLoggedIn) {
-      setToastMessage("타인의 메시지는 볼 수 없습니다");
+    // 새해가 시작되지 않았으면 토스트 표시하고 리턴
+    if (!isAfterNewYear) {
+      setToastMessage("편지는 1월 1일 이후에 볼 수 있어요");
       setShowToast(true);
       return;
     }
