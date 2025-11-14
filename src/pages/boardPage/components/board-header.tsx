@@ -111,7 +111,7 @@ export function BoardHeader({
 
       {/* Board Title and Count */}
       <div
-        className="fixed z-10"
+        className="fixed z-20"
         style={{
           top: titleTop,
           left:
