@@ -19,7 +19,7 @@ export function useLetterModal(
   >(null);
   const [showToast, setShowToast] = useState(false);
 
-  const { isPlaying, playAudio, stopAudio, toggleAudio } = useAudio();
+  const { isPlaying, playAudio, stopAudio } = useAudio();
   const { isAfterNewYear } = useTimeStore();
 
   useEffect(() => {
@@ -74,13 +74,6 @@ export function useLetterModal(
         );
         if (!mounted) return;
         setMessageDetail(res.data ?? null);
-
-        // Start playing music if songUrl is available
-        if (res.data?.songUrl) {
-          playAudio(res.data.songUrl).catch((error) => {
-            console.error("Failed to start audio playback:", error);
-          });
-        }
       } catch (err) {
         console.error("Failed to load message detail", err);
         setMessageDetail(null);
@@ -116,6 +109,18 @@ export function useLetterModal(
     setLetterOpenId(id);
   };
 
+  const handleToggleAudio = () => {
+    if (!messageDetail?.songUrl) return;
+
+    if (isPlaying) {
+      stopAudio();
+    } else {
+      playAudio(messageDetail.songUrl).catch((error) => {
+        console.error("Failed to play audio:", error);
+      });
+    }
+  };
+
   return {
     overlayRef,
     letterOpenId,
@@ -123,7 +128,7 @@ export function useLetterModal(
     handleAlbumClick,
     messageDetail,
     isPlaying,
-    toggleAudio,
+    toggleAudio: handleToggleAudio,
     closeModal,
     showToast,
     setShowToast,
