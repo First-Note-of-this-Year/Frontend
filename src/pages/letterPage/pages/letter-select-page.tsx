@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBoardInfo } from "@/apis/board";
 import PlayIcon from "@/assets/ic_play.svg?react";
 import PauseIcon from "@/assets/ic_pause.svg?react";
-import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
+import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
 import { useAudio } from "@/hooks/useAudio";
@@ -208,7 +208,7 @@ export default function LetterSelectPage({
               rel="noopener noreferrer"
               aria-label="Get it on iTunes Store"
             >
-              <ITunesBadge className="h-10" />
+              <ITunesBadge className="h-4" />
             </a>
             <p className="text-center text-white/60 text-xs">
               Provided courtesy of iTunes

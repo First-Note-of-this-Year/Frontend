@@ -7,7 +7,7 @@ import {
 } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getPopularMusicCharts, getSearchedSongs } from "@/apis/music";
-import ITunesBadge from "@/assets/obj_iTunes_Badge.svg?react";
+import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 import { BackButton } from "@/components/ui/back-button";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { SearchInput } from "@/components/ui/search-input";
@@ -238,7 +238,7 @@ function MusicSearchPage() {
                     rel="noopener noreferrer"
                     aria-label="Get it on iTunes Store"
                   >
-                    <ITunesBadge className="h-8" />
+                    <ITunesBadge className="h-4" />
                   </a>
                 </div>
               )}
