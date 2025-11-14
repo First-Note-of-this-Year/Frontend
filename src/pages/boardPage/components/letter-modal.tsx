@@ -18,8 +18,9 @@ interface LetterModalProps {
   onToggleAudio: () => void;
 }
 
-// 개발자 코멘트 판단 함수 (항상 6번째 위치, letterOpenId는 1-based)
-const isDeveloperComment = (letterOpenId: number | null) => letterOpenId === 6;
+// 개발자 코멘트 판단 함수 - messageId로 판단
+const isDeveloperComment = (messageDetail: BoardMessageData | null) => 
+  messageDetail?.messageId === "developer-comment";
 
 const MARQUEE_REPEAT = [1, 2, 3, 4] as const;
 
@@ -55,7 +56,7 @@ export function LetterModal({
 
   if (!isOpen || letterOpenId === null) return null;
 
-  const isDevComment = isDeveloperComment(letterOpenId);
+  const isDevComment = isDeveloperComment(messageDetail);
 
   return (
     <div
