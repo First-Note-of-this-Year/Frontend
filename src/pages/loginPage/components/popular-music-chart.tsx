@@ -191,9 +191,16 @@ export function PopularMusicChart({
                 }}
                 style={{ 
                   marginLeft: "17px",
+                  width: "33px",
+                  height: "33px",
+                  padding: 0,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  background: "transparent",
+                  border: "none",
+                  flexShrink: 0,
+                  WebkitTapHighlightColor: "transparent",
                 }}
                 aria-label={
                   playingMusicId === music.musicId && isPlaying
@@ -202,9 +209,23 @@ export function PopularMusicChart({
                 }
               >
                 {playingMusicId === music.musicId && isPlaying ? (
-                  <LandingPauseIcon style={{ width: "33px", height: "33px", display: "block" }} />
+                  <LandingPauseIcon 
+                    style={{ 
+                      width: "33px", 
+                      height: "33px", 
+                      display: "block",
+                      pointerEvents: "none",
+                    }} 
+                  />
                 ) : (
-                  <LandingPlayIcon style={{ width: "33px", height: "33px", display: "block" }} />
+                  <LandingPlayIcon 
+                    style={{ 
+                      width: "33px", 
+                      height: "33px", 
+                      display: "block",
+                      pointerEvents: "none",
+                    }} 
+                  />
                 )}
               </button>
             </div>
