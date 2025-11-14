@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getServerTime } from "@/apis/time";
+// import { getServerTime } from "@/apis/time";
 
 /**
  * 서버 시간(UTC)을 한국 시간으로 변환
