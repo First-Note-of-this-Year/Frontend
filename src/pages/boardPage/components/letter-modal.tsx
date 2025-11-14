@@ -39,9 +39,17 @@ export function LetterModal({
 
   useEffect(() => {
     if (textRef.current && containerRef.current && messageDetail?.songTitle) {
-      const textWidth = textRef.current.scrollWidth;
-      const containerWidth = containerRef.current.clientWidth;
-      setShouldAnimate(textWidth > containerWidth);
+      setShouldAnimate(false);
+
+      requestAnimationFrame(() => {
+        if (textRef.current && containerRef.current) {
+          const textWidth = textRef.current.scrollWidth;
+          const containerWidth = containerRef.current.clientWidth;
+          setShouldAnimate(textWidth > containerWidth);
+        }
+      });
+    } else {
+      setShouldAnimate(false);
     }
   }, [messageDetail?.songTitle]);
 
