@@ -16,9 +16,7 @@ export function useCountdown(serverTimeStr?: string) {
   });
 
   useEffect(() => {
-    // 데모데이 임시 수정: 로컬 시간 사용
-    const serverTime = new Date().toISOString();
-    // const serverTime = serverTimeStr ?? new Date().toISOString();
+    const serverTime = serverTimeStr ?? new Date().toISOString();
     const serverNow = new Date(serverTime);
     const startClient = Date.now();
 
