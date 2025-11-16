@@ -1,14 +1,12 @@
 import { create } from "zustand";
-// import { getServerTime } from "@/apis/time";
+import { getServerTime } from "@/apis/time";
 
 /**
  * 서버 시간(UTC)을 한국 시간으로 변환
  */
 const convertToKST = (serverTime: string): Date => {
   const utcDate = new Date(serverTime);
-  return new Date(utcDate.getTime());
-  // 기존
-  // return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+  return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
 };
 
 /**
@@ -54,9 +52,7 @@ export const useTimeStore = create<TimeState>((set) => ({
   fetchServerTime: async () => {
     set({ isLoading: true, error: null });
     try {
-      // 데모데이 임시 수정: 로컬 시간 사용
-      const serverTime = new Date().toISOString();
-      // const serverTime = await getServerTime();
+      const serverTime = await getServerTime();
       const isNewYear = checkIsNewYearPeriod(serverTime);
       const isAfterNewYear = checkIsAfterNewYear(serverTime);
       set({ serverTime, isNewYear, isAfterNewYear, isLoading: false });
@@ -84,15 +80,6 @@ export const useTimeStore = create<TimeState>((set) => ({
 
           if (timeUntilNewYear > 0) {
             newYearTimeoutId = setTimeout(() => {
-              // 데모데이 임시 수정: 로컬 시간 사용
-              const newServerTime = new Date().toISOString();
-              const actualIsAfterNewYear = checkIsAfterNewYear(newServerTime);
-              set({
-                serverTime: newServerTime,
-                isAfterNewYear: actualIsAfterNewYear,
-              });
-
-              /* 기존
               getServerTime().then((newServerTime) => {
                 const actualIsAfterNewYear = checkIsAfterNewYear(newServerTime);
                 set({
@@ -104,7 +91,6 @@ export const useTimeStore = create<TimeState>((set) => ({
                 // 에러가 발생해도 클라이언트 시간 기준으로 isAfterNewYear를 true로 설정
                 set({ isAfterNewYear: true });
               });
-              */
               newYearTimeoutId = null;
             }, timeUntilNewYear);
           }

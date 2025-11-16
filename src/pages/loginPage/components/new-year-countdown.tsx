@@ -12,8 +12,7 @@ export function NewYearCountdown() {
 
     // 서버 시간(UTC)을 파싱하고 9시간 더해서 한국 시간으로 변환
     const utcDate = new Date(serverTime);
-    const kstDate = new Date(utcDate.getTime());
-    //기존 const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+    const kstDate = new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
     serverTimeRef.current = kstDate;
     startTimeRef.current = Date.now();
 
