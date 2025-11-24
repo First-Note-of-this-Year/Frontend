@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getBoardInfo } from "@/apis/board";
-import PlayIcon from "@/assets/ic_play.svg?react";
-import PauseIcon from "@/assets/ic_pause.svg?react";
 import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
+import PauseIcon from "@/assets/ic_pause.svg?react";
+import PlayIcon from "@/assets/ic_play.svg?react";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
 import { useAudio } from "@/hooks/useAudio";

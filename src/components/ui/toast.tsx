@@ -8,7 +8,12 @@ interface ToastProps {
   duration?: number;
 }
 
-export function Toast({ isOpen, message, onClose, duration = 1500 }: ToastProps) {
+export function Toast({
+  isOpen,
+  message,
+  onClose,
+  duration = 1500,
+}: ToastProps) {
   useEffect(() => {
     if (!isOpen) return;
 
@@ -17,13 +22,13 @@ export function Toast({ isOpen, message, onClose, duration = 1500 }: ToastProps)
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [isOpen, duration]);
+  }, [isOpen, duration, onClose]);
 
   if (!isOpen || typeof document === "undefined") return null;
 
   return createPortal(
     <div
-      className="fixed left-1/2 -translate-x-1/2 transform"
+      className="-translate-x-1/2 fixed left-1/2 transform"
       style={{
         bottom: "100px",
         zIndex: 9999,
