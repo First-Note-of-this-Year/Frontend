@@ -111,7 +111,10 @@ export function AlbumGrid({
           window.dispatchEvent(
             new CustomEvent("boardOverlayHoleRect", { detail: null })
           );
-        } catch {}
+        } catch {
+          // eslint-disable-next-line no-empty
+          /* intentionally empty — errors from dispatch are non-fatal */
+        }
       }
     };
 
