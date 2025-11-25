@@ -63,6 +63,17 @@ export function AlbumGrid({
         }}
       >
         <div style={{ gridColumn: "1 / 2" }} />
+        {/* anchor for first album slot so overlay can compute position even when empty */}
+        <div
+          data-first-album-anchor
+          style={{
+            gridColumn: "2 / 3",
+            width: "60px",
+            height: "60px",
+            visibility: "hidden",
+            pointerEvents: "none",
+          }}
+        />
 
         {boardList.slice(0, 2).map((item, index) => {
           const messageId = isSharedBoard
@@ -80,6 +91,8 @@ export function AlbumGrid({
             return (
               <div
                 key={`album-${messageId}`}
+                role="img"
+                aria-label={`album-cover-${messageId}`}
                 style={{
                   gridColumn: index === 0 ? "2 / 3" : "4 / 5",
                   width: "60px",
@@ -189,6 +202,8 @@ export function AlbumGrid({
             return (
               <div
                 key={`album-${messageId}`}
+                role="img"
+                aria-label={`album-cover-${messageId}`}
                 style={{
                   width: "60px",
                   height: "60px",

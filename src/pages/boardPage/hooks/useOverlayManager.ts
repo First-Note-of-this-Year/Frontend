@@ -47,11 +47,17 @@ export function useOverlayManager({
     if (!shelfWrapperRef?.current) return;
     try {
       // find first album button inside the first-row grid (gridColumn 2 / 3)
-      const firstBtn = shelfWrapperRef.current.querySelector(
+      let firstEl = shelfWrapperRef.current.querySelector(
         '[aria-label^="album-cover-"]'
-      );
-      if (!firstBtn) return;
-      const rect = (firstBtn as HTMLElement).getBoundingClientRect();
+      ) as HTMLElement | null;
+      // fallback to a dedicated anchor element if no album element exists
+      if (!firstEl) {
+        firstEl = shelfWrapperRef.current.querySelector(
+          '[data-first-album-anchor]'
+        ) as HTMLElement | null;
+      }
+      if (!firstEl) return;
+      const rect = firstEl.getBoundingClientRect();
       window.dispatchEvent(
         new CustomEvent("boardOverlayHoleRect", {
           detail: {

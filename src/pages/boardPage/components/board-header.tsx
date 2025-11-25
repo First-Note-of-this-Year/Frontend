@@ -26,6 +26,7 @@ interface BoardHeaderProps {
   profileImage?: string;
   frameCenter: { x: number; y: number };
   onMenuClick: () => void;
+  shelfWrapperRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function BoardHeader({
@@ -34,6 +35,7 @@ export function BoardHeader({
   timeRemaining,
   screenWidth,
   onMenuClick,
+  shelfWrapperRef,
 }: BoardHeaderProps) {
   const { isAfterNewYear } = useTimeStore();
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ export function BoardHeader({
     questionHoleRect,
     linkHoleRect,
     lpHoleRect,
-  } = useOverlayManager({ questionRef });
+  } = useOverlayManager({ questionRef, shelfWrapperRef });
 
   const maskId = useId();
   const QUESTION_HOLE_PADDING = 0;

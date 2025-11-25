@@ -190,6 +190,7 @@ function BoardPage() {
         profileImage={boardInfoQuery?.data?.data?.profileImage}
         frameCenter={frameCenter}
         onMenuClick={() => setIsSidebarOpen(true)}
+        shelfWrapperRef={shelfWrapperRef}
       />
 
       <div
