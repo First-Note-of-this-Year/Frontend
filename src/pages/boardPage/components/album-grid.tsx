@@ -1,4 +1,8 @@
 import { useEffect } from "react";
+// Layout constants (tweak these to adjust fallback overlay positioning)
+const ALBUM_SIZE = 60;
+const GRID_PADDING_LEFT = 15;
+const GRID_MARGIN_LEFT = -3;
 import ShelfBg from "@/assets/bg_shelf.webp";
 import HeartIcon from "@/assets/ic_heart.svg";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
@@ -86,11 +90,17 @@ export function AlbumGrid({
         const positions = getAdjustedPositions?.();
         const firstPos = positions?.length ? positions[0] : { x: 0, y: 0 };
 
-        const albumWidth = 60;
-        // account for the grid container's left padding (15px) and marginLeft (-3)
-        // also add the sideMargin column so the first album aligns correctly
-        const gridPaddingLeft = 15;
-        const gridMarginLeft = -3;
+        const albumWidth = ALBUM_SIZE;
+        // X 좌표 계산 설명:
+        // 1. imgRect.left: 선반 이미지의 화면상 왼쪽 위치
+        // 2. contentLeft: 컨텐츠 영역의 추가 왼쪽 오프셋
+        // 3. shiftPx.x: 레이아웃 보정을 위한 x축 이동값
+        // 4. gridPaddingLeft (15px): 그리드 컨테이너의 왼쪽 패딩
+        // 5. gridMarginLeft (-3px): 그리드 컨테이너의 왼쪽 마진 보정
+        // 6. sideMargin: 첫 번째 열의 사이드 마진 (그리드 정렬용)
+        // 7. firstPos.x: 조정된 첫 번째 앨범의 상대 x 위치
+        const gridPaddingLeft = GRID_PADDING_LEFT;
+        const gridMarginLeft = GRID_MARGIN_LEFT;
         const x =
           imgRect.left +
           (contentLeft ?? 0) +
