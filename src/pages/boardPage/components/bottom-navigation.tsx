@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useOverlayContext } from "../context/OverlayContext";
 import EnvelopIcon from "@/assets/ic_envelope.svg?react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import { LinkShareButton } from "@/components/ui/link-share-button";
@@ -26,64 +27,23 @@ export function BottomNavigation({
   onShareClick,
 }: BottomNavigationProps) {
   const linkWrapperRef = useRef<HTMLDivElement | null>(null);
+  const { registerLinkRef, requestHoleRects, showOverlay } = useOverlayContext();
 
-  // Respond to header requests for hole rects so the overlay can punch a hole
-  // over the link-share button when needed.
   useEffect(() => {
-    const sendLinkRect = () => {
-      try {
-        const el = linkWrapperRef.current;
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        window.dispatchEvent(
-          new CustomEvent("boardOverlayLinkRect", {
-            detail: {
-              x: rect.left,
-              y: rect.top,
-              width: rect.width,
-              height: rect.height,
-            },
-          })
-        );
-      } catch {
-        // ignore
-      }
-    };
-
-    const handler = () => setTimeout(sendLinkRect, 0);
-    window.addEventListener(
-      "boardOverlayRequestHoleRect",
-      handler as EventListener
-    );
-
-    // Also send rect if overlay is already active on mount
-    if (
-      typeof document !== "undefined" &&
-      document.body.classList.contains("board-overlay-active")
-    ) {
-      setTimeout(sendLinkRect, 50);
-    }
-
-    // resend on resize/scroll while overlay active
+    registerLinkRef(linkWrapperRef);
+    // request rects so overlay has up-to-date positions
+    requestHoleRects();
     const onResize = () => {
-      if (
-        typeof document !== "undefined" &&
-        document.body.classList.contains("board-overlay-active")
-      )
-        sendLinkRect();
+      if (showOverlay) requestHoleRects();
     };
     window.addEventListener("resize", onResize);
     window.addEventListener("scroll", onResize);
-
     return () => {
-      window.removeEventListener(
-        "boardOverlayRequestHoleRect",
-        handler as EventListener
-      );
+      registerLinkRef(undefined);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("scroll", onResize);
     };
-  }, []);
+  }, [registerLinkRef, requestHoleRects, showOverlay]);
   return (
     <div
       ref={bottomGroupRef}

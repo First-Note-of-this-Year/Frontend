@@ -50,6 +50,7 @@ export function BoardHeader({
     questionHoleRect,
     linkHoleRect,
     lpHoleRect,
+    sendFirstAlbumRect,
   } = useOverlayManager({ questionRef, shelfWrapperRef });
 
   const maskId = useId();
@@ -85,21 +86,21 @@ export function BoardHeader({
   useEffect(() => {
     if (!showOverlay) return;
     try {
-      window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+      sendFirstAlbumRect();
     } catch {}
     // next tick
     setTimeout(() => {
       try {
-        window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+        sendFirstAlbumRect();
       } catch {}
     }, 0);
     // short delay
     setTimeout(() => {
       try {
-        window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+        sendFirstAlbumRect();
       } catch {}
     }, 150);
-  }, [showOverlay]);
+  }, [showOverlay, sendFirstAlbumRect]);
 
   return (
     <>
@@ -405,12 +406,12 @@ export function BoardHeader({
             style={{
               position: "fixed",
               // shift the box up so its top edge aligns with the LP icon top
-              top: `calc(50% - ${(1 - heightRatio) * 50}px - 18px)`,
+              top: `calc(50% - ${(1 - heightRatio) * 50}px - 56px)`,
               transform: "translateY(-50%)",
               right:
                 screenWidth >= 450
-                  ? `calc(50% - 225px + 18px + 80px + 12px)`
-                  : 110,
+                  ? `calc(50% - 200px)`
+                  : 25,
               zIndex: 80,
               pointerEvents: "auto",
             }}
@@ -436,9 +437,6 @@ export function BoardHeader({
           <button
             type="button"
             aria-label="click-hint"
-            onClick={() => {
-              /* placeholder: no-op or could trigger a tutorial action */
-            }}
             style={{
               position: "fixed",
               top: `calc(50% - ${(1 - heightRatio) * 50}px + 40px)`,

@@ -22,6 +22,7 @@ import { LetterModal } from "./components/letter-modal";
 import { useBoardData } from "./hooks/useBoardData";
 import { useCountdown } from "./hooks/useCountdown";
 import { useLayoutCalculation } from "./hooks/useLayoutCalculation";
+import { OverlayProvider, useOverlayContext } from "./context/OverlayContext";
 import { useLetterModal } from "./hooks/useLetterModal";
 
 function BoardPage() {
@@ -31,41 +32,7 @@ function BoardPage() {
   const lpButtonRef = useRef<HTMLButtonElement | null>(null);
   const { isNewYear } = useTimeStore();
 
-  useEffect(() => {
-    const handler = () => {
-      try {
-        const el = lpButtonRef.current;
-        if (!el) {
-          window.dispatchEvent(
-            new CustomEvent("boardOverlayLpRect", { detail: null })
-          );
-          return;
-        }
-        const r = el.getBoundingClientRect();
-        window.dispatchEvent(
-          new CustomEvent("boardOverlayLpRect", {
-            detail: { x: r.left, y: r.top, width: r.width, height: r.height },
-          })
-        );
-      } catch {
-        try {
-          window.dispatchEvent(
-            new CustomEvent("boardOverlayLpRect", { detail: null })
-          );
-        } catch {}
-      }
-    };
-
-    window.addEventListener(
-      "boardOverlayRequestHoleRect",
-      handler as EventListener
-    );
-    return () =>
-      window.removeEventListener(
-        "boardOverlayRequestHoleRect",
-        handler as EventListener
-      );
-  }, []);
+  // LP rect responder is now handled via OverlayContext registration below.
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -128,13 +95,14 @@ function BoardPage() {
   });
 
   return (
-    <div
-      className="relative flex min-h-screen flex-col"
-      style={{
-        paddingTop: 140,
-        paddingBottom: 0,
-      }}
-    >
+    <OverlayProvider>
+      <div
+        className="relative flex min-h-screen flex-col"
+        style={{
+          paddingTop: 140,
+          paddingBottom: 0,
+        }}
+      >
       {/* Garland Icon - 200px clipped, centered at top (New Year only) */}
       {isNewYear && (
         <div
@@ -194,6 +162,17 @@ function BoardPage() {
         shelfWrapperRef={shelfWrapperRef}
       />
 
+      {/* Register layout refs and LP/link refs with OverlayContext */}
+      <OverlayRegistrar
+        shelfRef={shelfRef}
+        shelfWrapperRef={shelfWrapperRef}
+        contentLeft={contentLeft}
+        shiftPx={shiftPx}
+        getAdjustedPositions={getAdjustedPositions}
+        linkRef={bottomGroupRef}
+        lpRef={lpButtonRef}
+      />
+
       <div
         className="fixed z-20"
         style={{
@@ -212,9 +191,7 @@ function BoardPage() {
           shelfRef={shelfRef}
           shelfWrapperRef={shelfWrapperRef}
           onComputeShift={computeShift}
-          contentLeft={contentLeft}
-          shiftPx={shiftPx}
-          getAdjustedPositions={getAdjustedPositions}
+          
           onAlbumClick={handleAlbumClick}
           screenWidth={screenWidth}
           currentPage={currentPage}
@@ -366,8 +343,53 @@ function BoardPage() {
         message={toastMessage}
         onClose={() => setShowToast(false)}
       />
-    </div>
+      </div>
+    </OverlayProvider>
   );
+}
+
+function OverlayRegistrar(props: {
+  shelfRef: ReturnType<typeof useLayoutCalculation>['shelfRef'];
+  shelfWrapperRef: ReturnType<typeof useLayoutCalculation>['shelfWrapperRef'];
+  contentLeft: number | undefined;
+  shiftPx: { x: number; y: number } | undefined;
+  getAdjustedPositions: (() => Array<{ id: number; x: number; y: number }>) | undefined;
+  linkRef: ReturnType<typeof useLayoutCalculation>['bottomGroupRef'];
+  lpRef: React.RefObject<HTMLButtonElement | null>;
+}) {
+  const {
+    registerLayoutHelpers,
+    registerLinkRef,
+    registerLpRef,
+    requestHoleRects,
+  } = useOverlayContext();
+
+  useEffect(() => {
+    registerLayoutHelpers({
+      shelfRef: props.shelfRef,
+      shelfWrapperRef: props.shelfWrapperRef,
+      contentLeft: props.contentLeft,
+      shiftPx: props.shiftPx,
+      getAdjustedPositions: props.getAdjustedPositions,
+    });
+    registerLinkRef(props.linkRef ?? undefined);
+    registerLpRef(props.lpRef ?? undefined);
+    requestHoleRects();
+  }, [
+    props.shelfRef,
+    props.shelfWrapperRef,
+    props.contentLeft,
+    props.shiftPx,
+    props.getAdjustedPositions,
+    props.linkRef,
+    props.lpRef,
+    registerLayoutHelpers,
+    registerLinkRef,
+    registerLpRef,
+    requestHoleRects,
+  ]);
+
+  return null;
 }
 
 export default BoardPage;
