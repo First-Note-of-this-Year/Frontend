@@ -344,17 +344,17 @@ export function BoardHeader({
                 </span>
               </div>
 
-              <div style={{ marginTop: 4 }}>
-                <span
-                  style={{
-                    color: "rgba(255,255,255,0.5)",
-                    fontWeight: 500,
-                    fontSize: 12,
-                  }}
-                >
-                  (새해 이후에 볼 수 있어요)
-                </span>
-              </div>
+                <div style={{ marginTop: 4 }}>
+                  <span
+                    style={{
+                      color: "rgba(255,255,255,0.5)",
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}
+                  >
+                    {isAfterNewYear ? "받은 편지를 눌러서 확인해요" : "(새해 이후에 볼 수 있어요)"}
+                  </span>
+                </div>
             </div>
           )}
 
