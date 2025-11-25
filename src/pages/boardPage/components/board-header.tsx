@@ -50,6 +50,7 @@ export function BoardHeader({
     questionHoleRect,
     linkHoleRect,
     lpHoleRect,
+    sendFirstAlbumRect,
   } = useOverlayManager({ questionRef, shelfWrapperRef });
 
   const maskId = useId();
@@ -85,21 +86,21 @@ export function BoardHeader({
   useEffect(() => {
     if (!showOverlay) return;
     try {
-      window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+      sendFirstAlbumRect();
     } catch {}
     // next tick
     setTimeout(() => {
       try {
-        window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+        sendFirstAlbumRect();
       } catch {}
     }, 0);
     // short delay
     setTimeout(() => {
       try {
-        window.dispatchEvent(new CustomEvent("boardOverlayRequestHoleRect"));
+        sendFirstAlbumRect();
       } catch {}
     }, 150);
-  }, [showOverlay]);
+  }, [showOverlay, sendFirstAlbumRect]);
 
   return (
     <>
