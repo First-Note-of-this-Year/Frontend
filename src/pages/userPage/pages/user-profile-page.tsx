@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import imageCompression from "browser-image-compression";
 import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import imageCompression from "browser-image-compression";
 import { getBoardInfo, getBoardShare, updateBoard } from "@/apis/board";
 import CameraIcon from "@/assets/ic_camera.svg?react";
 import DefaultProfileImage from "@/assets/obj_default_profile.svg?react";

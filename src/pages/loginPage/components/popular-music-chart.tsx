@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getPopularMusicCharts } from "@/apis/music";
+import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 import ChartBarIcon from "@/assets/ic_chartbar.svg?react";
 import LandingPauseIcon from "@/assets/ic_landing_pause.svg?react";
 import LandingPlayIcon from "@/assets/ic_landing_play.svg?react";
 import { useAudio } from "@/hooks/useAudio";
 import type { Music } from "@/types/music";
-import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
 
 interface PopularMusicChartProps {
   chartMarginBottom: number;

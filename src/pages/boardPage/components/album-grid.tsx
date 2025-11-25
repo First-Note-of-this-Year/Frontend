@@ -1,6 +1,7 @@
 import ShelfBg from "@/assets/bg_shelf.webp";
 import HeartIcon from "@/assets/ic_heart.svg";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
+import { useOverlayManager } from "../hooks/useOverlayManager";
 
 interface AlbumGridProps {
   boardList: BoardListItem[] | SharedBoardMessage[];
@@ -23,6 +24,7 @@ export function AlbumGrid({
   screenWidth,
   currentPage,
 }: AlbumGridProps) {
+  const { overlayActive } = useOverlayManager({ shelfWrapperRef });
   // Calculate responsive gaps
   // 390px 기준: 나머지 열 10px, 첫 번째 열 22px
   const horizontalGap =
@@ -33,7 +35,7 @@ export function AlbumGrid({
     screenWidth >= 390 ? 14 : Math.max(7, 14 - (390 - screenWidth) * 0.08);
 
   // Helper function to check if position is developer comment (always at index 5 on first page)
-  const isDeveloperCommentPosition = (globalIndex: number) => 
+  const isDeveloperCommentPosition = (globalIndex: number) =>
     currentPage === 0 && globalIndex === 5;
 
   return (
@@ -71,7 +73,7 @@ export function AlbumGrid({
             : (item as BoardListItem).coverImage;
           const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index);
-          const isEmpty = messageId?.startsWith('empty-');
+          const isEmpty = messageId?.startsWith("empty-");
 
           // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
           if (isEmpty) {
@@ -87,6 +89,8 @@ export function AlbumGrid({
             );
           }
 
+          const isFirst = index === 0;
+
           return (
             <button
               key={`album-${messageId}`}
@@ -96,7 +100,7 @@ export function AlbumGrid({
                 onAlbumClick(index + 1);
               }}
               style={{
-                gridColumn: index === 0 ? "2 / 3" : "4 / 5",
+                gridColumn: isFirst ? "2 / 3" : "4 / 5",
                 width: "60px",
                 height: "60px",
                 padding: 0,
@@ -105,6 +109,8 @@ export function AlbumGrid({
                 cursor: "pointer",
                 transition: "transform 120ms ease",
                 position: "relative",
+                zIndex: isFirst && overlayActive ? 9999 : undefined,
+                pointerEvents: isFirst && overlayActive ? "auto" : undefined,
               }}
               className="hover:scale-105"
             >
@@ -176,7 +182,7 @@ export function AlbumGrid({
             : (item as BoardListItem).coverImage;
           const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index + 2);
-          const isEmpty = messageId?.startsWith('empty-');
+          const isEmpty = messageId?.startsWith("empty-");
 
           // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
           if (isEmpty) {

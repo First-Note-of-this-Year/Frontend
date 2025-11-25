@@ -1,6 +1,6 @@
 import type { ServerTimeResponse } from "@/apis/types/time";
-import { API_ENDPOINTS } from "./config/endpoints";
 import { apiGetPublic } from "@/lib/api";
+import { API_ENDPOINTS } from "./config/endpoints";
 
 //서버 시간 정보 조회
 export const getServerTime = async (): Promise<string> => {

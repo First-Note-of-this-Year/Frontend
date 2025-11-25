@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import bgbottom from "@/assets/bg_bottom.webp";
 import GarlandIcon from "@/assets/bg_garland.svg?react";
-import drawerIcon from "@/assets/ic_drawer.webp";
-import bonsaiNormal from "@/assets/ic_bonsai_normal.webp";
 import bonsaiNewYear from "@/assets/ic_bonsai_newyear.webp";
+import bonsaiNormal from "@/assets/ic_bonsai_normal.webp";
+import drawerIcon from "@/assets/ic_drawer.webp";
 import HatIcon from "@/assets/ic_hat.svg?react";
 import LpNormalIcon from "@/assets/ic_lp_normal.webp";
 import LpPlayingIcon from "@/assets/ic_lp_playing.webp";
@@ -28,7 +28,44 @@ function BoardPage() {
   const { shareUri } = useParams();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLpPlaying, setIsLpPlaying] = useState(false);
+  const lpButtonRef = useRef<HTMLButtonElement | null>(null);
   const { isNewYear } = useTimeStore();
+
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const el = lpButtonRef.current;
+        if (!el) {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayLpRect", { detail: null })
+          );
+          return;
+        }
+        const r = el.getBoundingClientRect();
+        window.dispatchEvent(
+          new CustomEvent("boardOverlayLpRect", {
+            detail: { x: r.left, y: r.top, width: r.width, height: r.height },
+          })
+        );
+      } catch {
+        try {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayLpRect", { detail: null })
+          );
+        } catch {}
+      }
+    };
+
+    window.addEventListener(
+      "boardOverlayRequestHoleRect",
+      handler as EventListener
+    );
+    return () =>
+      window.removeEventListener(
+        "boardOverlayRequestHoleRect",
+        handler as EventListener
+      );
+  }, []);
 
   // 화면 높이 가져오기
   const screenHeight = typeof window !== "undefined" ? window.innerHeight : 850;
@@ -273,8 +310,10 @@ function BoardPage() {
       </div>
 
       {/* LP Icon - positioned at center right */}
+      {/* BGM ON/OFF label moved to header component */}
       <button
         type="button"
+        ref={lpButtonRef}
         onClick={() => setIsLpPlaying(!isLpPlaying)}
         className="fixed z-10 cursor-pointer"
         style={{

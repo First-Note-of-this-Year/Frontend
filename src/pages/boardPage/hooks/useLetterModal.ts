@@ -93,12 +93,12 @@ export function useLetterModal(
       stopAudio();
     };
   }, [
-    letterOpenId, 
-    isSharedBoard, 
-    boardList, 
-    sharedBoardData, 
+    letterOpenId,
+    isSharedBoard,
+    boardList,
+    sharedBoardData,
     stopAudio,
-    currentPage
+    currentPage,
   ]);
 
   const closeModal = () => {

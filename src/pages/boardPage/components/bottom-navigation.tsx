@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import EnvelopIcon from "@/assets/ic_envelope.svg?react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import { LinkShareButton } from "@/components/ui/link-share-button";
@@ -24,6 +25,65 @@ export function BottomNavigation({
   bottomGroupRef,
   onShareClick,
 }: BottomNavigationProps) {
+  const linkWrapperRef = useRef<HTMLDivElement | null>(null);
+
+  // Respond to header requests for hole rects so the overlay can punch a hole
+  // over the link-share button when needed.
+  useEffect(() => {
+    const sendLinkRect = () => {
+      try {
+        const el = linkWrapperRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        window.dispatchEvent(
+          new CustomEvent("boardOverlayLinkRect", {
+            detail: {
+              x: rect.left,
+              y: rect.top,
+              width: rect.width,
+              height: rect.height,
+            },
+          })
+        );
+      } catch {
+        // ignore
+      }
+    };
+
+    const handler = () => setTimeout(sendLinkRect, 0);
+    window.addEventListener(
+      "boardOverlayRequestHoleRect",
+      handler as EventListener
+    );
+
+    // Also send rect if overlay is already active on mount
+    if (
+      typeof document !== "undefined" &&
+      document.body.classList.contains("board-overlay-active")
+    ) {
+      setTimeout(sendLinkRect, 50);
+    }
+
+    // resend on resize/scroll while overlay active
+    const onResize = () => {
+      if (
+        typeof document !== "undefined" &&
+        document.body.classList.contains("board-overlay-active")
+      )
+        sendLinkRect();
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("scroll", onResize);
+
+    return () => {
+      window.removeEventListener(
+        "boardOverlayRequestHoleRect",
+        handler as EventListener
+      );
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("scroll", onResize);
+    };
+  }, []);
   return (
     <div
       ref={bottomGroupRef}
@@ -37,7 +97,7 @@ export function BottomNavigation({
             onPageChange={(page) => onPageChange(page - 1)}
           />
         </div>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%" }} ref={linkWrapperRef}>
           <LinkShareButton
             label={
               isSharedBoard
