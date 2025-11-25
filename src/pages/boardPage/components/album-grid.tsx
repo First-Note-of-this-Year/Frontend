@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import ShelfBg from "@/assets/bg_shelf.webp";
 import HeartIcon from "@/assets/ic_heart.svg";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
@@ -12,6 +13,9 @@ interface AlbumGridProps {
   onAlbumClick: (id: number) => void;
   screenWidth: number;
   currentPage: number;
+  contentLeft?: number;
+  shiftPx?: { x: number; y: number };
+  getAdjustedPositions?: () => Array<{ id: number; x: number; y: number }>;
 }
 
 export function AlbumGrid({
@@ -23,6 +27,9 @@ export function AlbumGrid({
   onAlbumClick,
   screenWidth,
   currentPage,
+  contentLeft,
+  shiftPx,
+  getAdjustedPositions,
 }: AlbumGridProps) {
   const { overlayActive } = useOverlayManager({ shelfWrapperRef });
   // Calculate responsive gaps
@@ -37,6 +44,94 @@ export function AlbumGrid({
   // Helper function to check if position is developer comment (always at index 5 on first page)
   const isDeveloperCommentPosition = (globalIndex: number) =>
     currentPage === 0 && globalIndex === 5;
+
+  // Respond to overlay's request for the first album rect. If a real album
+  // element exists, use its bounding rect; otherwise compute the position
+  // using layout helpers passed from `useLayoutCalculation`.
+  useEffect(() => {
+    const handler = () => {
+      try {
+        // prefer a rendered album element
+        const wrap = shelfWrapperRef?.current;
+        if (!wrap) {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+          return;
+        }
+
+        const firstEl = wrap.querySelector(
+          '[aria-label^="album-cover-"]'
+        ) as HTMLElement | null;
+        if (firstEl) {
+          const r = firstEl.getBoundingClientRect();
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", {
+              detail: { x: r.left, y: r.top, width: r.width, height: r.height },
+            })
+          );
+          return;
+        }
+
+        // fallback: compute using shelf image position and adjusted positions
+        const img = shelfRef?.current;
+        if (!img || !getAdjustedPositions) {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+          return;
+        }
+
+        const imgRect = img.getBoundingClientRect();
+        const positions = getAdjustedPositions?.();
+        const firstPos = positions?.length ? positions[0] : { x: 0, y: 0 };
+
+        const albumWidth = 60;
+        // account for the grid container's left padding (15px) and marginLeft (-3)
+        // also add the sideMargin column so the first album aligns correctly
+        const gridPaddingLeft = 15;
+        const gridMarginLeft = -3;
+        const x =
+          imgRect.left +
+          (contentLeft ?? 0) +
+          (shiftPx?.x ?? 0) +
+          gridPaddingLeft +
+          gridMarginLeft +
+          (sideMargin ?? 0) +
+          firstPos.x;
+        const y = imgRect.top + (shiftPx?.y ?? 0) + firstPos.y;
+
+        window.dispatchEvent(
+          new CustomEvent("boardOverlayHoleRect", {
+            detail: { x, y, width: albumWidth, height: albumWidth },
+          })
+        );
+      } catch {
+        try {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+        } catch {}
+      }
+    };
+
+    window.addEventListener(
+      "boardOverlayRequestHoleRect",
+      handler as EventListener
+    );
+    return () =>
+      window.removeEventListener(
+        "boardOverlayRequestHoleRect",
+        handler as EventListener
+      );
+  }, [
+    shelfWrapperRef,
+    shelfRef,
+    contentLeft,
+    shiftPx,
+    getAdjustedPositions,
+    sideMargin,
+  ]);
 
   return (
     <div ref={shelfWrapperRef} className="relative mb-8 inline-block">
@@ -63,17 +158,6 @@ export function AlbumGrid({
         }}
       >
         <div style={{ gridColumn: "1 / 2" }} />
-        {/* anchor for first album slot so overlay can compute position even when empty */}
-        <div
-          data-first-album-anchor
-          style={{
-            gridColumn: "2 / 3",
-            width: "60px",
-            height: "60px",
-            visibility: "hidden",
-            pointerEvents: "none",
-          }}
-        />
 
         {boardList.slice(0, 2).map((item, index) => {
           const messageId = isSharedBoard
@@ -91,8 +175,6 @@ export function AlbumGrid({
             return (
               <div
                 key={`album-${messageId}`}
-                role="img"
-                aria-label={`album-cover-${messageId}`}
                 style={{
                   gridColumn: index === 0 ? "2 / 3" : "4 / 5",
                   width: "60px",
@@ -202,8 +284,6 @@ export function AlbumGrid({
             return (
               <div
                 key={`album-${messageId}`}
-                role="img"
-                aria-label={`album-cover-${messageId}`}
                 style={{
                   width: "60px",
                   height: "60px",
