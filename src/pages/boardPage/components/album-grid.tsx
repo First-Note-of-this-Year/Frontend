@@ -1,3 +1,8 @@
+import { useEffect } from "react";
+// Layout constants (tweak these to adjust fallback overlay positioning)
+const ALBUM_SIZE = 60;
+const GRID_PADDING_LEFT = 15;
+const GRID_MARGIN_LEFT = -3;
 import ShelfBg from "@/assets/bg_shelf.webp";
 import HeartIcon from "@/assets/ic_heart.svg";
 import type { BoardListItem, SharedBoardMessage } from "@/types/board";
@@ -12,6 +17,9 @@ interface AlbumGridProps {
   onAlbumClick: (id: number) => void;
   screenWidth: number;
   currentPage: number;
+  contentLeft?: number;
+  shiftPx?: { x: number; y: number };
+  getAdjustedPositions?: () => Array<{ id: number; x: number; y: number }>;
 }
 
 export function AlbumGrid({
@@ -23,6 +31,9 @@ export function AlbumGrid({
   onAlbumClick,
   screenWidth,
   currentPage,
+  contentLeft,
+  shiftPx,
+  getAdjustedPositions,
 }: AlbumGridProps) {
   const { overlayActive } = useOverlayManager({ shelfWrapperRef });
   // Calculate responsive gaps
@@ -37,6 +48,103 @@ export function AlbumGrid({
   // Helper function to check if position is developer comment (always at index 5 on first page)
   const isDeveloperCommentPosition = (globalIndex: number) =>
     currentPage === 0 && globalIndex === 5;
+
+  // Respond to overlay's request for the first album rect. If a real album
+  // element exists, use its bounding rect; otherwise compute the position
+  // using layout helpers passed from `useLayoutCalculation`.
+  useEffect(() => {
+    const handler = () => {
+      try {
+        // prefer a rendered album element
+        const wrap = shelfWrapperRef?.current;
+        if (!wrap) {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+          return;
+        }
+
+        const firstEl = wrap.querySelector(
+          '[aria-label^="album-cover-"]'
+        ) as HTMLElement | null;
+        if (firstEl) {
+          const r = firstEl.getBoundingClientRect();
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", {
+              detail: { x: r.left, y: r.top, width: r.width, height: r.height },
+            })
+          );
+          return;
+        }
+
+        // fallback: compute using shelf image position and adjusted positions
+        const img = shelfRef?.current;
+        if (!img || !getAdjustedPositions) {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+          return;
+        }
+
+        const imgRect = img.getBoundingClientRect();
+        const positions = getAdjustedPositions?.();
+        const firstPos = positions?.length ? positions[0] : { x: 0, y: 0 };
+
+        const albumWidth = ALBUM_SIZE;
+        // X 좌표 계산 설명:
+        // 1. imgRect.left: 선반 이미지의 화면상 왼쪽 위치
+        // 2. contentLeft: 컨텐츠 영역의 추가 왼쪽 오프셋
+        // 3. shiftPx.x: 레이아웃 보정을 위한 x축 이동값
+        // 4. gridPaddingLeft (15px): 그리드 컨테이너의 왼쪽 패딩
+        // 5. gridMarginLeft (-3px): 그리드 컨테이너의 왼쪽 마진 보정
+        // 6. sideMargin: 첫 번째 열의 사이드 마진 (그리드 정렬용)
+        // 7. firstPos.x: 조정된 첫 번째 앨범의 상대 x 위치
+        const gridPaddingLeft = GRID_PADDING_LEFT;
+        const gridMarginLeft = GRID_MARGIN_LEFT;
+        const x =
+          imgRect.left +
+          (contentLeft ?? 0) +
+          (shiftPx?.x ?? 0) +
+          gridPaddingLeft +
+          gridMarginLeft +
+          (sideMargin ?? 0) +
+          firstPos.x;
+        const y = imgRect.top + (shiftPx?.y ?? 0) + firstPos.y;
+
+        window.dispatchEvent(
+          new CustomEvent("boardOverlayHoleRect", {
+            detail: { x, y, width: albumWidth, height: albumWidth },
+          })
+        );
+      } catch {
+        try {
+          window.dispatchEvent(
+            new CustomEvent("boardOverlayHoleRect", { detail: null })
+          );
+        } catch {
+          // eslint-disable-next-line no-empty
+          /* intentionally empty — errors from dispatch are non-fatal */
+        }
+      }
+    };
+
+    window.addEventListener(
+      "boardOverlayRequestHoleRect",
+      handler as EventListener
+    );
+    return () =>
+      window.removeEventListener(
+        "boardOverlayRequestHoleRect",
+        handler as EventListener
+      );
+  }, [
+    shelfWrapperRef,
+    shelfRef,
+    contentLeft,
+    shiftPx,
+    getAdjustedPositions,
+    sideMargin,
+  ]);
 
   return (
     <div ref={shelfWrapperRef} className="relative mb-8 inline-block">

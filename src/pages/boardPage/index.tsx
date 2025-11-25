@@ -98,6 +98,7 @@ function BoardPage() {
     frameCenter,
     computeShift,
   } = useLayoutCalculation();
+  const { contentLeft, shiftPx, getAdjustedPositions } = useLayoutCalculation();
 
   const timeRemaining = useCountdown(boardInfoQuery?.data?.data?.serverTime);
 
@@ -190,6 +191,7 @@ function BoardPage() {
         profileImage={boardInfoQuery?.data?.data?.profileImage}
         frameCenter={frameCenter}
         onMenuClick={() => setIsSidebarOpen(true)}
+        shelfWrapperRef={shelfWrapperRef}
       />
 
       <div
@@ -210,6 +212,9 @@ function BoardPage() {
           shelfRef={shelfRef}
           shelfWrapperRef={shelfWrapperRef}
           onComputeShift={computeShift}
+          contentLeft={contentLeft}
+          shiftPx={shiftPx}
+          getAdjustedPositions={getAdjustedPositions}
           onAlbumClick={handleAlbumClick}
           screenWidth={screenWidth}
           currentPage={currentPage}

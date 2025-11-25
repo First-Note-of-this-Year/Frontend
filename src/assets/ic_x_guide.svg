@@ -1,5 +1,5 @@
 <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-<foreignObject x="-13.4" y="-14.4" width="70.8" height="70.8"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(8.7px);clip-path:url(#bgblur_0_188_637_clip_path);height:100%;width:100%"></div></foreignObject><g filter="url(#filter0_d_188_637)" data-figma-bg-blur-radius="17.4">
+<g filter="url(#filter0_d_188_637)">
 <rect x="4" y="3" width="36" height="36" rx="8" fill="white" fill-opacity="0.1" shape-rendering="crispEdges"/>
 <rect x="4.5" y="3.5" width="35" height="35" rx="7.5" stroke="white" stroke-opacity="0.1" shape-rendering="crispEdges"/>
 <g opacity="0.8" filter="url(#filter1_d_188_637)">
@@ -19,8 +19,7 @@
 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_188_637"/>
 <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_188_637" result="shape"/>
 </filter>
-<clipPath id="bgblur_0_188_637_clip_path" transform="translate(13.4 14.4)"><rect x="4" y="3" width="36" height="36" rx="8"/>
-</clipPath><filter id="filter1_d_188_637" x="8" y="7" width="28" height="28" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter1_d_188_637" x="8" y="7" width="28" height="28" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
 <feOffset/>

@@ -26,6 +26,7 @@ interface BoardHeaderProps {
   profileImage?: string;
   frameCenter: { x: number; y: number };
   onMenuClick: () => void;
+  shelfWrapperRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export function BoardHeader({
@@ -34,6 +35,7 @@ export function BoardHeader({
   timeRemaining,
   screenWidth,
   onMenuClick,
+  shelfWrapperRef,
 }: BoardHeaderProps) {
   const { isAfterNewYear } = useTimeStore();
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ export function BoardHeader({
     questionHoleRect,
     linkHoleRect,
     lpHoleRect,
-  } = useOverlayManager({ questionRef });
+  } = useOverlayManager({ questionRef, shelfWrapperRef });
 
   const maskId = useId();
   const QUESTION_HOLE_PADDING = 0;
@@ -344,17 +346,19 @@ export function BoardHeader({
                 </span>
               </div>
 
-                <div style={{ marginTop: 4 }}>
-                  <span
-                    style={{
-                      color: "rgba(255,255,255,0.5)",
-                      fontWeight: 500,
-                      fontSize: 12,
-                    }}
-                  >
-                    {isAfterNewYear ? "받은 편지를 눌러서 확인해요" : "(새해 이후에 볼 수 있어요)"}
-                  </span>
-                </div>
+              <div style={{ marginTop: 4 }}>
+                <span
+                  style={{
+                    color: "rgba(255,255,255,0.5)",
+                    fontWeight: 500,
+                    fontSize: 12,
+                  }}
+                >
+                  {isAfterNewYear
+                    ? "받은 편지를 눌러서 확인해요"
+                    : "(새해 이후에 볼 수 있어요)"}
+                </span>
+              </div>
             </div>
           )}
 
@@ -568,7 +572,14 @@ export function BoardHeader({
                 justifyContent: "center",
               }}
             >
-              <span style={{ color: "#ffffff", fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
+              <span
+                style={{
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  whiteSpace: "nowrap",
+                }}
+              >
                 다른 사람한테 공유할 링크를 복사해요
               </span>
             </div>
