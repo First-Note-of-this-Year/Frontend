@@ -14,6 +14,7 @@ export function Toast({
   onClose,
   duration = 1500,
 }: ToastProps) {
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!isOpen) return;
 
@@ -22,7 +23,7 @@ export function Toast({
     }, duration);
 
     return () => clearTimeout(timer);
-  }, [isOpen, duration, onClose]);
+  }, [isOpen, duration]);
 
   if (!isOpen || typeof document === "undefined") return null;
 

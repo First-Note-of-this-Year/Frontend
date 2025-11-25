@@ -559,14 +559,17 @@ export function BoardHeader({
                 background: "rgba(255,255,255,0.1)",
                 borderRadius: 4,
                 height: 32,
-                padding: "0 10px",
+                padding: "0 12px",
+                minWidth: 280,
+                maxWidth: 450,
+                boxSizing: "border-box",
                 boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.05)",
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <span style={{ color: "#ffffff", fontWeight: 600, fontSize: 14 }}>
+              <span style={{ color: "#ffffff", fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}>
                 다른 사람한테 공유할 링크를 복사해요
               </span>
             </div>
