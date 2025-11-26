@@ -79,13 +79,8 @@ export function Sidebar({
   const { setShowOverlay } = useOverlayContext();
 
   const handleUsageClick = () => {
-    try {
-      onClose?.();
-    } catch {}
-
-    try {
-      setShowOverlay(true);
-    } catch {}
+    onClose?.();
+    setShowOverlay(true);
   };
 
   const handleLoginClick = () => {
