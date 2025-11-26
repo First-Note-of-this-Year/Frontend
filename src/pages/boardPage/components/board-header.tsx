@@ -357,11 +357,11 @@ export function BoardHeader({
                     fontSize: 12,
                   }}
                 >
-                  {isAfterNewYear
-                    ? "받은 편지를 눌러서 확인해요"
-                    : isSharedBoard
+                  {isSharedBoard
                     ? "(타인의 편지는 읽을 수 없어요)"
-                    : "(새해 이후에 볼 수 있어요)"}
+                    : isAfterNewYear
+                      ? "(받은 편지를 눌러서 확인해요)"
+                      : "(새해 이후에 볼 수 있어요)"}
                 </span>
               </div>
             </div>
@@ -412,10 +412,7 @@ export function BoardHeader({
               // shift the box up so its top edge aligns with the LP icon top
               top: `calc(50% - ${(1 - heightRatio) * 50}px - 56px)`,
               transform: "translateY(-50%)",
-              right:
-                screenWidth >= 450
-                  ? `calc(50% - 200px)`
-                  : 25,
+              right: screenWidth >= 450 ? `calc(50% - 200px)` : 25,
               zIndex: 80,
               pointerEvents: "auto",
             }}

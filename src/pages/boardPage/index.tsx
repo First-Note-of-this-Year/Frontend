@@ -19,10 +19,10 @@ import { AlbumGrid } from "./components/album-grid";
 import { BoardHeader } from "./components/board-header";
 import { BottomNavigation } from "./components/bottom-navigation";
 import { LetterModal } from "./components/letter-modal";
+import { OverlayProvider, useOverlayContext } from "./context/OverlayContext";
 import { useBoardData } from "./hooks/useBoardData";
 import { useCountdown } from "./hooks/useCountdown";
 import { useLayoutCalculation } from "./hooks/useLayoutCalculation";
-import { OverlayProvider, useOverlayContext } from "./context/OverlayContext";
 import { useLetterModal } from "./hooks/useLetterModal";
 
 function BoardPage() {
@@ -103,259 +103,264 @@ function BoardPage() {
           paddingBottom: 0,
         }}
       >
-      {/* Garland Icon - 200px clipped, centered at top (New Year only) */}
-      {isNewYear && (
+        {/* Garland Icon - 200px clipped, centered at top (New Year only) */}
+        {isNewYear && (
+          <div
+            className="pointer-events-none fixed z-20"
+            style={{
+              top: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "100vw",
+              maxWidth: "450px",
+              overflow: "hidden",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                marginTop: -200,
+                marginLeft: -100,
+                width: "fit-content",
+              }}
+            >
+              <GarlandIcon />
+            </div>
+          </div>
+        )}
+
+        {/* Window Icon - 79px clipped on right, positioned at top */}
         <div
-          className="pointer-events-none fixed z-20"
+          className="pointer-events-none fixed z-10"
           style={{
-            top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "100vw",
-            maxWidth: "450px",
+            top: windowTop,
+            right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+            width: "fit-content",
             overflow: "hidden",
-            display: "flex",
-            justifyContent: "center",
           }}
         >
-          <div
-            style={{ marginTop: -200, marginLeft: -100, width: "fit-content" }}
-          >
-            <GarlandIcon />
+          <div style={{ marginRight: -79 }}>
+            <img
+              src={isNewYear ? windowNewYearIcon : windowIcon}
+              alt=""
+              aria-hidden
+              style={{ width: 266, height: "auto", display: "block" }}
+            />
           </div>
         </div>
-      )}
 
-      {/* Window Icon - 79px clipped on right, positioned at top */}
-      <div
-        className="pointer-events-none fixed z-10"
-        style={{
-          top: windowTop,
-          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
-          width: "fit-content",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ marginRight: -79 }}>
-          <img
-            src={isNewYear ? windowNewYearIcon : windowIcon}
-            alt=""
-            aria-hidden
-            style={{ width: 266, height: "auto", display: "block" }}
-          />
-        </div>
-      </div>
-
-      <BoardHeader
-        ownerNickname={ownerNickname}
-        messagesCount={
-          boardInfoQuery?.data?.data?.messageCount ??
-          (isSharedBoard
-            ? sharedBoardData?.data?.totalElements
-            : boardTotalElements)
-        }
-        timeRemaining={timeRemaining}
-        screenWidth={screenWidth}
-        profileImage={boardInfoQuery?.data?.data?.profileImage}
-        frameCenter={frameCenter}
-        onMenuClick={() => setIsSidebarOpen(true)}
-        shelfWrapperRef={shelfWrapperRef}
-        isSharedBoard={isSharedBoard}
-      />
-
-      {/* Register layout refs and LP/link refs with OverlayContext */}
-      <OverlayRegistrar
-        shelfRef={shelfRef}
-        shelfWrapperRef={shelfWrapperRef}
-        contentLeft={contentLeft}
-        shiftPx={shiftPx}
-        getAdjustedPositions={getAdjustedPositions}
-        linkRef={bottomGroupRef}
-        lpRef={lpButtonRef}
-      />
-
-      <div
-        className="fixed z-20"
-        style={{
-          bottom: 65,
-          left:
-            screenWidth >= 450
-              ? `calc(50% - 225px + 15px)`
-              : screenWidth >= 390
-                ? 15
-                : Math.max(3, 15 - (390 - screenWidth) * 0.5),
-        }}
-      >
-        <AlbumGrid
-          boardList={boardList}
+        <BoardHeader
+          ownerNickname={ownerNickname}
+          messagesCount={
+            boardInfoQuery?.data?.data?.messageCount ??
+            (isSharedBoard
+              ? sharedBoardData?.data?.totalElements
+              : boardTotalElements)
+          }
+          timeRemaining={timeRemaining}
+          screenWidth={screenWidth}
+          profileImage={boardInfoQuery?.data?.data?.profileImage}
+          frameCenter={frameCenter}
+          onMenuClick={() => setIsSidebarOpen(true)}
+          shelfWrapperRef={shelfWrapperRef}
           isSharedBoard={isSharedBoard}
+        />
+
+        {/* Register layout refs and LP/link refs with OverlayContext */}
+        <OverlayRegistrar
           shelfRef={shelfRef}
           shelfWrapperRef={shelfWrapperRef}
-          onComputeShift={computeShift}
-          
-          onAlbumClick={handleAlbumClick}
-          screenWidth={screenWidth}
+          contentLeft={contentLeft}
+          shiftPx={shiftPx}
+          getAdjustedPositions={getAdjustedPositions}
+          linkRef={bottomGroupRef}
+          lpRef={lpButtonRef}
+        />
+
+        <div
+          className="fixed z-20"
+          style={{
+            bottom: 65,
+            left:
+              screenWidth >= 450
+                ? `calc(50% - 225px + 15px)`
+                : screenWidth >= 390
+                  ? 15
+                  : Math.max(3, 15 - (390 - screenWidth) * 0.5),
+          }}
+        >
+          <AlbumGrid
+            boardList={boardList}
+            isSharedBoard={isSharedBoard}
+            shelfRef={shelfRef}
+            shelfWrapperRef={shelfWrapperRef}
+            onComputeShift={computeShift}
+            onAlbumClick={handleAlbumClick}
+            screenWidth={screenWidth}
+            currentPage={currentPage}
+          />
+
+          <LetterModal
+            isOpen={letterOpenId !== null}
+            letterOpenId={letterOpenId}
+            messageDetail={messageDetail}
+            ownerNickname={ownerNickname}
+            isPlaying={isPlaying}
+            overlayRef={overlayRef}
+            onClose={closeModal}
+            onToggleAudio={toggleAudio}
+          />
+        </div>
+
+        <BottomNavigation
+          totalPages={
+            isSharedBoard && sharedBoardData?.data
+              ? sharedBoardData.data.totalPages
+              : totalPages
+          }
           currentPage={currentPage}
-        />
-
-        <LetterModal
-          isOpen={letterOpenId !== null}
-          letterOpenId={letterOpenId}
-          messageDetail={messageDetail}
+          onPageChange={setCurrentPage}
           ownerNickname={ownerNickname}
-          isPlaying={isPlaying}
-          overlayRef={overlayRef}
-          onClose={closeModal}
-          onToggleAudio={toggleAudio}
+          isSharedBoard={isSharedBoard}
+          shareUri={shareUri}
+          bottomGroupRef={bottomGroupRef}
+          onShareClick={openShareModal}
         />
-      </div>
 
-      <BottomNavigation
-        totalPages={
-          isSharedBoard && sharedBoardData?.data
-            ? sharedBoardData.data.totalPages
-            : totalPages
-        }
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        ownerNickname={ownerNickname}
-        isSharedBoard={isSharedBoard}
-        shareUri={shareUri}
-        bottomGroupRef={bottomGroupRef}
-        onShareClick={openShareModal}
-      />
+        {/* Share Modal */}
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={closeShareModal}
+          onKakaoShare={handleKakaoShare}
+          onLinkCopy={handleLinkCopy}
+          showCopyFeedback={showCopyFeedback}
+        />
 
-      {/* Share Modal */}
-      <ShareModal
-        isOpen={isShareModalOpen}
-        onClose={closeShareModal}
-        onKakaoShare={handleKakaoShare}
-        onLinkCopy={handleLinkCopy}
-        showCopyFeedback={showCopyFeedback}
-      />
-
-      {/* Background bottom image */}
-      <img
-        src={bgbottom}
-        alt=""
-        aria-hidden
-        className="pointer-events-none fixed left-1/2 z-10 w-full max-w-[450px]"
-        style={{
-          bottom: 46,
-          transform: "translateX(-50%)",
-          height: "auto",
-          maxHeight: "70px",
-        }}
-      />
-
-      {/* Drawer Icon */}
-      <img
-        src={drawerIcon}
-        alt=""
-        aria-hidden
-        className="pointer-events-none fixed z-10 max-w-[450px]"
-        style={{
-          bottom: 65 + 19,
-          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
-        }}
-      />
-
-      {/* Bonsai Icon - positioned 5px left of Hat */}
-      <div
-        className="pointer-events-none fixed z-10"
-        style={{
-          bottom: 65 + 150,
-          right: screenWidth >= 450 ? `calc(50% - 225px + 36px)` : 36,
-          width: "fit-content",
-        }}
-      >
+        {/* Background bottom image */}
         <img
-          src={isNewYear ? bonsaiNewYear : bonsaiNormal}
+          src={bgbottom}
           alt=""
           aria-hidden
-          style={{ width: 68, height: "auto", display: "block" }}
+          className="pointer-events-none fixed left-1/2 z-10 w-full max-w-[450px]"
+          style={{
+            bottom: 46,
+            transform: "translateX(-50%)",
+            height: "auto",
+            maxHeight: "70px",
+          }}
         />
-      </div>
 
-      {/* Hat Icon - 31px clipped on right, 6px below drawer top */}
-      <div
-        className="pointer-events-none fixed z-10"
-        style={{
-          bottom: 65 + 105,
-          right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
-          width: "fit-content",
-          overflow: "hidden",
-        }}
-      >
-        <div style={{ marginRight: -31 }}>
-          <HatIcon />
+        {/* Drawer Icon */}
+        <img
+          src={drawerIcon}
+          alt=""
+          aria-hidden
+          className="pointer-events-none fixed z-10 max-w-[450px]"
+          style={{
+            bottom: 65 + 19,
+            right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+          }}
+        />
+
+        {/* Bonsai Icon - positioned 5px left of Hat */}
+        <div
+          className="pointer-events-none fixed z-10"
+          style={{
+            bottom: 65 + 150,
+            right: screenWidth >= 450 ? `calc(50% - 225px + 36px)` : 36,
+            width: "fit-content",
+          }}
+        >
+          <img
+            src={isNewYear ? bonsaiNewYear : bonsaiNormal}
+            alt=""
+            aria-hidden
+            style={{ width: 68, height: "auto", display: "block" }}
+          />
         </div>
-      </div>
 
-      {/* LP Icon - positioned at center right */}
-      {/* BGM ON/OFF label moved to header component */}
-      <button
-        type="button"
-        ref={lpButtonRef}
-        onClick={() => setIsLpPlaying(!isLpPlaying)}
-        className="fixed z-10 cursor-pointer"
-        style={{
-          top: `calc(50% - ${(1 - heightRatio) * 50}px)`,
-          transform: "translateY(-50%)",
-          right: screenWidth >= 450 ? `calc(50% - 225px + 18px)` : 18,
-        }}
-        aria-label={isLpPlaying ? "LP 정지" : "LP 재생"}
-      >
-        <img
-          src={isLpPlaying ? LpPlayingIcon : LpNormalIcon}
-          alt=""
-          aria-hidden
-          style={{ width: 80, height: "auto", display: "block" }}
-        />
-      </button>
+        {/* Hat Icon - 31px clipped on right, 6px below drawer top */}
+        <div
+          className="pointer-events-none fixed z-10"
+          style={{
+            bottom: 65 + 105,
+            right: screenWidth >= 450 ? `calc(50% - 225px)` : 0,
+            width: "fit-content",
+            overflow: "hidden",
+          }}
+        >
+          <div style={{ marginRight: -31 }}>
+            <HatIcon />
+          </div>
+        </div>
 
-      {/* Sidebar */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          <button
-            type="button"
-            className="flex-1 bg-black bg-opacity-50"
-            onClick={() => setIsSidebarOpen(false)}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                setIsSidebarOpen(false);
+        {/* LP Icon - positioned at center right */}
+        {/* BGM ON/OFF label moved to header component */}
+        <button
+          type="button"
+          ref={lpButtonRef}
+          onClick={() => setIsLpPlaying(!isLpPlaying)}
+          className="fixed z-10 cursor-pointer"
+          style={{
+            top: `calc(50% - ${(1 - heightRatio) * 50}px)`,
+            transform: "translateY(-50%)",
+            right: screenWidth >= 450 ? `calc(50% - 225px + 18px)` : 18,
+          }}
+          aria-label={isLpPlaying ? "LP 정지" : "LP 재생"}
+        >
+          <img
+            src={isLpPlaying ? LpPlayingIcon : LpNormalIcon}
+            alt=""
+            aria-hidden
+            style={{ width: 80, height: "auto", display: "block" }}
+          />
+        </button>
+
+        {/* Sidebar */}
+        {isSidebarOpen && (
+          <div className="fixed inset-0 z-50 flex justify-end">
+            <button
+              type="button"
+              className="flex-1 bg-black bg-opacity-50"
+              onClick={() => setIsSidebarOpen(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  setIsSidebarOpen(false);
+                }
+              }}
+              aria-label="사이드바 닫기"
+            />
+            <Sidebar
+              nickname={ownerNickname}
+              onClose={() => setIsSidebarOpen(false)}
+              shareUri={
+                isSharedBoard ? shareUri : currentUserBoard?.data?.shareUri
               }
-            }}
-            aria-label="사이드바 닫기"
-          />
-          <Sidebar
-            nickname={ownerNickname}
-            onClose={() => setIsSidebarOpen(false)}
-            shareUri={
-              isSharedBoard ? shareUri : currentUserBoard?.data?.shareUri
-            }
-          />
-        </div>
-      )}
+            />
+          </div>
+        )}
 
-      {/* Toast */}
-      <Toast
-        isOpen={showToast}
-        message={toastMessage}
-        onClose={() => setShowToast(false)}
-      />
+        {/* Toast */}
+        <Toast
+          isOpen={showToast}
+          message={toastMessage}
+          onClose={() => setShowToast(false)}
+        />
       </div>
     </OverlayProvider>
   );
 }
 
 function OverlayRegistrar(props: {
-  shelfRef: ReturnType<typeof useLayoutCalculation>['shelfRef'];
-  shelfWrapperRef: ReturnType<typeof useLayoutCalculation>['shelfWrapperRef'];
+  shelfRef: ReturnType<typeof useLayoutCalculation>["shelfRef"];
+  shelfWrapperRef: ReturnType<typeof useLayoutCalculation>["shelfWrapperRef"];
   contentLeft: number | undefined;
   shiftPx: { x: number; y: number } | undefined;
-  getAdjustedPositions: (() => Array<{ id: number; x: number; y: number }>) | undefined;
-  linkRef: ReturnType<typeof useLayoutCalculation>['bottomGroupRef'];
+  getAdjustedPositions:
+    | (() => Array<{ id: number; x: number; y: number }>)
+    | undefined;
+  linkRef: ReturnType<typeof useLayoutCalculation>["bottomGroupRef"];
   lpRef: React.RefObject<HTMLButtonElement | null>;
 }) {
   const {

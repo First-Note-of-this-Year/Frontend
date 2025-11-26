@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useOverlayContext } from "../context/OverlayContext";
 import EnvelopIcon from "@/assets/ic_envelope.svg?react";
 import LinkIcon from "@/assets/ic_link.svg?react";
 import { LinkShareButton } from "@/components/ui/link-share-button";
 import { Pagination } from "@/components/ui/pagination";
+import { useOverlayContext } from "../context/OverlayContext";
 
 interface BottomNavigationProps {
   totalPages: number;
@@ -27,7 +27,8 @@ export function BottomNavigation({
   onShareClick,
 }: BottomNavigationProps) {
   const linkWrapperRef = useRef<HTMLDivElement | null>(null);
-  const { registerLinkRef, requestHoleRects, showOverlay } = useOverlayContext();
+  const { registerLinkRef, requestHoleRects, showOverlay } =
+    useOverlayContext();
 
   useEffect(() => {
     registerLinkRef(linkWrapperRef);
