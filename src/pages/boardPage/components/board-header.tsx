@@ -27,6 +27,7 @@ interface BoardHeaderProps {
   frameCenter: { x: number; y: number };
   onMenuClick: () => void;
   shelfWrapperRef?: React.RefObject<HTMLDivElement | null>;
+  isSharedBoard?: boolean;
 }
 
 export function BoardHeader({
@@ -36,6 +37,7 @@ export function BoardHeader({
   screenWidth,
   onMenuClick,
   shelfWrapperRef,
+  isSharedBoard,
 }: BoardHeaderProps) {
   const { isAfterNewYear } = useTimeStore();
   const navigate = useNavigate();
@@ -357,6 +359,8 @@ export function BoardHeader({
                 >
                   {isAfterNewYear
                     ? "받은 편지를 눌러서 확인해요"
+                    : isSharedBoard
+                    ? "(타인의 편지는 읽을 수 없어요)"
                     : "(새해 이후에 볼 수 있어요)"}
                 </span>
               </div>
@@ -578,7 +582,9 @@ export function BoardHeader({
                   whiteSpace: "nowrap",
                 }}
               >
-                다른 사람한테 공유할 링크를 복사해요
+                {isSharedBoard
+                  ? "편지를 보내서 마음을 전해요"
+                  : "다른 사람한테 공유할 링크를 복사해요"}
               </span>
             </div>
           </div>

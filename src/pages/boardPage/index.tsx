@@ -160,6 +160,7 @@ function BoardPage() {
         frameCenter={frameCenter}
         onMenuClick={() => setIsSidebarOpen(true)}
         shelfWrapperRef={shelfWrapperRef}
+        isSharedBoard={isSharedBoard}
       />
 
       {/* Register layout refs and LP/link refs with OverlayContext */}
