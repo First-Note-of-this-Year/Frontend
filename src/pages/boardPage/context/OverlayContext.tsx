@@ -1,4 +1,10 @@
-import React, { createContext, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 type HoleRect = { x: number; y: number; width: number; height: number } | null;
 
@@ -55,7 +61,9 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
     try {
       const wrap = layoutRef.current.shelfWrapperRef?.current;
       if (wrap) {
-        const firstEl = wrap.querySelector('[aria-label^="album-cover-"]') as HTMLElement | null;
+        const firstEl = wrap.querySelector(
+          '[aria-label^="album-cover-"]'
+        ) as HTMLElement | null;
         if (firstEl) {
           const r = firstEl.getBoundingClientRect();
           return { x: r.left, y: r.top, width: r.width, height: r.height };
@@ -69,8 +77,16 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
       const firstPos = positions[0];
       const imgRect = img.getBoundingClientRect();
       const albumWidth = 60;
-      const x = imgRect.left + (layoutRef.current.contentLeft ?? 0) + (layoutRef.current.shiftPx?.x ?? 0) + (firstPos.x ?? 0) + 15 - 3 + (layoutRef.current.shiftPx?.x ? 0 : 0);
-      const y = imgRect.top + (layoutRef.current.shiftPx?.y ?? 0) + (firstPos.y ?? 0);
+      const x =
+        imgRect.left +
+        (layoutRef.current.contentLeft ?? 0) +
+        (layoutRef.current.shiftPx?.x ?? 0) +
+        (firstPos.x ?? 0) +
+        15 -
+        3 +
+        (layoutRef.current.shiftPx?.x ? 0 : 0);
+      const y =
+        imgRect.top + (layoutRef.current.shiftPx?.y ?? 0) + (firstPos.y ?? 0);
       return { x, y, width: albumWidth, height: albumWidth };
     } catch {
       return null;
@@ -155,12 +171,15 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
     requestHoleRects,
   };
 
-  return <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>;
+  return (
+    <OverlayContext.Provider value={value}>{children}</OverlayContext.Provider>
+  );
 }
 
 export function useOverlayContext() {
   const ctx = React.useContext(OverlayContext);
-  if (!ctx) throw new Error("useOverlayContext must be used within OverlayProvider");
+  if (!ctx)
+    throw new Error("useOverlayContext must be used within OverlayProvider");
   return ctx;
 }
 

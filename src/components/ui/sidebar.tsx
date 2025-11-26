@@ -10,6 +10,7 @@ import QusetionIcon from "@/assets/ic_question.svg?react";
 import SignOutIcon from "@/assets/ic_sign_out.svg?react";
 import XIcon from "@/assets/ic_x.svg?react";
 import { Alert } from "@/components/ui/alert";
+import { useOverlayContext } from "@/pages/boardPage/context/OverlayContext";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 interface SidebarProps {
@@ -73,6 +74,13 @@ export function Sidebar({
 
   const handleNavigateInquiry = () => {
     navigate("/user/inquiry");
+  };
+
+  const { setShowOverlay } = useOverlayContext();
+
+  const handleUsageClick = () => {
+    onClose?.();
+    setShowOverlay(true);
   };
 
   const handleLoginClick = () => {
@@ -202,7 +210,11 @@ export function Sidebar({
               </button>
             </div>
             <div className="h-0 w-60 outline outline-[#E6E6E6] outline-offset-[-0.50px]" />
-            <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
+            <button
+              type="button"
+              onClick={handleUsageClick}
+              className="flex h-12 w-full items-center gap-3 overflow-hidden py-2 text-left transition-colors hover:bg-neutral-200"
+            >
               <div className="relative h-10 w-10">
                 <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
                 <QusetionIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
@@ -210,7 +222,7 @@ export function Sidebar({
               <div className="font-semibold text-base text-black leading-snug tracking-wide">
                 사용 방법
               </div>
-            </div>
+            </button>
             <div className="flex flex-col">
               <button
                 type="button"

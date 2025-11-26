@@ -117,15 +117,21 @@ export function useOverlayManager({
     };
   }, [showOverlay, computeQuestionRect, questionRef]);
 
-  const handleDontShowChange = useCallback((next: boolean) => {
-    try {
-      localStorage.setItem("board_overlay_dont_show", next ? "true" : "false");
-    } catch {
-      // ignore
-    }
-    setDontShowChecked(next);
-    if (next) setShowOverlay(false);
-  }, [setDontShowChecked, setShowOverlay]);
+  const handleDontShowChange = useCallback(
+    (next: boolean) => {
+      try {
+        localStorage.setItem(
+          "board_overlay_dont_show",
+          next ? "true" : "false"
+        );
+      } catch {
+        // ignore
+      }
+      setDontShowChecked(next);
+      if (next) setShowOverlay(false);
+    },
+    [setDontShowChecked, setShowOverlay]
+  );
 
   return {
     overlayActive,
