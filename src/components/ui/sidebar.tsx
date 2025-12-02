@@ -11,6 +11,7 @@ import SignOutIcon from "@/assets/ic_sign_out.svg?react";
 import XIcon from "@/assets/ic_x.svg?react";
 import { Alert } from "@/components/ui/alert";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { Toast } from "@/components/ui/toast";
 
 interface SidebarProps {
   nickname?: string;
@@ -24,6 +25,7 @@ export function Sidebar({
   shareUri,
 }: SidebarProps) {
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
   const {
     isLoggedIn,
     isCheckingAuth,
@@ -71,6 +73,10 @@ export function Sidebar({
     navigate("/user/profile");
   };
 
+  const handleUserGuide = () => {
+    setShowUpdateToast(true);
+  };
+  
   const handleNavigateInquiry = () => {
     navigate("/user/inquiry");
   };
@@ -203,13 +209,19 @@ export function Sidebar({
             </div>
             <div className="h-0 w-60 outline outline-[#E6E6E6] outline-offset-[-0.50px]" />
             <div className="flex h-12 items-center gap-3 overflow-hidden py-2">
-              <div className="relative h-10 w-10">
-                <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
-                <QusetionIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
-              </div>
-              <div className="font-semibold text-base text-black leading-snug tracking-wide">
-                사용 방법
-              </div>
+              <button
+              type="button"
+              onClick={handleUserGuide}
+              className="flex h-12 w-full items-center gap-3 overflow-hidden py-2 text-left transition-colors hover:bg-neutral-200"
+              >
+                <div className="relative h-10 w-10">
+                  <div className="h-10 w-10 rounded-full bg-red-900/5 backdrop-blur-[9.75px]" />
+                  <QusetionIcon className="absolute top-[10px] left-[10px] h-5 w-5" />
+                </div>
+                <div className="font-semibold text-base text-black leading-snug tracking-wide">
+                  사용 방법
+                </div>
+              </button>
             </div>
             <div className="flex flex-col">
               <button
@@ -257,6 +269,12 @@ export function Sidebar({
         leftButtonText="취소"
         rightButtonText="로그아웃"
         content="로그아웃하시겠습니까?"
+      />
+
+      <Toast
+        message="추후 업데이트 예정입니다"
+        isOpen={showUpdateToast}
+        onClose={() => setShowUpdateToast(false)}
       />
     </div>
   );
