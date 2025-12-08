@@ -152,7 +152,6 @@ export default function LetterWritePage() {
             전송
           </NavigationButton>
         }
-        className="p-4"
       >
         <LetterStep
           step={2}
