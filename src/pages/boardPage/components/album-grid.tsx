@@ -33,7 +33,7 @@ export function AlbumGrid({
     screenWidth >= 390 ? 14 : Math.max(7, 14 - (390 - screenWidth) * 0.08);
 
   // Helper function to check if position is developer comment (always at index 5 on first page)
-  const isDeveloperCommentPosition = (globalIndex: number) => 
+  const isDeveloperCommentPosition = (globalIndex: number) =>
     currentPage === 0 && globalIndex === 5;
 
   return (
@@ -71,7 +71,7 @@ export function AlbumGrid({
             : (item as BoardListItem).coverImage;
           const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index);
-          const isEmpty = messageId?.startsWith('empty-');
+          const isEmpty = messageId?.startsWith("empty-");
 
           // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
           if (isEmpty) {
@@ -176,7 +176,7 @@ export function AlbumGrid({
             : (item as BoardListItem).coverImage;
           const isRead = !isSharedBoard && (item as BoardListItem).read;
           const isDeveloperComment = isDeveloperCommentPosition(index + 2);
-          const isEmpty = messageId?.startsWith('empty-');
+          const isEmpty = messageId?.startsWith("empty-");
 
           // 빈 아이템은 빈 div로 렌더링 (그리드 위치 유지)
           if (isEmpty) {

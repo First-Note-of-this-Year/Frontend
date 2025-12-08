@@ -90,8 +90,8 @@ function LoginPage() {
 
           {/* 로그인 상태에 따른 버튼 */}
           <div className="flex w-full justify-center">
-            {isAuthResolved && (
-              isLoggedIn ? (
+            {isAuthResolved &&
+              (isLoggedIn ? (
                 <button
                   type="button"
                   onClick={handleGoToBoard}
@@ -102,8 +102,7 @@ function LoginPage() {
                 </button>
               ) : (
                 <KakaoLoginButton onClick={handleKakaoLogin} />
-              )
-            )}
+              ))}
           </div>
         </div>
       </div>
@@ -159,8 +158,8 @@ function LoginPage() {
       <div className="flex flex-col-reverse items-center justify-center pb-10">
         {/* 로그인 상태에 따른 버튼 */}
         <div className="flex w-full justify-center">
-          {isAuthResolved && (
-            isLoggedIn ? (
+          {isAuthResolved &&
+            (isLoggedIn ? (
               <button
                 type="button"
                 onClick={handleGoToBoard}
@@ -171,8 +170,7 @@ function LoginPage() {
               </button>
             ) : (
               <KakaoLoginButton onClick={handleKakaoLogin} />
-            )
-          )}
+            ))}
         </div>
 
         {/* 디데이 표기 창 */}
