@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import BgLetter from "@/assets/bg_letterpaper.webp";
-import PlayIcon from "@/assets/ic_play.svg?react";
-import PauseIcon from "@/assets/ic_pause.svg?react";
 import ITunesBadge from "@/assets/btn_iTunes_Badge.svg?react";
+import PauseIcon from "@/assets/ic_pause.svg?react";
+import PlayIcon from "@/assets/ic_play.svg?react";
 import StampWebp from "@/assets/ic_stamp.webp";
 import ObjLp from "@/assets/obj_lp.webp";
 import type { BoardMessageData } from "@/types/board";
@@ -19,7 +19,7 @@ interface LetterModalProps {
 }
 
 // 개발자 코멘트 판단 함수 - messageId로 판단
-const isDeveloperComment = (messageDetail: BoardMessageData | null) => 
+const isDeveloperComment = (messageDetail: BoardMessageData | null) =>
   messageDetail?.messageId === "developer-comment";
 
 const MARQUEE_REPEAT = [1, 2, 3, 4] as const;

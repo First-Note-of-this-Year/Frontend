@@ -15,7 +15,9 @@ type ShareResult =
 export const useShare = () => {
   const [isSharing, setIsSharing] = useState(false);
 
-  const shareBoard = async (providedShareUri?: string): Promise<ShareResult> => {
+  const shareBoard = async (
+    providedShareUri?: string
+  ): Promise<ShareResult> => {
     setIsSharing(true);
     try {
       let shareUri: string;

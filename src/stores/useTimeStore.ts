@@ -80,17 +80,23 @@ export const useTimeStore = create<TimeState>((set) => ({
 
           if (timeUntilNewYear > 0) {
             newYearTimeoutId = setTimeout(() => {
-              getServerTime().then((newServerTime) => {
-                const actualIsAfterNewYear = checkIsAfterNewYear(newServerTime);
-                set({
-                  serverTime: newServerTime,
-                  isAfterNewYear: actualIsAfterNewYear
+              getServerTime()
+                .then((newServerTime) => {
+                  const actualIsAfterNewYear =
+                    checkIsAfterNewYear(newServerTime);
+                  set({
+                    serverTime: newServerTime,
+                    isAfterNewYear: actualIsAfterNewYear,
+                  });
+                })
+                .catch((error) => {
+                  console.error(
+                    "Failed to fetch server time on new year:",
+                    error
+                  );
+                  // 에러가 발생해도 클라이언트 시간 기준으로 isAfterNewYear를 true로 설정
+                  set({ isAfterNewYear: true });
                 });
-              }).catch((error) => {
-                console.error("Failed to fetch server time on new year:", error);
-                // 에러가 발생해도 클라이언트 시간 기준으로 isAfterNewYear를 true로 설정
-                set({ isAfterNewYear: true });
-              });
               newYearTimeoutId = null;
             }, timeUntilNewYear);
           }
