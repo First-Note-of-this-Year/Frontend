@@ -35,8 +35,8 @@ export const useShare = () => {
       console.log("Generated share URL:", shareUrl);
 
       const shareData: ShareData = {
-        title: "내 보드를 확인해보세요!",
-        text: "친구들과 함께 만든 특별한 보드를 공유합니다.",
+        title: "올해의 첫소리",
+        text: "너의 새해 첫 곡도 알려줘! 🎵 여기에 기록해줘 ↓",
         url: shareUrl,
       };
 
