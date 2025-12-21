@@ -205,11 +205,11 @@
 
 /* Dynamic padding for responsive height */
 .dynamic-padding-top {
-  padding-top: max(6.5rem, calc(6.5rem + (100vh - 690px) * 0.3));
+  padding-top: max(5rem, calc(5rem + (100vh - 690px) * 0.3));
 }
 
 .dynamic-bottom-position {
-  bottom: max(89px, calc(89px + (100vh - 660px) * 0.3));
+  bottom: max(75px, calc(75px + (100vh - 660px) * 0.3));
 }
 
 /* Star twinkling animations */
