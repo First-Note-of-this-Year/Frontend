@@ -3,10 +3,16 @@ import CDPlayerImage from "@/assets/obj_cdplayer.webp";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinCompletePage() {
   const navigate = useNavigate();
-  const handleClick = () => navigate(ROUTES.BOARD);
+  const {checkAuth} = useAuthStore();
+
+  const handleClick = async () => {
+    await checkAuth();
+    navigate(ROUTES.BOARD);
+  };
 
   return (
     <PageLayout
