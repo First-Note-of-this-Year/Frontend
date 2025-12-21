@@ -1,12 +1,32 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CDPlayerImage from "@/assets/obj_cdplayer.webp";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
 import { ROUTES } from "@/constants/routes";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinCompletePage() {
   const navigate = useNavigate();
-  const handleClick = () => navigate(ROUTES.BOARD);
+  const { checkAuth } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    try {
+      const authCheckResult = await checkAuth();
+      if (authCheckResult) {
+        navigate(ROUTES.BOARD);
+      } else {
+        navigate(ROUTES.HOME);
+      }
+    } catch (error) {
+      console.error("Failed to check auth:", error);
+      navigate(ROUTES.HOME);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <PageLayout
@@ -22,10 +42,11 @@ export default function JoinCompletePage() {
       bottomContent={
         <NavigationButton
           className="w-full"
-          active={true}
+          active={!isLoading}
+          disabled={isLoading}
           onClick={handleClick}
         >
-          다음으로
+          {isLoading ? "확인 중..." : "다음으로"}
         </NavigationButton>
       }
     >
