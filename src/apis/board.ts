@@ -1,5 +1,11 @@
 import { API_ENDPOINTS } from "@/apis/config/endpoints";
-import { apiGet, apiGetPublic, apiPatch, apiPost } from "@/lib/api";
+import {
+  apiGet,
+  apiGetAuthCheck,
+  apiGetPublic,
+  apiPatch,
+  apiPost,
+} from "@/lib/api";
 import type {
   BoardInfoResponse,
   BoardListResponse,
@@ -26,6 +32,12 @@ export const createBoard = async (
 export const getBoardShare = async (): Promise<GetBoardShareResponse> => {
   return apiGet<GetBoardShareResponse>(API_ENDPOINTS.BOARD.SHARE);
 };
+
+// 인증 체크용 보드 공유 링크 반환
+export const getBoardShareForAuth =
+  async (): Promise<GetBoardShareResponse> => {
+    return apiGetAuthCheck<GetBoardShareResponse>(API_ENDPOINTS.BOARD.SHARE);
+  };
 
 //공유 보드 메세지 반환
 export const getSharedBoard = async (
