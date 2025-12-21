@@ -10,8 +10,13 @@ export default function JoinCompletePage() {
   const {checkAuth} = useAuthStore();
 
   const handleClick = async () => {
-    await checkAuth();
-    navigate(ROUTES.BOARD);
+    const authCheckResult = await checkAuth();
+    if (authCheckResult){
+      navigate(ROUTES.BOARD);
+    }
+    else{
+      navigate(ROUTES.HOME);
+    }
   };
 
   return (
