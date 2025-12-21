@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import AirplaneBackground from "@/assets/bg_airplane.webp";
 import AirplaneObject from "@/assets/obj_airplane.webp";
@@ -8,7 +9,13 @@ import { useAuthStore } from "@/stores/useAuthStore";
 export default function LetterCompletePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, hasFetchedAuth, checkAuth } = useAuthStore();
+
+  useEffect(() => {
+    if (!hasFetchedAuth) {
+      void checkAuth();
+    }
+  }, [hasFetchedAuth, checkAuth]);
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/complete";
