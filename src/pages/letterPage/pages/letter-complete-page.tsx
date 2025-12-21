@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import AirplaneBackground from "@/assets/bg_airplane.webp";
 import AirplaneObject from "@/assets/obj_airplane.webp";
 import SwooshObject from "@/assets/obj_swoosh.webp";
 import { NavigationButton } from "@/components/ui/navigation-button";
+import { useAuthStore } from "@/stores/useAuthStore";
 export default function LetterCompletePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { shareUri } = useParams();
+  const { isLoggedIn } = useAuthStore();
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/complete";
@@ -17,8 +18,11 @@ export default function LetterCompletePage() {
   };
 
   const handleToBoard = () => {
-    if (shareUri) navigate(`/board/${shareUri}`);
-    else navigate("/board");
+    if (!isLoggedIn) {
+      navigate("/");
+      return;
+    }
+    navigate("/board");
   };
 
   return (
