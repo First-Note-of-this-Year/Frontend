@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getBoardShare } from "@/apis/board";
+import { getBoardShareForAuth } from "@/apis/board";
 import type { GetBoardShareResponse } from "@/types/board";
 
 interface AuthState {
@@ -33,7 +33,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isCheckingAuth: true });
 
     try {
-      const response = await getBoardShare();
+      const response = await getBoardShareForAuth();
 
       set({
         isLoggedIn: true,
