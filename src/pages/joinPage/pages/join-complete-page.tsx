@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinCompletePage() {
   const navigate = useNavigate();
-  const { isLoggedIn, checkAuth, hasFetchedAuth } = useAuthStore();
+  const { isLoggedIn, checkAuth, hasFetchedAuth, boardShare } = useAuthStore();
 
   useEffect(() => {
     if (!hasFetchedAuth) {
@@ -20,6 +20,19 @@ export default function JoinCompletePage() {
       navigate("/");
       return;
     }
+    
+    if (!boardShare?.boardId) {
+      // 보드 정보가 없으면 인증을 다시 시도
+      void checkAuth({ force: true }).then((data) => {
+        if (data?.boardId) {
+          navigate("/board");
+        } else {
+          navigate("/join/nickname");
+        }
+      });
+      return;
+    }
+    
     navigate("/board");
   };
 
@@ -35,7 +48,7 @@ export default function JoinCompletePage() {
       }
       showBackButton={false}
       bottomContent={
-        <NavigationButton className="w-full" onClick={handleToBoard}>
+        <NavigationButton className="w-full" active={true} onClick={handleToBoard}>
           다음으로
         </NavigationButton>
       }
