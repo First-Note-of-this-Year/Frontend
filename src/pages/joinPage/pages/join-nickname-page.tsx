@@ -25,12 +25,12 @@ export default function JoinNicknamePage() {
       console.log("보드 생성 성공:", response);
       setLoggedIn(true, {
         boardShare: {
-          boardId: response.boardId,
-          shareUri: response.shareUri,
+          boardId: response.data.boardId,
+          shareUri: response.data.shareUri,
         },
       });
       navigate(
-        ROUTES.JOIN.GUIDE_WITH_SHARE.replace(":shareUri", response.shareUri)
+        ROUTES.JOIN.GUIDE_WITH_SHARE.replace(":shareUri", response.data.shareUri)
       );
     } catch (error) {
       console.error("보드 생성 API 에러:", error);
