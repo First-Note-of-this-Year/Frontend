@@ -16,18 +16,19 @@ export default function LetterGuidePage({
   const { shareUri } = useParams();
   const location = useLocation();
 
+  const isJoinPage = location.pathname.startsWith("/join/");
+  const isFirstTimeJoin = location.pathname === "/join/letter/guide";
+
   // fetch board info when shareUri is present to get the owner's name
+  // join 페이지에서는 보드 정보를 가져올 필요 없음
   const boardInfoQuery = useQuery({
     queryKey: ["boardInfo", shareUri],
     queryFn: () => getBoardInfo(shareUri ?? ""),
-    enabled: Boolean(shareUri),
+    enabled: Boolean(shareUri) && !isJoinPage,
   });
 
   const computedNickname =
     boardInfoQuery.data?.data?.nickname ?? (nickname as string);
-
-  const isJoinPage = location.pathname.startsWith("/join/");
-  const isFirstTimeJoin = location.pathname === "/join/letter/guide";
 
   const handleSearchClick = () => {
     if (isJoinPage) {

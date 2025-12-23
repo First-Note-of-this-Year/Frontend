@@ -47,7 +47,8 @@ export default function LetterSelectPage({
 
   useEffect(() => {
     const fetchBoardInfo = async () => {
-      if (!shareUri) return;
+      // join 페이지에서는 보드 정보를 가져올 필요 없음
+      if (!shareUri || isJoinPage) return;
       try {
         const response = await getBoardInfo(shareUri);
         setRecipientNickname(response.data.nickname);
@@ -57,7 +58,7 @@ export default function LetterSelectPage({
     };
 
     fetchBoardInfo();
-  }, [shareUri]);
+  }, [shareUri, isJoinPage]);
 
   useEffect(() => {
     // prefer prop `music` if provided
