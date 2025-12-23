@@ -101,14 +101,6 @@ export default function LetterWritePage() {
         // 내게 쓰기 흐름일 때는 자신의 보드 shareUri 사용
         draft.shareUri = shareUri ?? (isJoinPage ? boardShare?.shareUri : draft.shareUri) ?? "";
 
-        console.log("메시지 전송 디버그:", {
-          "URL shareUri": shareUri,
-          "isJoinPage": isJoinPage,
-          "boardShare?.shareUri": boardShare?.shareUri,
-          "draft.shareUri (localStorage)": stored ? JSON.parse(stored).shareUri : undefined,
-          "최종 draft.shareUri": draft.shareUri,
-        });
-
         // POST to backend using central message api
         await postMessage(draft);
 
