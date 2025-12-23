@@ -3,10 +3,15 @@ export interface CreateBoardRequest {
 }
 
 export interface CreateBoardResponse {
-  boardId: string;
-  userId: string;
-  nickname: string;
-  shareUri: string;
+  success: boolean;
+  code: number;
+  message: string;
+  data: {
+    boardId: string;
+    userId: string;
+    nickname: string;
+    shareUri: string;
+  };
 }
 
 export interface GetBoardShareResponse {
