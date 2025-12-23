@@ -48,7 +48,8 @@ export default function LetterWritePage() {
 
   useEffect(() => {
     const fetchBoardInfo = async () => {
-      if (!shareUri) return;
+      // 내게 쓰기 흐름(join 페이지)일 때는 보드 정보를 가져올 필요 없음
+      if (!shareUri || isJoinPage) return;
       try {
         const response = await getBoardInfo(shareUri);
         setRecipientNickname(response.data.nickname);
@@ -58,7 +59,7 @@ export default function LetterWritePage() {
     };
 
     fetchBoardInfo();
-  }, [shareUri]);
+  }, [shareUri, isJoinPage]);
 
   const isFormValid =
     letterContent.trim() !== "" &&
