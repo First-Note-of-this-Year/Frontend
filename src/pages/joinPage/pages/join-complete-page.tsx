@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CDPlayerImage from "@/assets/obj_cdplayer.webp";
 import { NavigationButton } from "@/components/ui/navigation-button";
@@ -6,7 +7,13 @@ import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinCompletePage() {
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, checkAuth, hasFetchedAuth } = useAuthStore();
+
+  useEffect(() => {
+    if (!hasFetchedAuth) {
+      void checkAuth();
+    }
+  }, [checkAuth, hasFetchedAuth]);
 
   const handleToBoard = () => {
     if (!isLoggedIn) {
@@ -14,7 +21,7 @@ export default function JoinCompletePage() {
       return;
     }
     navigate("/board");
-  }
+  };
 
   return (
     <PageLayout
@@ -28,10 +35,7 @@ export default function JoinCompletePage() {
       }
       showBackButton={false}
       bottomContent={
-        <NavigationButton
-          className="w-full"
-          onClick={handleToBoard}
-        >
+        <NavigationButton className="w-full" onClick={handleToBoard}>
           다음으로
         </NavigationButton>
       }

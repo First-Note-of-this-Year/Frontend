@@ -27,9 +27,7 @@ export function PageLayout({
 
       {children && <div className="flex-1">{children}</div>}
 
-      {bottomContent && (
-        <div className="z-10 mt-auto">{bottomContent}</div>
-      )}
+      {bottomContent && <div className="z-10 mt-auto">{bottomContent}</div>}
     </div>
   );
 }
