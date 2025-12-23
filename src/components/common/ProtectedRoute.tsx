@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { ROUTES } from "@/constants/routes";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -15,11 +15,13 @@ export default function ProtectedRoute({
   requireBoard = false,
 }: ProtectedRouteProps) {
   const { shareUri } = useParams();
+  const location = useLocation();
   const { isLoggedIn, isCheckingAuth, hasFetchedAuth, boardShare, checkAuth } =
     useAuthStore();
   const hasBoard = Boolean(boardShare?.boardId);
 
   const isPublicShare = Boolean(shareUri);
+  const isJoinFlow = location.pathname.startsWith("/join/");
 
   useEffect(() => {
     if (!isPublicShare && !hasFetchedAuth && !isCheckingAuth) {
@@ -52,7 +54,8 @@ export default function ProtectedRoute({
     return <Navigate to={ROUTES.JOIN.NICKNAME} replace />;
   }
 
-  if (!requireBoard && hasBoard) {
+  // join 플로우가 아닌 경우에만 보드가 있으면 리다이렉트
+  if (!requireBoard && hasBoard && !isJoinFlow) {
     return <Navigate to={redirectTo} replace />;
   }
 
