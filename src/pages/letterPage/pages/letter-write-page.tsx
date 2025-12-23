@@ -8,6 +8,7 @@ import StampWebp from "@/assets/ic_stamp.webp";
 import { Alert } from "@/components/ui/alert";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
+import { useAuthStore } from "@/stores/useAuthStore";
 import type { MessageData } from "@/types/message";
 import LetterStep from "../components/letter-step";
 
@@ -15,6 +16,7 @@ export default function LetterWritePage() {
   const navigate = useNavigate();
   const { shareUri } = useParams();
   const location = useLocation();
+  const { boardShare } = useAuthStore();
 
   const isJoinPage = location.pathname.startsWith("/join/");
   const isFirstTimeJoin = location.pathname === "/join/letter/write";
@@ -75,7 +77,8 @@ export default function LetterWritePage() {
       try {
         const stored = localStorage.getItem(LOCALSTORAGE_KEY);
         const draft: Partial<MessageData> = stored ? JSON.parse(stored) : {};
-        draft.sender = authorName;
+        // 내게 쓰기 흐름일 때는 자신의 보드 shareUri 사용
+        draft.shareUri = shareUri ?? (isJoinPage ? boardShare?.shareUri : draft.shareUri)
         draft.content = letterContent;
         draft.shareUri = shareUri ?? draft.shareUri ?? "";
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));
@@ -94,7 +97,8 @@ export default function LetterWritePage() {
         const stored = localStorage.getItem(LOCALSTORAGE_KEY);
         const draft: Partial<MessageData> = stored ? JSON.parse(stored) : {};
         draft.sender = authorName;
-        draft.content = letterContent;
+        // 내게 쓰기 흐름일 때는 자신의 보드 shareUri 사용
+        draft.shareUri = shareUri ?? (isJoinPage ? boardShare?.shareUri : draft.shareUri)
         draft.shareUri = shareUri ?? draft.shareUri ?? "";
 
         // POST to backend using central message api
