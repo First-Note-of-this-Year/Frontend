@@ -77,10 +77,10 @@ export default function LetterWritePage() {
       try {
         const stored = localStorage.getItem(LOCALSTORAGE_KEY);
         const draft: Partial<MessageData> = stored ? JSON.parse(stored) : {};
-        // 내게 쓰기 흐름일 때는 자신의 보드 shareUri 사용
-        draft.shareUri = shareUri ?? (isJoinPage ? boardShare?.shareUri : draft.shareUri)
+        draft.sender = authorName;
         draft.content = letterContent;
-        draft.shareUri = shareUri ?? draft.shareUri ?? "";
+        // 내게 쓰기 흐름일 때는 자신의 보드 shareUri 사용
+        draft.shareUri = shareUri ?? (isJoinPage ? boardShare?.shareUri : draft.shareUri) ?? "";
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(draft));
       } catch (err) {
         // eslint-disable-next-line no-console
