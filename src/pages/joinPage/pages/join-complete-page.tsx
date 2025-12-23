@@ -1,31 +1,26 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import CDPlayerImage from "@/assets/obj_cdplayer.webp";
 import { NavigationButton } from "@/components/ui/navigation-button";
 import { PageLayout } from "@/components/ui/page-layout";
-import { ROUTES } from "@/constants/routes";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function JoinCompletePage() {
   const navigate = useNavigate();
-  const { checkAuth } = useAuthStore();
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoggedIn, checkAuth, hasFetchedAuth } = useAuthStore();
 
-  const handleClick = async () => {
-    setIsLoading(true);
-    try {
-      const authCheckResult = await checkAuth();
-      if (authCheckResult) {
-        navigate(ROUTES.BOARD);
-      } else {
-        navigate(ROUTES.HOME);
-      }
-    } catch (error) {
-      console.error("Failed to check auth:", error);
-      navigate(ROUTES.HOME);
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    if (!hasFetchedAuth) {
+      void checkAuth();
     }
+  }, [checkAuth, hasFetchedAuth]);
+
+  const handleToBoard = () => {
+    if (!isLoggedIn) {
+      navigate("/");
+      return;
+    }
+    navigate("/board");
   };
 
   return (
@@ -40,13 +35,8 @@ export default function JoinCompletePage() {
       }
       showBackButton={false}
       bottomContent={
-        <NavigationButton
-          className="w-full"
-          active={!isLoading}
-          disabled={isLoading}
-          onClick={handleClick}
-        >
-          {isLoading ? "확인 중..." : "다음으로"}
+        <NavigationButton className="w-full" onClick={handleToBoard}>
+          다음으로
         </NavigationButton>
       }
     >
