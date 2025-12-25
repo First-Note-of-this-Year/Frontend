@@ -66,7 +66,7 @@ export default function LetterWritePage() {
   const isFormValid =
     letterContent.trim() !== "" &&
     authorName.trim() !== "" &&
-    letterContent.length <= 50 &&
+    letterContent.length <= 400 &&
     authorName.length <= 18;
 
   // lock author input when it's the default '과거의 나'
@@ -214,7 +214,7 @@ export default function LetterWritePage() {
             onChange={(e) => setLetterContent(e.target.value)}
             aria-label="편지 내용"
             name="letterContent"
-            maxLength={50}
+            maxLength={400}
           />
 
           {/* From 작성자 입력 영역 - 편지지 하단에서 20px 위 */}
