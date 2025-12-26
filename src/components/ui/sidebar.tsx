@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/apis/auth";
-import { getBoardInfo } from "@/apis/board";
+import { getBoardInfo, getBoardShare } from "@/apis/board";
 import HeadsetIcon from "@/assets/ic_headset.svg?react";
 import MusicNoteIcon from "@/assets/ic_music_note.svg?react";
 import PersonIcon from "@/assets/ic_person.svg?react";
@@ -36,10 +36,19 @@ export function Sidebar({
     reset: resetAuth,
   } = useAuthStore();
 
-  const { data: boardInfo } = useQuery({
-    queryKey: ["boardInfo", shareUri],
-    queryFn: () => getBoardInfo(shareUri as string),
-    enabled: Boolean(shareUri),
+  // 로그인 상태면 내 보드 정보를 가져옴
+  const { data: myBoardShare } = useQuery({
+    queryKey: ["myBoardShare"],
+    queryFn: getBoardShare,
+    enabled: isLoggedIn,
+  });
+
+  const myShareUri = myBoardShare?.data?.shareUri;
+
+  const { data: myBoardInfo } = useQuery({
+    queryKey: ["myBoardInfo", myShareUri],
+    queryFn: () => getBoardInfo(myShareUri as string),
+    enabled: isLoggedIn && Boolean(myShareUri),
   });
 
   const navigate = useNavigate();
@@ -181,9 +190,9 @@ export function Sidebar({
 
           <div className="flex flex-row items-center gap-3">
             <div className="relative h-16 w-16">
-              {boardInfo?.data?.profileImage ? (
+              {myBoardInfo?.data?.profileImage ? (
                 <img
-                  src={boardInfo.data.profileImage}
+                  src={myBoardInfo.data.profileImage}
                   alt="프로필 이미지"
                   className="h-full w-full rounded-full object-cover"
                 />
@@ -194,14 +203,14 @@ export function Sidebar({
 
             <div className="flex flex-col gap-1">
               <div className="font-bold text-neutral-800 text-xl leading-7 tracking-wide">
-                {boardInfo?.data?.nickname || nickname} 님
+                {myBoardInfo?.data?.nickname || nickname} 님
               </div>
               <div className="inline-flex w-fit items-center gap-1 rounded bg-stone-300/30 px-2 py-2 backdrop-blur-[3.02px]">
                 <div className="relative h-3 w-3 overflow-hidden">
                   <MusicNoteIcon />
                 </div>
                 <div className="text-center font-bold text-xs text-zinc-800 leading-none">
-                  총 {boardInfo?.data?.messageCount ?? 0}개 음반
+                  총 {myBoardInfo?.data?.messageCount ?? 0}개 음반
                 </div>
               </div>
             </div>
