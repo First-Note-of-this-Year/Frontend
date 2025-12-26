@@ -30,6 +30,7 @@ export function Sidebar({
     isLoggedIn,
     isCheckingAuth,
     hasFetchedAuth,
+    lastCheckedShareUri,
     checkAuth,
     checkAuthForSharedBoard,
     reset: resetAuth,
@@ -45,12 +46,14 @@ export function Sidebar({
   const isSharedBoard = Boolean(shareUri);
 
   useEffect(() => {
-    if (hasFetchedAuth || isCheckingAuth) return;
+    if (isCheckingAuth) return;
 
     if (isSharedBoard && shareUri) {
       // 공유 보드
-      void checkAuthForSharedBoard(shareUri);
-    } else {
+      if (lastCheckedShareUri !== shareUri) {
+        void checkAuthForSharedBoard(shareUri);
+      }
+    } else if (!hasFetchedAuth) {
       // 내 보드
       void checkAuth();
     }
@@ -60,6 +63,7 @@ export function Sidebar({
     checkAuth,
     checkAuthForSharedBoard,
     hasFetchedAuth,
+    lastCheckedShareUri,
     isCheckingAuth,
   ]);
 

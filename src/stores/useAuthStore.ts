@@ -7,12 +7,14 @@ interface AuthState {
   isLoggedIn: boolean;
   isCheckingAuth: boolean;
   hasFetchedAuth: boolean;
+  lastCheckedShareUri: string | null;
   boardShare: GetBoardShareResponse["data"] | null;
   checkAuth: (options?: {
     force?: boolean;
   }) => Promise<GetBoardShareResponse["data"] | null>;
   checkAuthForSharedBoard: (
-    shareUri: string
+    shareUri: string,
+    options?: { force?: boolean }
   ) => Promise<CheckLoginResponse["data"] | null>;
   setLoggedIn: (
     value: boolean,
@@ -25,6 +27,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isLoggedIn: false,
   isCheckingAuth: false,
   hasFetchedAuth: false,
+  lastCheckedShareUri: null,
   boardShare: null,
 
   checkAuth: async ({ force = false } = {}) => {
@@ -59,10 +62,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  checkAuthForSharedBoard: async (shareUri: string) => {
-    const { hasFetchedAuth } = get();
+  checkAuthForSharedBoard: async (shareUri: string, { force = false } = {}) => {
+    const { lastCheckedShareUri } = get();
 
-    if (hasFetchedAuth) {
+    // 같은 shareUri로 이미 체크했으면 스킵 (force가 아닌 경우)
+    if (lastCheckedShareUri === shareUri && !force) {
       return null;
     }
 
@@ -75,6 +79,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoggedIn: response.data.validUser,
         isCheckingAuth: false,
         hasFetchedAuth: true,
+        lastCheckedShareUri: shareUri,
       });
 
       return response.data;
@@ -83,6 +88,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isLoggedIn: false,
         isCheckingAuth: false,
         hasFetchedAuth: true,
+        lastCheckedShareUri: shareUri,
       });
 
       return null;
@@ -103,6 +109,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       isLoggedIn: false,
       isCheckingAuth: false,
       hasFetchedAuth: true,
+      lastCheckedShareUri: null,
       boardShare: null,
     });
   },
