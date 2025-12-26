@@ -30,7 +30,9 @@ export function Sidebar({
     isLoggedIn,
     isCheckingAuth,
     hasFetchedAuth,
+    lastCheckedShareUri,
     checkAuth,
+    checkAuthForSharedBoard,
     reset: resetAuth,
   } = useAuthStore();
 
@@ -44,11 +46,26 @@ export function Sidebar({
   const isSharedBoard = Boolean(shareUri);
 
   useEffect(() => {
-    // 공유 보드가 아닌 경우에만 인증 체크
-    if (!isSharedBoard && !hasFetchedAuth && !isCheckingAuth) {
+    if (isCheckingAuth) return;
+
+    if (isSharedBoard && shareUri) {
+      // 공유 보드
+      if (lastCheckedShareUri !== shareUri) {
+        void checkAuthForSharedBoard(shareUri);
+      }
+    } else if (!hasFetchedAuth) {
+      // 내 보드
       void checkAuth();
     }
-  }, [isSharedBoard, checkAuth, hasFetchedAuth, isCheckingAuth]);
+  }, [
+    isSharedBoard,
+    shareUri,
+    checkAuth,
+    checkAuthForSharedBoard,
+    hasFetchedAuth,
+    lastCheckedShareUri,
+    isCheckingAuth,
+  ]);
 
   const handleLogoutClick = () => {
     setShowLogoutAlert(true);

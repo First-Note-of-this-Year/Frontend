@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   AUTH: {
     REISSUE: "/auth/reissue",
     LOGOUT: "/auth/logout",
+    CHECK_LOGIN: "/auth/check-login",
   },
 
   // 시간 관련
