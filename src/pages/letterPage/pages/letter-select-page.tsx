@@ -125,15 +125,18 @@ export default function LetterSelectPage({
       title={
         isFirstTimeJoin ? (
           <>
-            미래의 나에게 <br />이 노래를 들려드릴까요?{" "}
+            미래의 나에게 <br />
+            <span className="whitespace-nowrap">이 노래를 들려드릴까요?</span>
           </>
         ) : isJoinPage ? (
           <>
-            미래의 나에게 <br /> 이 노래를 들려드릴까요?
+            미래의 나에게 <br />
+            <span className="whitespace-nowrap">이 노래를 들려드릴까요?</span>
           </>
         ) : (
           <>
-            {recipientNickname} 님께 <br />이 노래를 들려드릴까요?
+            <span className="inline-block">{recipientNickname} 님께</span> <br />
+            <span className="whitespace-nowrap">이 노래를 들려드릴까요?</span>
           </>
         )
       }
@@ -202,7 +205,7 @@ export default function LetterSelectPage({
         </div>
 
         {displayedMusic?.itunesUrl && (
-          <div className="mt-4 flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2">
             <a
               href={displayedMusic.itunesUrl}
               target="_blank"
