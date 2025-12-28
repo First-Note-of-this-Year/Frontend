@@ -21,7 +21,7 @@ export function PageLayout({
       className={`dynamic-padding-top relative flex h-full w-full flex-col min-[451px]:md:pt-48 min-[451px]:sm:pt-44 ${className}`}
     >
       {showBackButton && <BackButton />}
-      <p className="font-primary text-[32px] text-red-200 leading-12">
+      <p className="font-primary text-[32px] text-red-200 leading-12 [text-wrap:balance] max-[450px]:text-[28px] max-[400px]:text-[26px] max-[350px]:text-[24px]">
         {title}
       </p>
 
