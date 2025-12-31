@@ -6,7 +6,9 @@ import { create } from "zustand";
  */
 const convertToKST = (serverTime: string): Date => {
   const utcDate = new Date(serverTime);
-  return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
+  return new Date(utcDate.getTime());
+  // 기존
+  // return new Date(utcDate.getTime() + 9 * 60 * 60 * 1000);
 };
 
 /**
